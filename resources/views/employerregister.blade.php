@@ -11,24 +11,33 @@
     <div class="card p-4 shadow-lg" style="width: 350px;">
         <h3 class="text-center mb-3">Employer Register</h3>
 
-        <form>
+        <!-- Laravel Form -->
+        <form method="POST" action="{{ route('employer.register') }}">
+            @csrf  <!-- CSRF Token for security -->
+
             <!-- Name Field -->
             <div class="mb-3">
                 <label for="name" class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" placeholder="Enter your name">
+                <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name" required>
             </div>
 
             <!-- Email Field -->
             <div class="mb-3">
                 <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
             </div>
 
             <!-- Password Field -->
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Enter your password">
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
             </div>
+
+                <!-- Password Confirmation -->
+<div class="mb-3">
+    <label for="password_confirmation" class="form-label">Confirm Password</label>
+    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm your password">
+</div>
 
             <!-- Register Button -->
             <div class="text-center">
