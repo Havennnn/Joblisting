@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Livewire\Forms\Employers\LoginForm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Employer;
@@ -9,19 +10,19 @@ use Illuminate\Support\Facades\Hash;
 
 class EmployerAuthController extends Controller
 {
-    // Employer Login
+
+    public LoginForm $form;
+
+    public function loginForm(Request $request)
+    {
+        return view('employers.auth.login');
+    }
+
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
+        $this->form->login();
 
-        if (Auth::guard('employer')->attempt($credentials)) {
-            return redirect()->route('employer.dashboard')->with('success', 'Login successful!');
-        }
-
-        return back()->withErrors(['email' => 'Invalid credentials'])->withInput();
+        return redirect()->route('employer.dashboard')->with('success', 'Login successful!');
     }
 
     // Employer Registration
