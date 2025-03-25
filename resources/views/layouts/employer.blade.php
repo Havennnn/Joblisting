@@ -1,10 +1,9 @@
-<!-- resources/views/layouts/app.blade.php -->
 <!DOCTYPE html>
-<html lang="en" class="h-full">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Neksjob')</title>
+    <title>@yield('title', 'Neksjob - Employer')</title>
 
     <!-- Include both your custom CSS and Tailwind CSS -->
     @vite(['resources/css/style.css'])
@@ -41,20 +40,18 @@
         }
     </style>
 </head>
-<body class="flex flex-col min-h-screen">
+<body>
+
     <!-- Navigation Component -->
-    <div class="w-full">
-        <x-navigation />
-    </div>
+    <x-navigation />
 
     <!-- Main Content -->
-    <main class="flex-grow w-full">
+    <main class="main">
         @yield('content')
     </main>
 
     <!-- Footer Component -->
-    <div class="w-full">
-        <x-footer />
-    </div>
+    <x-footer />
+
 </body>
 </html>

@@ -4,6 +4,10 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\EnsureUserIsApplicant;
+use App\Http\Middleware\EnsureUserIsEmployer;
+use App\Http\Middleware\SetUserLayout;
+use App\Http\Middleware\RedirectIfAuthenticated;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,7 +19,18 @@ return Application::configure(basePath: dirname(__DIR__))
         }
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        // Add SetUserLayout to the web middleware group
+        $middleware->web(append: [
+            SetUserLayout::class,
+        ]);
+
+        // Register middleware aliases
+        $middleware->alias([
+            'applicant' => EnsureUserIsApplicant::class,
+            'employer' => EnsureUserIsEmployer::class,
+            'set.layout' => SetUserLayout::class,
+            'guest' => RedirectIfAuthenticated::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

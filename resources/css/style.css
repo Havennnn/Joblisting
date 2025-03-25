@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 * {
     margin: 0;
@@ -9,7 +9,7 @@ body {
     width: 100%;
     height: 100%;
 
-    font-family: 'Inter', sans-serif;
+    font-family: "Inter", sans-serif;
 }
 
 /* Navbar */
@@ -19,7 +19,6 @@ body {
     align-items: flex-start;
 
     border-bottom: 0.093vh solid #000;
-    
 }
 
 .navbar .logo {
@@ -84,7 +83,7 @@ body {
 }
 
 .navbar a.emp {
-    color: #D91656;
+    color: #d91656;
     font-family: Inter;
     font-size: 0.729vw;
     font-size: 1.296vh;
@@ -94,12 +93,11 @@ body {
 }
 
 .main {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        height: 100vh;
-    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
 }
 
 /* Landing Page Content */
@@ -107,7 +105,7 @@ body {
 /* Search Bar */
 
 .icon {
-    font-size: 3vw; 
+    font-size: 3vw;
     height: 3vh;
     position: absolute;
 }
@@ -131,13 +129,13 @@ body {
     border-radius: 0.521vw;
     border-radius: 0.926vh;
     border: 0.093vh solid #1d1c1c;
-    background: rgba(255, 255, 255, 0.00);
+    background: rgba(255, 255, 255, 0);
 }
 
 .sepe {
-   font-weight: bold; 
-   font-size: 0.938vw;
-   font-size: 1.667vh;
+    font-weight: bold;
+    font-size: 0.938vw;
+    font-size: 1.667vh;
 }
 
 .search-bar input {
@@ -161,7 +159,7 @@ body {
 }
 
 .search-btn {
-    background: #3674B5;
+    background: #3674b5;
     padding: 0.521vw 1.389vh;
     border: none;
     border-radius: 0.26vw;
@@ -169,7 +167,7 @@ body {
     cursor: pointer;
     align-items: center;
 
-    color: #FFF;
+    color: #fff;
     font-family: Inter;
     font-size: 0.833vw;
     font-size: 1.481vh;
@@ -195,7 +193,7 @@ body {
 }
 
 .hero .highlight {
-    color: #DC2626;
+    color: #dc2626;
 }
 
 .hero p {
@@ -221,7 +219,7 @@ body {
     border: 0.078vw solid #3674B5;
     padding: 0.521vw 1.852vh;
     cursor: pointer;
-   
+
     color: #3674B5;
     font-family: Inter;
     font-size: 1.481vh;
@@ -235,7 +233,7 @@ body {
     margin-left: 0.781vw;
     text-decoration: none;
 
-    color: #3674B5;
+    color: #3674b5;
     font-family: Inter;
     font-size: 1.481vh;
     font-size: 0.833vw;
@@ -302,7 +300,7 @@ body {
 
     border-radius: 20px;
     border: 1px solid rgba(0, 0, 0, 0.77);
-    background: #FFF;
+    background: #fff;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
 }
 
@@ -415,14 +413,16 @@ body {
 
 /* Auth Css */
 
-.login-container, .register-container {
+.login-container,
+.register-container {
     display: flex;
     padding: 0.521vw 0.926vh;
     justify-content: center;
     align-items: flex-start;
 }
 
-.register-content, .login-content {
+.register-content,
+.login-content {
     display: flex;
     width: 31.25vw;
     padding: 2.604vw 4.63vh;
@@ -431,10 +431,11 @@ body {
     gap: 1.852vh;
 }
 
-.register-title, .login-title{
+.register-title,
+.login-title {
     align-self: stretch;
 
-    color: #DC2626;
+    color: #dc2626;
     text-align: center;
     font-family: Inter;
     font-size: 1.302vw;
@@ -450,14 +451,16 @@ body {
     align-items: center;
 } */
 
-.name-fields, .email-fields{
+.name-fields,
+.email-fields {
     display: flex;
     align-items: center;
     gap: 1.042vw;
     align-self: stretch;
 }
 
-.name-fields div, .email-fields div {
+.name-fields div,
+.email-fields div {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -486,7 +489,7 @@ body {
     border-radius: 0.26vw;
     border-radius: 0.463vh;
     border: 0.052vw solid #000;
-    background: #FFF;
+    background: #fff;
 }
 
 .reg-txtbox::placeholder {
@@ -506,9 +509,9 @@ body {
     border-radius: 0.208vw;
     border-radius: 0.37vh;
     border: none;
-    background: #3674B5;
+    background: #3674b5;
 
-    color: #FFF;
+    color: #fff;
     text-align: center;
     font-family: Inter;
     font-size: 0.729vw;
@@ -518,9 +521,8 @@ body {
     line-height: normal;
 }
 
-
 .next-page {
-    color: #3674B5;
+    color: #3674b5;
     text-align: center;
     font-family: Inter;
     font-size: 0.729vw;
@@ -539,8 +541,9 @@ body {
     align-self: stretch;
 }
 
-.login-btn, .register-btn {
-    background: #DC2626;
+.login-btn,
+.register-btn {
+    background: #dc2626;
     color: white;
     padding: 0.521vw 0.926vh;
     border: none;
@@ -565,7 +568,8 @@ body {
     width: 100%;
 }
 
-.divider::before, .divider::after {
+.divider::before,
+.divider::after {
     content: "";
     flex: 1;
     border-bottom: 0.052vw solid #ccc;
@@ -594,7 +598,6 @@ body {
     border-radius: 0.463vh;
     cursor: pointer;
 
- 
     color: #000;
     font-family: Inter;
     font-size: 0.833vw;
@@ -602,7 +605,6 @@ body {
     font-style: normal;
     font-weight: 600;
     line-height: normal;
-   
 }
 
 .social-btn img {
@@ -689,8 +691,6 @@ p a {
     margin-top: 10px;
     font-size: 16px;
 }
-
-
 
 @media (max-width: 1920px), (max-height: 1080px) {
     body {

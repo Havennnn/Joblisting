@@ -2,27 +2,183 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Employer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
-   public function showLogin()
-   {
-       return view('auth.login');
-   }
+    // Shared login methods
+    public function showLogin()
+    {
+        // Redirect authenticated users to their dashboard
+        if (Auth::check()) {
+            if (Auth::user()->is_employer) {
+                return redirect()->route('employer.dashboard');
+            }
+            return redirect()->route('applicant.dashboard');
+        }
 
-   public function showRegister()
-   {
-       return view('auth.register'); // Ensure you have a register.blade.php file in resources/views/auth/
-   }
+        return view('shared.login');
+    }
 
-   public function showRegisterNextPage()
-   {
-       return view('auth.register-next-page'); // Ensure you have a register.blade.php file in resources/views/auth/
-   }
+    public function login(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
 
-   public function showEmployerLogin()
-   {
-       return view('auth.employer.employer-login'); // Ensure you have a register.blade.php file in resources/views/auth/
-   }
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            // Redirect based on user type
+            if (Auth::user()->is_employer) {
+                return redirect()->intended(route('employer.dashboard'));
+            }
+
+            return redirect()->intended(route('applicant.dashboard'));
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/');
+    }
+
+    // Applicant registration methods
+    public function showApplicantRegister()
+    {
+        // Redirect authenticated users to their dashboard
+        if (Auth::check()) {
+            if (Auth::user()->is_employer) {
+                return redirect()->route('employer.dashboard');
+            }
+            return redirect()->route('applicant.dashboard');
+        }
+
+        return view('applicant.register');
+    }
+
+    public function registerApplicant(Request $request)
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'confirmed', Password::defaults()],
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'is_employer' => false,
+        ]);
+
+        Auth::login($user);
+
+        return redirect()->route('applicant.dashboard');
+    }
+
+    // Employer registration methods
+    public function showEmployerRegister()
+    {
+        // Redirect authenticated users to their dashboard
+        if (Auth::check()) {
+            if (Auth::user()->is_employer) {
+                return redirect()->route('employer.dashboard');
+            }
+            return redirect()->route('applicant.dashboard');
+        }
+
+        return view('employer.register');
+    }
+
+    public function registerEmployer(Request $request)
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'confirmed', Password::defaults()],
+            'company_name' => ['required', 'string', 'max:255'],
+            'company_description' => ['required', 'string'],
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'is_employer' => true,
+        ]);
+
+        // Create employer profile
+        $user->employer()->create([
+            'company_name' => $request->company_name,
+            'company_description' => $request->company_description,
+        ]);
+
+        Auth::login($user);
+
+        return redirect()->route('employer.dashboard');
+    }
+
+    // Dashboard methods
+    public function applicantDashboard()
+    {
+        return view('applicant.dashboard');
+    }
+
+    public function employerDashboard()
+    {
+        return view('employer.dashboard');
+    }
+
+    public function showRegister()
+    {
+        // Redirect authenticated users to their dashboard
+        if (Auth::check()) {
+            if (Auth::user()->is_employer) {
+                return redirect()->route('employer.dashboard');
+            }
+            return redirect()->route('applicant.dashboard');
+        }
+
+        return view('auth.register');
+    }
+
+    public function showRegisterNextPage()
+    {
+        // Redirect authenticated users to their dashboard
+        if (Auth::check()) {
+            if (Auth::user()->is_employer) {
+                return redirect()->route('employer.dashboard');
+            }
+            return redirect()->route('applicant.dashboard');
+        }
+
+        return view('auth.register-next-page');
+    }
+
+    public function showEmployerLogin()
+    {
+        // Redirect authenticated users to their dashboard
+        if (Auth::check()) {
+            if (Auth::user()->is_employer) {
+                return redirect()->route('employer.dashboard');
+            }
+            return redirect()->route('applicant.dashboard');
+        }
+
+        return view('auth.employer.employer-login');
+    }
 }

@@ -1,10 +1,9 @@
-<!-- resources/views/layouts/app.blade.php -->
 <!DOCTYPE html>
 <html lang="en" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Neksjob')</title>
+    <title>@yield('title', 'Neksjob - Applicant')</title>
 
     <!-- Include both your custom CSS and Tailwind CSS -->
     @vite(['resources/css/style.css'])

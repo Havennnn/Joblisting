@@ -24,7 +24,7 @@
                 <input type="password" name="email" required class="reg-txtbox">
             </div>
         </div>
-        
+
         <button type="button" class="register-btn">Register</button>
 
 
