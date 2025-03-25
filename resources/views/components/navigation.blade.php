@@ -8,8 +8,8 @@
                 </a>
             </div>
 
-            <div class="hidden md:flex items-center justify-between flex-1 ml-10">
-                <div class="flex items-center space-x-4">
+            <div class="hidden md:flex items-center justify-between flex-1 ml-2">
+                <div class="flex items-start space-x-4">
                     @auth
                         @if(auth()->user()->is_employer)
                             <a href="{{ route('employer.dashboard') }}" class="text-gray-900 hover:text-neksjob-blue px-3 py-2 text-sm font-medium">Dashboard</a>
