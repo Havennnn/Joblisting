@@ -58,7 +58,7 @@
                                     Profile Completion
                                 </dt>
                                 <dd class="mt-1 text-3xl font-semibold text-gray-900">
-                                    75%
+                                    25%
                                 </dd>
                                 <dd class="mt-3">
                                     <span class="text-sm text-blue-600 hover:text-blue-500">
@@ -82,7 +82,7 @@
                                     Upcoming Interviews
                                 </dt>
                                 <dd class="mt-1 text-3xl font-semibold text-gray-900">
-                                    2
+                                    0
                                 </dd>
                                 <dd class="mt-3">
                                     <span class="text-sm text-blue-600 hover:text-blue-500">
