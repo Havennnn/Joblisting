@@ -10,7 +10,7 @@
                 <p class="text-sm mb-4">Monday to Friday, 9:00 AM to 4:00 PM</p>
 
                 <!-- Social Icons -->
-                <div class="flex space-x-4 mb-4">
+                <div class="flex space-x-3 mb-4">
                     <a href="#" class="text-neksjob-blue hover:text-gray-500">
                         <span class="sr-only">Facebook</span>
                         <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">

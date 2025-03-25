@@ -7,17 +7,15 @@
     <title>@yield('title', 'Neksjob')</title>
 
     <!-- Include both your custom CSS and Tailwind CSS -->
-    @vite(['resources/css/style.css'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <!-- Tailwind CSS CDN for quick development -->
     <script src="https://cdn.tailwindcss.com"></script>
 
 </head>
-<body class="flex flex-col min-h-screen overflow-x-hidden">
+<body class="flex flex-col min-h-screen w-full mx-auto">
     <!-- Navigation Component -->
-    <div class="w-full">
-        <x-navigation />
-    </div>
+    <x-navigation />
 
     <!-- Main Content -->
     <main class="flex-grow w-full">
@@ -25,8 +23,6 @@
     </main>
 
     <!-- Footer Component -->
-    <div class="w-full">
-        <x-footer />
-    </div>
+    <x-footer />
 </body>
 </html>
