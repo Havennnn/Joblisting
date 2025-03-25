@@ -14,6 +14,10 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            colors: {
+                'neksjob-blue': '#3674B5',
+                'neksjob-pink': '#D91656',
+            }
         },
     },
 

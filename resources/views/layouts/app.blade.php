@@ -12,34 +12,6 @@
     <!-- Tailwind CSS CDN for quick development -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Tailwind configuration for colors -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'neksjob-blue': '#3674B5',
-                        'neksjob-pink': '#D91656',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        .main {
-            flex: 1;
-            display: block;
-            width: 100%;
-            height: auto;
-            min-height: calc(100vh - 150px); /* Adjust based on nav and footer height */
-            overflow-y: auto;
-        }
-    </style>
 </head>
 <body class="flex flex-col min-h-screen overflow-x-hidden">
     <!-- Navigation Component -->
