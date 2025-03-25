@@ -41,7 +41,7 @@
         }
     </style>
 </head>
-<body class="flex flex-col min-h-screen">
+<body class="flex flex-col min-h-screen overflow-x-hidden">
     <!-- Navigation Component -->
     <div class="w-full">
         <x-navigation />
