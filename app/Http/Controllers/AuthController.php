@@ -83,11 +83,12 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'is_employer' => false,
+            'setup_completed' => false,
         ]);
 
         Auth::login($user);
 
-        return redirect()->route('applicant.dashboard');
+        return redirect()->route('applicant.setup');
     }
 
     // Employer registration methods

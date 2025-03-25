@@ -3,10 +3,16 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Applicant\DashboardController;
 use App\Http\Controllers\Applicant\ProfileController;
+use App\Http\Controllers\Applicant\SetupController;
 
 // All applicant routes are prefixed with 'applicant' and named with 'applicant.'
-Route::middleware(['auth', 'applicant'])->group(function () {
-    // Dashboard
+Route::prefix('applicant')->name('applicant.')->middleware(['auth', 'applicant'])->group(function () {
+    // Setup wizard routes
+    Route::get('/setup', [SetupController::class, 'index'])->name('setup');
+    Route::post('/setup', [SetupController::class, 'store'])->name('setup.store');
+    Route::get('/setup/skip', [SetupController::class, 'skip'])->name('setup.skip');
+
+    // Dashboard (only accessible after setup or if setup is skipped)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Profile routes

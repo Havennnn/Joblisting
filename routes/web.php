@@ -33,13 +33,6 @@ Route::middleware('guest')->group(function () {
 // Logout route
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 
-// Applicant routes
-Route::prefix('applicant')->name('applicant.')->middleware(['auth', 'applicant'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-});
-
 // Employer routes
 Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->group(function () {
     Route::get('/dashboard', [AuthController::class, 'employerDashboard'])->name('dashboard');

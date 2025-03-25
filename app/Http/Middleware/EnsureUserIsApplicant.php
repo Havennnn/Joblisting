@@ -19,6 +19,16 @@ class EnsureUserIsApplicant
     {
         // Check if user is logged in and is not an employer
         if (Auth::check() && !Auth::user()->is_employer) {
+            // If the user is an applicant but setup is not completed,
+            // and the current route is not setup-related, redirect to setup
+            $user = Auth::user();
+            $currentRoute = $request->route()->getName();
+
+            if (!$user->setup_completed &&
+                !in_array($currentRoute, ['applicant.setup', 'applicant.setup.store', 'applicant.setup.skip'])) {
+                return redirect()->route('applicant.setup');
+            }
+
             return $next($request);
         }
 
