@@ -118,11 +118,13 @@
                         <div class="{{ $currentStep != 3 ? 'hidden' : '' }}">
                             <div class="space-y-6">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">Profile Picture</label>
+                                    <label class="block text-sm font-medium text-gray-700">Profile Picture (Optional)</label>
                                     <div class="mt-1 flex items-center">
                                         <span class="inline-block h-12 w-12 rounded-full overflow-hidden bg-gray-100">
                                             @if($profile_picture_preview)
                                                 <img src="{{ $profile_picture_preview }}" alt="Profile" class="h-full w-full object-cover">
+                                            @elseif(isset($user) && $user->profile_picture_path && Storage::disk('public')->exists($user->profile_picture_path))
+                                                <img src="{{ Storage::url($user->profile_picture_path) }}" alt="Profile" class="h-full w-full object-cover">
                                             @else
                                                 <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
                                                     <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -138,7 +140,7 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">Resume</label>
+                                    <label class="block text-sm font-medium text-gray-700">Resume (Optional)</label>
                                     <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                                         <div class="space-y-1 text-center">
                                             @if($resume_name)

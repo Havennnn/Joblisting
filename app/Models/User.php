@@ -31,7 +31,7 @@ class User extends Authenticatable
         'years_experience',
         'age',
         'gender',
-        'profile_picture',
+        'profile_picture_path',
         'resume_path',
     ];
 

@@ -35,6 +35,9 @@ class ProfileSetup extends Component
     public $profile_picture_preview;
     public $resume_name;
 
+    /**
+     * Initialize the component.
+     */
     public function mount()
     {
         $user = Auth::user();
@@ -50,7 +53,7 @@ class ProfileSetup extends Component
         $this->years_experience = $user->years_experience;
 
         // Set profile picture preview if exists
-        if ($user->profile_picture_path) {
+        if ($user->profile_picture_path && Storage::disk('public')->exists($user->profile_picture_path)) {
             $this->profile_picture_preview = Storage::url($user->profile_picture_path);
         }
     }
@@ -125,7 +128,7 @@ class ProfileSetup extends Component
         $this->validateBasicInfo();
         $this->validateProfessionalInfo();
 
-        // Validate file uploads if provided
+        // Make profile picture and resume optional
         if ($this->profile_picture) {
             $this->validate([
                 'profile_picture' => 'image|max:1024',
@@ -150,14 +153,14 @@ class ProfileSetup extends Component
             'field' => $this->field,
             'skills' => $this->skills,
             'years_experience' => $this->years_experience,
-            'setup_completed' => true,
+            'setup_completed' => true, // Mark setup as completed regardless of file uploads
         ];
 
         // Handle profile picture upload
         if ($this->profile_picture) {
             // Delete old file if exists
             if ($user->profile_picture_path) {
-                Storage::delete($user->profile_picture_path);
+                Storage::delete('public/' . $user->profile_picture_path);
             }
 
             $profilePicturePath = $this->profile_picture->store('profile-pictures', 'public');
@@ -168,7 +171,7 @@ class ProfileSetup extends Component
         if ($this->resume) {
             // Delete old file if exists
             if ($user->resume_path) {
-                Storage::delete($user->resume_path);
+                Storage::delete('public/' . $user->resume_path);
             }
 
             $resumePath = $this->resume->store('resumes', 'public');
@@ -179,15 +182,36 @@ class ProfileSetup extends Component
         $user->update($userData);
 
         // Redirect to dashboard
-        return redirect()->route('applicant.dashboard');
+        return redirect()->route('applicant.dashboard')->with('status', 'Profile setup completed successfully!');
     }
 
+    /**
+     * Skip the setup process.
+     */
     public function skipSetup()
     {
-        // Mark setup as completed
         $user = Auth::user();
-        $user->update(['setup_completed' => true]);
-        return redirect()->route('applicant.dashboard');
+
+        // Mark basic fields with current data
+        $userData = [
+            'name' => $this->full_name,
+            'email' => $this->email,
+            'setup_completed' => true // Mark as setup completed even when skipped
+        ];
+
+        // Update any fields that might have been filled before skipping
+        if (!empty($this->phone_number)) $userData['phone_number'] = $this->phone_number;
+        if (!empty($this->gender)) $userData['gender'] = $this->gender;
+        if (!empty($this->age)) $userData['age'] = $this->age;
+        if (!empty($this->field)) $userData['field'] = $this->field;
+        if (!empty($this->skills)) $userData['skills'] = $this->skills;
+        if (!empty($this->years_experience)) $userData['years_experience'] = $this->years_experience;
+
+        // Update user
+        $user->update($userData);
+
+        return redirect()->route('applicant.dashboard')
+            ->with('status', 'Setup skipped. You can complete your profile anytime for a better experience.');
     }
 
     /**

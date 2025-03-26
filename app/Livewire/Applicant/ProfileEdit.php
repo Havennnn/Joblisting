@@ -53,7 +53,7 @@ class ProfileEdit extends Component
         $this->years_experience = $this->user->years_experience;
 
         // Set profile picture preview if exists
-        if ($this->user->profile_picture_path) {
+        if ($this->user->profile_picture_path && Storage::disk('public')->exists($this->user->profile_picture_path)) {
             $this->profile_picture_preview = Storage::url($this->user->profile_picture_path);
         }
     }
@@ -87,16 +87,16 @@ class ProfileEdit extends Component
      */
     public function saveProfile()
     {
-        // Validate form fields
+        // Validate form fields - all fields are optional in profile edit mode
         $this->validate([
-            'full_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone_number' => 'required|string|max:20',
-            'gender' => 'required|string|in:male,female,other',
-            'age' => 'required|integer|min:18',
-            'field' => 'required|string|max:255',
-            'skills' => 'required|string',
-            'years_experience' => 'required|integer|min:0',
+            'full_name' => 'nullable|string|max:255',
+            'email' => 'required|email|max:255', // Email remains required as it's essential
+            'phone_number' => 'nullable|string|max:20',
+            'gender' => 'nullable|string|in:male,female,other',
+            'age' => 'nullable|integer|min:18',
+            'field' => 'nullable|string|max:255',
+            'skills' => 'nullable|string',
+            'years_experience' => 'nullable|integer|min:0',
         ]);
 
         // Validate file uploads if provided
@@ -112,23 +112,47 @@ class ProfileEdit extends Component
             ]);
         }
 
-        // Update user data
-        $userData = [
-            'name' => $this->full_name,
-            'email' => $this->email,
-            'phone_number' => $this->phone_number,
-            'gender' => $this->gender,
-            'age' => $this->age,
-            'field' => $this->field,
-            'skills' => $this->skills,
-            'years_experience' => $this->years_experience,
-        ];
+        // Only update fields that have been changed
+        $userData = [];
+
+        // Check each field for changes and only include if changed
+        if ($this->full_name !== $this->user->name) {
+            $userData['name'] = $this->full_name;
+        }
+
+        if ($this->email !== $this->user->email) {
+            $userData['email'] = $this->email;
+        }
+
+        if ($this->phone_number !== $this->user->phone_number) {
+            $userData['phone_number'] = $this->phone_number;
+        }
+
+        if ($this->gender !== $this->user->gender) {
+            $userData['gender'] = $this->gender;
+        }
+
+        if ($this->age !== $this->user->age) {
+            $userData['age'] = $this->age;
+        }
+
+        if ($this->field !== $this->user->field) {
+            $userData['field'] = $this->field;
+        }
+
+        if ($this->skills !== $this->user->skills) {
+            $userData['skills'] = $this->skills;
+        }
+
+        if ($this->years_experience !== $this->user->years_experience) {
+            $userData['years_experience'] = $this->years_experience;
+        }
 
         // Handle profile picture upload
         if ($this->profile_picture) {
             // Delete old file if exists
             if ($this->user->profile_picture_path) {
-                Storage::delete($this->user->profile_picture_path);
+                Storage::delete('public/' . $this->user->profile_picture_path);
             }
 
             $profilePicturePath = $this->profile_picture->store('profile-pictures', 'public');
@@ -139,18 +163,24 @@ class ProfileEdit extends Component
         if ($this->resume) {
             // Delete old file if exists
             if ($this->user->resume_path) {
-                Storage::delete($this->user->resume_path);
+                Storage::delete('public/' . $this->user->resume_path);
             }
 
             $resumePath = $this->resume->store('resumes', 'public');
             $userData['resume_path'] = $resumePath;
         }
 
-        // Update user
-        $this->user->update($userData);
+        // Only update if there are changes
+        if (!empty($userData)) {
+            // Update user
+            $this->user->update($userData);
 
-        // Show success message
-        session()->flash('status', 'Profile updated successfully!');
+            // Show success message
+            session()->flash('status', 'Profile updated successfully!');
+        } else {
+            // No changes were made
+            session()->flash('status', 'No changes detected in your profile.');
+        }
     }
 
     /**

@@ -97,6 +97,8 @@
                                     <span class="inline-block h-12 w-12 rounded-full overflow-hidden bg-gray-100">
                                         @if($profile_picture_preview)
                                             <img src="{{ $profile_picture_preview }}" alt="Profile" class="h-full w-full object-cover">
+                                        @elseif($user->profile_picture_path && Storage::disk('public')->exists($user->profile_picture_path))
+                                            <img src="{{ Storage::url($user->profile_picture_path) }}" alt="Profile" class="h-full w-full object-cover">
                                         @else
                                             <svg class="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">
                                                 <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -105,6 +107,11 @@
                                     </span>
                                     <input type="file" wire:model="profile_picture" id="profile_picture" class="ml-5 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
                                 </div>
+                                @if($user->profile_picture_path)
+                                    <div class="mt-1 text-xs text-gray-500">
+                                        Current file: {{ $user->profile_picture_path }}
+                                    </div>
+                                @endif
                                 <div wire:loading wire:target="profile_picture" class="mt-2 text-sm text-blue-500">
                                     Uploading...
                                 </div>
