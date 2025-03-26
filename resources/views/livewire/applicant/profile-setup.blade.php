@@ -39,7 +39,7 @@
                             </div>
                             <div class="ml-4">
                                 <h3 class="text-sm font-medium {{ $currentStep == 3 ? 'text-blue-600' : 'text-gray-500' }}">Documents</h3>
-                                <p class="text-sm text-gray-500">Upload your files</p>
+                                <p class="text-sm text-gray-500">Upload your files (Optional)</p>
                             </div>
                         </div>
                     </div>
@@ -49,7 +49,9 @@
             <!-- Setup Form -->
             <div class="bg-white shadow sm:rounded-lg">
                 <div class="px-4 py-5 sm:p-6">
-                    <form wire:submit.prevent="saveProfile" class="space-y-6">
+                    <form wire:submit="saveProfile" class="space-y-6">
+                        @csrf
+
                         <!-- Step 1: Basic Information -->
                         <div class="{{ $currentStep != 1 ? 'hidden' : '' }}">
                             <div class="space-y-6">
@@ -179,9 +181,11 @@
                                         Previous
                                     </button>
                                 @endif
-                                <a href="#" wire:click.prevent="skipSetup" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                    Skip for now
-                                </a>
+                                @if($currentStep == 2)
+                                    <button type="button" wire:click="skipSetup" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        Skip to Documents
+                                    </button>
+                                @endif
                             </div>
                             <div>
                                 @if($currentStep < 3)

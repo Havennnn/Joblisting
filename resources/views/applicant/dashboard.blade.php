@@ -48,7 +48,7 @@
                                 </dd>
                             </dl>
                         </div>
-                    </div>
+                        </div>
 
                     <!-- Profile completion -->
                     <div class="bg-white overflow-hidden shadow rounded-lg">
@@ -79,7 +79,7 @@
                                 </dd>
                             </dl>
                         </div>
-                    </div>
+                        </div>
 
                     <!-- Interviews -->
                     <div class="bg-white overflow-hidden shadow rounded-lg">
@@ -104,7 +104,7 @@
                             </dl>
                         </div>
                     </div>
-                </div>
+</div>
             </div>
 
             <!-- Recommended Jobs -->

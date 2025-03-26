@@ -126,7 +126,11 @@ class ProfileSetup extends Component
     {
         // Validate all steps
         $this->validateBasicInfo();
-        $this->validateProfessionalInfo();
+
+        // Only validate professional info if fields were filled out
+        if (!empty($this->field) || !empty($this->skills) || !empty($this->years_experience)) {
+            $this->validateProfessionalInfo();
+        }
 
         // Make profile picture and resume optional
         if ($this->profile_picture) {
@@ -150,11 +154,13 @@ class ProfileSetup extends Component
             'phone_number' => $this->phone_number,
             'gender' => $this->gender,
             'age' => $this->age,
-            'field' => $this->field,
-            'skills' => $this->skills,
-            'years_experience' => $this->years_experience,
             'setup_completed' => true, // Mark setup as completed regardless of file uploads
         ];
+
+        // Add optional fields if they exist
+        if (!empty($this->field)) $userData['field'] = $this->field;
+        if (!empty($this->skills)) $userData['skills'] = $this->skills;
+        if (!empty($this->years_experience)) $userData['years_experience'] = $this->years_experience;
 
         // Handle profile picture upload
         if ($this->profile_picture) {
@@ -181,37 +187,48 @@ class ProfileSetup extends Component
         // Update user
         $user->update($userData);
 
-        // Redirect to dashboard
-        return redirect()->route('applicant.dashboard')->with('status', 'Profile setup completed successfully!');
+        // Redirect to dashboard using session flash
+        session()->flash('status', 'Profile setup completed successfully!');
+        return redirect()->route('applicant.dashboard');
     }
 
     /**
-     * Skip the setup process.
+     * Skip the setup process based on current step.
      */
     public function skipSetup()
     {
-        $user = Auth::user();
+        if ($this->currentStep == 2) {
+            // If on step 2, just move to step 3
+            $this->currentStep = 3;
+            return;
+        } elseif ($this->currentStep == 3) {
+            // If on step 3, complete setup and go to dashboard
+            $user = Auth::user();
 
-        // Mark basic fields with current data
-        $userData = [
-            'name' => $this->full_name,
-            'email' => $this->email,
-            'setup_completed' => true // Mark as setup completed even when skipped
-        ];
+            // Validate step 1 data to ensure we have the required information
+            $this->validateBasicInfo();
 
-        // Update any fields that might have been filled before skipping
-        if (!empty($this->phone_number)) $userData['phone_number'] = $this->phone_number;
-        if (!empty($this->gender)) $userData['gender'] = $this->gender;
-        if (!empty($this->age)) $userData['age'] = $this->age;
-        if (!empty($this->field)) $userData['field'] = $this->field;
-        if (!empty($this->skills)) $userData['skills'] = $this->skills;
-        if (!empty($this->years_experience)) $userData['years_experience'] = $this->years_experience;
+            // Mark basic fields with current data (which should already be validated from step 1)
+            $userData = [
+                'name' => $this->full_name,
+                'email' => $this->email,
+                'phone_number' => $this->phone_number,
+                'gender' => $this->gender,
+                'age' => $this->age,
+                'setup_completed' => true // Mark as setup completed even when skipped
+            ];
 
-        // Update user
-        $user->update($userData);
+            // Update any fields that might have been filled before skipping
+            if (!empty($this->field)) $userData['field'] = $this->field;
+            if (!empty($this->skills)) $userData['skills'] = $this->skills;
+            if (!empty($this->years_experience)) $userData['years_experience'] = $this->years_experience;
 
-        return redirect()->route('applicant.dashboard')
-            ->with('status', 'Setup skipped. You can complete your profile anytime for a better experience.');
+            // Update user
+            $user->update($userData);
+
+            session()->flash('status', 'Setup completed. You can update your profile anytime.');
+            return redirect()->route('applicant.dashboard');
+        }
     }
 
     /**

@@ -1,4 +1,4 @@
-@extends('layouts.applicant')
+@extends('layouts.setup')
 
 @section('title', 'Complete Your Profile')
 
