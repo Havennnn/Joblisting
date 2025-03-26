@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class DashboardController extends Controller
 {
@@ -41,11 +42,16 @@ class DashboardController extends Controller
     /**
      * Calculate the profile completion percentage.
      *
-     * @param \App\Models\User $user
+     * @param \Illuminate\Contracts\Auth\Authenticatable|null $user
      * @return int
      */
     private function calculateProfileCompletion($user)
     {
+        // Return 0 if user is null
+        if (!$user) {
+            return 0;
+        }
+
         // Required fields for basic profile
         $requiredFields = [
             'name',
