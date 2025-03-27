@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\Employer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -11,21 +11,16 @@ use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
-    // Shared login methods
-    public function showLogin()
+    public function showApplicantLogin()
     {
-        // Redirect authenticated users to their dashboard
-        if (Auth::check()) {
-            if (Auth::user()->is_employer) {
-                return redirect()->route('employer.dashboard');
-            }
+        if (Auth::check() && !Auth::user()->is_employer) {
             return redirect()->route('applicant.dashboard');
         }
 
-        return view('shared.login');
+        return view('applicant.login');
     }
 
-    public function login(Request $request)
+    public function loginApplicant(Request $request)
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
@@ -35,9 +30,11 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            // Redirect based on user type
             if (Auth::user()->is_employer) {
-                return redirect()->intended(route('employer.dashboard'));
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'This account is registered as an employer. Please use employer login.',
+                ]);
             }
 
             return redirect()->intended(route('applicant.dashboard'));

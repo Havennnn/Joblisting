@@ -7,11 +7,12 @@
     <!-- Dashboard header -->
     <header class="bg-white shadow">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+            <h1 class="text-3xl font-bold text-gray-900">Applicant Dashboard</h1>
         </div>
     </header>
 
-    <div class="py-6">
+    <!-- Main content -->
+    <main class="pt-6 pb-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Welcome message -->
             <div class="px-4 py-6 sm:px-0">
@@ -24,7 +25,7 @@
             </div>
 
             <!-- Stats -->
-            <div class="mt-8">
+            <div class="mt-8 ">
                 <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                     <!-- Jobs applied -->
                     <div class="bg-white overflow-hidden shadow rounded-lg">
@@ -104,11 +105,11 @@
                             </dl>
                         </div>
                     </div>
-</div>
+                </div>
             </div>
 
             <!-- Recommended Jobs -->
-            <div class="mt-8 pb-12">
+            <div class="mt-8">
                 <div class="bg-white shadow overflow-hidden sm:rounded-md">
                     <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
                         <h3 class="text-lg leading-6 font-medium text-gray-900">
@@ -208,6 +209,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 </div>
 @endsection

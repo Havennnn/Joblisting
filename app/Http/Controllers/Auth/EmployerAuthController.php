@@ -1,52 +1,83 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Livewire\Forms\Employers\LoginForm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Employer;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class EmployerAuthController extends Controller
 {
-
-    public LoginForm $form;
-
-    public function loginForm(Request $request)
+    public function showLogin()
     {
-        return view('employers.auth.login');
+        // If user is already logged in as employer, redirect to dashboard
+        if (Auth::check() && Auth::user()->is_employer) {
+            return redirect()->route('employer.dashboard');
+        }
+
+        return view('employer.login');
     }
 
     public function login(Request $request)
     {
-        $this->form->login();
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
 
-        return redirect()->route('employer.dashboard')->with('success', 'Login successful!');
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            if (!Auth::user()->is_employer) {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'This account is registered as a job seeker. Please use job seeker login.',
+                ]);
+            }
+
+            return redirect()->route('employer.dashboard');
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
     }
 
-    // Employer Registration
+    public function showRegister()
+    {
+        // If user is already logged in as employer, redirect to dashboard
+        if (Auth::check() && Auth::user()->is_employer) {
+            return redirect()->route('employer.dashboard');
+        }
+
+        return view('employer.register');
+    }
+
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:employers,email',
-            'password' => 'required|min:6|confirmed'
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'confirmed', 'min:8'],
         ]);
 
-        Employer::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            'is_employer' => true,
         ]);
 
-        return redirect()->route('employer.login')->with('success', 'Registration successful! Please log in.');
+        Auth::login($user);
+
+        return redirect()->route('employer.dashboard');
     }
 
-    // Employer Logout
     public function logout()
     {
-        Auth::guard('employer')->logout();
-        return redirect('/')->with('success', 'Logged out successfully.');
+        Auth::logout();
+        return redirect('/');
     }
 }

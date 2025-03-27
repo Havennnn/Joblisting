@@ -25,7 +25,7 @@
                 <div class="flex items-center space-x-4">
                     @auth
                         @if(auth()->user()->is_employer)
-                            <form method="POST" action="{{ route('logout') }}" class="inline">
+                            <form method="POST" action="{{ route('employer.logout') }}" class="inline">
                                 @csrf
                                 <button type="submit" class="text-neksjob-pink hover:text-neksjob-blue px-3 py-2 text-sm font-medium">
                                     Logout
@@ -40,9 +40,13 @@
                             </form>
                         @endif
                     @else
-                        <a href="{{ route('login') }}" class="text-gray-900 hover:text-neksjob-blue px-3 py-2 text-sm font-medium">Job Seeker Sign-In</a>
-                        <span class="text-gray-300">|</span>
-                        <a href="{{ route('login') }}" class="text-neksjob-pink hover:text-neksjob-blue px-3 py-2 text-sm font-medium">Employer Sign-In</a>
+                        @if(Route::currentRouteName() == 'applicant.login')
+                            <a href="{{ route('employer.login') }}" class="border border-neksjob-pink rounded-md text-neksjob-pink hover:bg-neksjob-pink hover:text-white px-3 py-1 text-sm font-medium">Employer Login</a>
+                        @elseif(Route::currentRouteName() == 'employer.login' || Route::currentRouteName() == 'employer.register')
+                            <a href="{{ route('applicant.login') }}" class="border border-neksjob-blue rounded-md text-neksjob-blue hover:bg-neksjob-blue hover:text-white px-3 py-1 text-sm font-medium">Jobseeker Login</a>
+                        @else
+                            <a href="{{ route('applicant.login') }}" class="border border-neksjob-blue rounded-md text-neksjob-blue hover:bg-neksjob-blue hover:text-white px-3 py-1 text-sm font-medium transition-all duration-300 ease-in-out">Jobseeker Login</a>
+                        @endif
                     @endauth
                 </div>
             </div>

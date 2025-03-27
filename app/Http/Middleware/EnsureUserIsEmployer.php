@@ -24,7 +24,7 @@ class EnsureUserIsEmployer
 
         // Redirect to login if not logged in, or to applicant dashboard if user is not an employer
         if (!Auth::check()) {
-            return redirect()->route('login');
+            return redirect()->route('employer.login');
         }
 
         return redirect()->route('applicant.dashboard');

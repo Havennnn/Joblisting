@@ -41,8 +41,7 @@
             <div class="col-span-1">
                 <h4 class="text-sm font-bold uppercase tracking-wider mb-4">Jobseekers</h4>
                 <ul class="space-y-2">
-                    <li><a href="{{ route('applicant.register') }}" class="text-sm hover:text-neksjob-blue">Sign-Up</a></li>
-                    <li><a href="{{ route('login') }}" class="text-sm hover:text-neksjob-blue">Sign-In</a></li>
+                    <li><a href="{{ route('applicant.login') }}" class="text-sm hover:text-neksjob-blue">Sign-In</a></li>
                     <li><a href="#" class="text-sm hover:text-neksjob-blue">Find a Job</a></li>
                 </ul>
             </div>
@@ -51,7 +50,7 @@
                 <h4 class="text-sm font-bold uppercase tracking-wider mb-4">Employers</h4>
                 <ul class="space-y-2">
                     <li><a href="{{ route('employer.register') }}" class="text-sm hover:text-neksjob-blue">Sign-Up</a></li>
-                    <li><a href="{{ route('login') }}" class="text-sm hover:text-neksjob-blue">Sign-In</a></li>
+                    <li><a href="{{ route('employer.login') }}" class="text-sm hover:text-neksjob-blue">Sign-In</a></li>
                 </ul>
             </div>
         </div>
