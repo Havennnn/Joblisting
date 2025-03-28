@@ -7,13 +7,14 @@ use App\Http\Controllers\Applicant\ProfileController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\EmployerAuthController;
 use App\Http\Controllers\Employer\DashboardController as EmployerDashboardController;
+use App\Http\Controllers\LandingPage\LandingController;
+use App\Http\Controllers\LandingPage\JobController;
 use Livewire\Volt\Volt;
 
-// Redirect root to applicant login
-Route::redirect('/', '/applicant/login');
-
-//Landing page
-Route::get('/', [LandingController::class, 'index']); 
+// Landing page routes
+Route::get('/', [LandingController::class, 'index'])->name('landing');
+Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
+Route::get('/job-details/{id}', [JobController::class, 'show'])->name('jobs.show');
 
 // Applicant routes
 Route::prefix('applicant')->name('applicant.')->group(function () {

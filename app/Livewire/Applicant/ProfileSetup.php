@@ -3,6 +3,7 @@
 namespace App\Livewire\Applicant;
 
 use App\Models\User;
+use App\Models\ApplicantProfile;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
@@ -41,20 +42,33 @@ class ProfileSetup extends Component
     public function mount()
     {
         $user = Auth::user();
+        $profile = $user->applicantProfile;
 
         // Pre-fill form with user data if available
         $this->full_name = $user->name;
         $this->email = $user->email;
-        $this->phone_number = $user->phone_number;
-        $this->gender = $user->gender;
-        $this->age = $user->age;
-        $this->field = $user->field;
-        $this->skills = $user->skills;
-        $this->years_experience = $user->years_experience;
 
-        // Set profile picture preview if exists
-        if ($user->profile_picture_path && Storage::disk('public')->exists($user->profile_picture_path)) {
-            $this->profile_picture_preview = Storage::url($user->profile_picture_path);
+        // Get values from applicant profile if it exists
+        if ($profile) {
+            $this->phone_number = $profile->phone_number;
+            $this->gender = $profile->gender;
+            $this->age = $profile->age;
+            $this->field = $profile->field;
+            $this->skills = $profile->skills;
+            $this->years_experience = $profile->years_experience;
+
+            // Set profile picture preview if exists
+            if ($profile->profile_picture_path && Storage::disk('public')->exists($profile->profile_picture_path)) {
+                $this->profile_picture_preview = Storage::url($profile->profile_picture_path);
+            }
+        } else {
+            // Fallback to user fields if no profile exists yet (for backwards compatibility)
+            if (isset($user->phone_number)) $this->phone_number = $user->phone_number;
+            if (isset($user->gender)) $this->gender = $user->gender;
+            if (isset($user->age)) $this->age = $user->age;
+            if (isset($user->field)) $this->field = $user->field;
+            if (isset($user->skills)) $this->skills = $user->skills;
+            if (isset($user->years_experience)) $this->years_experience = $user->years_experience;
         }
     }
 
@@ -147,49 +161,62 @@ class ProfileSetup extends Component
 
         $user = Auth::user();
 
-        // Update user data
+        // Update user basic data
         $userData = [
             'name' => $this->full_name,
             'email' => $this->email,
-            'phone_number' => $this->phone_number,
-            'gender' => $this->gender,
-            'age' => $this->age,
-            'setup_completed' => true, // Mark setup as completed regardless of file uploads
         ];
 
-        // Add optional fields if they exist
-        if (!empty($this->field)) $userData['field'] = $this->field;
-        if (!empty($this->skills)) $userData['skills'] = $this->skills;
-        if (!empty($this->years_experience)) $userData['years_experience'] = $this->years_experience;
+        // Update user record
+        $user->update($userData);
+
+        // Get or create applicant profile
+        $profile = $user->applicantProfile;
+        if (!$profile) {
+            $profile = new ApplicantProfile();
+            $profile->user_id = $user->id;
+        }
+
+        // Update profile data
+        $profile->full_name = $this->full_name;
+        $profile->phone_number = $this->phone_number;
+        $profile->gender = $this->gender;
+        $profile->age = $this->age;
+        $profile->field = $this->field;
+        $profile->skills = $this->skills;
+        $profile->years_experience = $this->years_experience;
+        $profile->setup_completed = true;
 
         // Handle profile picture upload
         if ($this->profile_picture) {
             // Delete old file if exists
-            if ($user->profile_picture_path) {
-                Storage::delete('public/' . $user->profile_picture_path);
+            if ($profile->profile_picture_path) {
+                Storage::delete('public/' . $profile->profile_picture_path);
             }
 
             $profilePicturePath = $this->profile_picture->store('profile-pictures', 'public');
-            $userData['profile_picture_path'] = $profilePicturePath;
+            $profile->profile_picture_path = $profilePicturePath;
         }
 
         // Handle resume upload
         if ($this->resume) {
             // Delete old file if exists
-            if ($user->resume_path) {
-                Storage::delete('public/' . $user->resume_path);
+            if ($profile->resume_path) {
+                Storage::delete('public/' . $profile->resume_path);
             }
 
             $resumePath = $this->resume->store('resumes', 'public');
-            $userData['resume_path'] = $resumePath;
+            $profile->resume_path = $resumePath;
         }
 
-        // Update user
-        $user->update($userData);
+        // Save the profile
+        $profile->save();
 
-        // Redirect to dashboard using session flash
+        // Redirect to dashboard with success message
         session()->flash('status', 'Profile setup completed successfully!');
-        return redirect()->route('applicant.dashboard');
+
+        // Force redirect to break the Livewire lifecycle
+        $this->redirect(route('applicant.dashboard'), navigate: false);
     }
 
     /**
@@ -208,26 +235,40 @@ class ProfileSetup extends Component
             // Validate step 1 data to ensure we have the required information
             $this->validateBasicInfo();
 
-            // Mark basic fields with current data (which should already be validated from step 1)
+            // Update user data
             $userData = [
                 'name' => $this->full_name,
                 'email' => $this->email,
-                'phone_number' => $this->phone_number,
-                'gender' => $this->gender,
-                'age' => $this->age,
-                'setup_completed' => true // Mark as setup completed even when skipped
             ];
 
-            // Update any fields that might have been filled before skipping
-            if (!empty($this->field)) $userData['field'] = $this->field;
-            if (!empty($this->skills)) $userData['skills'] = $this->skills;
-            if (!empty($this->years_experience)) $userData['years_experience'] = $this->years_experience;
-
-            // Update user
+            // Update user record
             $user->update($userData);
 
+            // Get or create applicant profile
+            $profile = $user->applicantProfile;
+            if (!$profile) {
+                $profile = new ApplicantProfile();
+                $profile->user_id = $user->id;
+            }
+
+            // Update profile with basic data
+            $profile->full_name = $this->full_name;
+            $profile->phone_number = $this->phone_number;
+            $profile->gender = $this->gender;
+            $profile->age = $this->age;
+
+            // Add optional fields if they were provided
+            if (!empty($this->field)) $profile->field = $this->field;
+            if (!empty($this->skills)) $profile->skills = $this->skills;
+            if (!empty($this->years_experience)) $profile->years_experience = $this->years_experience;
+
+            $profile->setup_completed = true;
+            $profile->save();
+
             session()->flash('status', 'Setup completed. You can update your profile anytime.');
-            return redirect()->route('applicant.dashboard');
+
+            // Force redirect to break the Livewire lifecycle
+            $this->redirect(route('applicant.dashboard'), navigate: false);
         }
     }
 

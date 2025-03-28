@@ -22,17 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'is_employer',
-        'setup_completed',
-        'first_name',
-        'last_name',
-        'phone_number',
-        'field',
-        'skills',
-        'years_experience',
-        'age',
-        'gender',
-        'profile_picture_path',
-        'resume_path',
+        'last_active_at'
     ];
 
     /**
@@ -56,12 +46,17 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_employer' => 'boolean',
-            'setup_completed' => 'boolean',
+            'last_active_at' => 'datetime',
         ];
     }
 
     public function employer()
     {
         return $this->hasOne(Employer::class);
+    }
+
+    public function applicantProfile()
+    {
+        return $this->hasOne(ApplicantProfile::class);
     }
 }

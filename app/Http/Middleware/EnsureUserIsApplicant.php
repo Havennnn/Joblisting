@@ -24,7 +24,13 @@ class EnsureUserIsApplicant
             $user = Auth::user();
             $currentRoute = $request->route()->getName();
 
-            if (!$user->setup_completed &&
+            // Check if profile exists and setup is not completed
+            $setupCompleted = false;
+            if ($user->applicantProfile) {
+                $setupCompleted = $user->applicantProfile->setup_completed;
+            }
+
+            if (!$setupCompleted &&
                 !in_array($currentRoute, ['applicant.setup', 'applicant.setup.store', 'applicant.setup.skip'])) {
                 return redirect()->route('applicant.setup');
             }

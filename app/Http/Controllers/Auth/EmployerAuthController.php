@@ -61,6 +61,8 @@ class EmployerAuthController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', 'min:8'],
+            'company_name' => ['required', 'string', 'max:255'],
+            'company_description' => ['required', 'string'],
         ]);
 
         $user = User::create([
@@ -68,6 +70,12 @@ class EmployerAuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'is_employer' => true,
+        ]);
+
+        // Create the employer record in the employers table
+        $user->employer()->create([
+            'company_name' => $request->company_name,
+            'company_description' => $request->company_description,
         ]);
 
         Auth::login($user);

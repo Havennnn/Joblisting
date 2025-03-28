@@ -14,11 +14,22 @@ class ApplicantProfile extends Model
         'full_name',
         'phone_number',
         'location',
-        'resume_path',
+        'gender',
+        'age',
+        'field',
         'skills',
+        'years_experience',
         'experience',
         'education',
-        'profile_completed'
+        'profile_picture_path',
+        'resume_path',
+        'setup_completed'
+    ];
+
+    protected $casts = [
+        'age' => 'integer',
+        'years_experience' => 'integer',
+        'setup_completed' => 'boolean'
     ];
 
     public function user()

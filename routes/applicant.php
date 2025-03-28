@@ -41,10 +41,9 @@ Route::prefix('applicant')->name('applicant.')->middleware(['auth', 'applicant']
     // Saved jobs routes (Franklin)
     // Route::get('/saved-jobs', [SavedJobController::class, 'index'])->name('saved-jobs');
 
-    Route::get('/jobs', [JobController::class, 'index']); 
-    Route::get('/jobs/{id}', [JobController::class, 'show']);
-    Route::get('/dashboard', [DashboardController::class, 'index']);
-    Route::get('/interview', [InterviewController::class, 'index']); 
-    Route::get('/profile', [ProfileController::class, 'index']);
-
+    /* These routes are commented out until their controllers are created
+    Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
+    Route::get('/jobs/{id}', [JobController::class, 'show'])->name('jobs.show');
+    Route::get('/interview', [InterviewController::class, 'index'])->name('interview.index');
+    */
 });

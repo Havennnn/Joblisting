@@ -47,7 +47,7 @@
                             @error('resume')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            
+
                             @if(isset($profile) && $profile->resume_path)
                                 <div class="mt-2">
                                     <p class="mb-0"><i class="fas fa-file-pdf"></i> Current resume: {{ basename($profile->resume_path) }}</p>

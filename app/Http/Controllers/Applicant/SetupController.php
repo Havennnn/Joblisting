@@ -24,6 +24,7 @@ class SetupController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
+        $profile = $user->applicantProfile;
 
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
@@ -39,21 +40,35 @@ class SetupController extends Controller
             'resume' => 'nullable|file|mimes:pdf,doc,docx|max:5120', // 5MB max
         ]);
 
+        // Update user data
+        $user->update([
+            'name' => $validated['first_name'] . ' ' . $validated['last_name'],
+            'email' => $validated['email'],
+        ]);
+
         // Handle profile picture upload
         if ($request->hasFile('profile_picture')) {
             $path = $request->file('profile_picture')->store('profile-pictures', 'public');
-            $validated['profile_picture'] = $path;
+            $profile->profile_picture_path = $path;
         }
 
         // Handle resume upload
         if ($request->hasFile('resume')) {
             $path = $request->file('resume')->store('resumes', 'public');
-            $validated['resume_path'] = $path;
+            $profile->resume_path = $path;
         }
 
-        // Update user profile
-        $user->update($validated);
-        $user->update(['setup_completed' => true]);
+        // Update applicant profile
+        $profile->update([
+            'full_name' => $validated['first_name'] . ' ' . $validated['last_name'],
+            'phone_number' => $validated['phone_number'],
+            'field' => $validated['field'],
+            'skills' => $validated['skills'],
+            'years_experience' => $validated['years_experience'],
+            'age' => $validated['age'],
+            'gender' => $validated['gender'],
+            'setup_completed' => true
+        ]);
 
         return redirect()->route('applicant.dashboard')
             ->with('status', 'Profile setup completed successfully!');
@@ -65,7 +80,17 @@ class SetupController extends Controller
     public function skip()
     {
         $user = Auth::user();
-        $user->update(['setup_completed' => true]);
+        $profile = $user->applicantProfile;
+
+        if ($profile) {
+            $profile->update(['setup_completed' => true]);
+        } else {
+            // Create a basic profile if it doesn't exist
+            $user->applicantProfile()->create([
+                'full_name' => $user->name,
+                'setup_completed' => true
+            ]);
+        }
 
         return redirect()->route('applicant.dashboard')
             ->with('status', 'You can complete your profile later.');

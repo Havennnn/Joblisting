@@ -49,7 +49,7 @@ class MessengerController extends Controller
     }
 
 
-    
+
     // For interviewers - Shows the list of conversations
     public function interviewerChats()
     {
@@ -65,7 +65,7 @@ class MessengerController extends Controller
         return view('messenger.interviewer-chats', compact('conversations'));
     }
 
-    
+
     // Shows a specific conversation for either role
     public function showConversation(Conversation $conversation)
     {
@@ -88,17 +88,17 @@ class MessengerController extends Controller
         if ($roleType === 'interviewer') {
             $conversation->update(['is_read' => true]);
         }
-        
+
         // Load the other participant based on role
         if ($roleType === 'interviewer') {
             $conversation->load(['applicant', 'messages.user']);
         } else {
             $conversation->load(['interviewer', 'messages.user']);
         }
-        
+
         return view('messenger.conversation', compact('conversation', 'roleType'));
     }
-    
+
     // Get messages for a conversation
     public function getMessages(Conversation $conversation)
     {
@@ -129,7 +129,7 @@ class MessengerController extends Controller
 
         return response()->json($messages);
     }
-    
+
     // Send a message// Send a message
     public function sendMessage(Request $request, Conversation $conversation)
     {
@@ -159,7 +159,7 @@ class MessengerController extends Controller
 
         // Load the user relationship and format for response
         $message->load('user');
-        
+
         $formattedMessage = [
             'id' => $message->id,
             'content' => $message->content,
@@ -171,7 +171,7 @@ class MessengerController extends Controller
 
         return response()->json($formattedMessage);
     }
-    
+
     // For applicants - Start or continue a conversation with a specific interviewer
     public function startChatWithInterviewer($interviewerId)
     {
@@ -226,12 +226,12 @@ class MessengerController extends Controller
     public function getConversations()
     {
         $user = Auth::user();
-        
+
         // Only applicants should use this endpoint
         if ($user->role !== 'applicant') {
             return abort(403, 'This endpoint is only for applicants');
         }
-        
+
         $conversations = Conversation::where('applicant_id', $user->id)
             ->with(['interviewer:id,name', 'messages' => function($query) {
                 $query->latest()->limit(1)->with('user:id,name');
@@ -240,7 +240,7 @@ class MessengerController extends Controller
             ->get()
             ->map(function($conv) {
                 $lastMessage = $conv->messages->first();
-                
+
                 return [
                     'id' => $conv->id,
                     'interviewer_name' => $conv->interviewer->name,
@@ -249,72 +249,73 @@ class MessengerController extends Controller
                     'last_message_time' => $conv->last_message_at ? $conv->last_message_at->diffForHumans() : 'New',
                 ];
             });
-        
+
         return response()->json($conversations);
     }
 
     public function checkApplicantProfile()
     {
         $user = Auth::user();
-        
+
         // Only applicable for applicants
         if ($this->getUserRole($user) !== 'applicant') {
             return redirect()->route('messenger.index');
         }
-        
+
         // Check if applicant has a complete profile
         $profile = ApplicantProfile::where('user_id', $user->id)
             ->where('profile_completed', true)
             ->first();
-        
+
         if (!$profile) {
             return redirect()->route('messenger.applicant-profile-form');
         }
-        
+
         return redirect()->route('messenger.applicant-chat');
     }
 
     public function showApplicantProfileForm()
     {
         $user = Auth::user();
-        
+
         // Only applicable for applicants
         if ($this->getUserRole($user) !== 'applicant') {
             return redirect()->route('messenger.index');
         }
-        
+
         // Get existing profile if any
         $profile = ApplicantProfile::where('user_id', $user->id)->first();
-        
+
         return view('messenger.applicant-profile-form', compact('profile'));
     }
 
     public function saveApplicantProfile(Request $request)
     {
         $user = Auth::user();
-        
+
         // Only applicable for applicants
         if ($this->getUserRole($user) !== 'applicant') {
             return redirect()->route('messenger.index');
         }
-        
+
         // Validate the form
         $request->validate([
             'full_name' => 'required|string|max:255',
             'phone_number' => 'required|string|max:20',
             'location' => 'required|string|max:255',
+            'field' => 'required|string|max:255',
             'skills' => 'nullable|string',
             'experience' => 'nullable|string',
             'education' => 'nullable|string',
             'resume' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
         ]);
-        
+
         // Handle resume upload if provided
         $resumePath = null;
         if ($request->hasFile('resume')) {
             $resumePath = $request->file('resume')->store('resumes', 'public');
         }
-        
+
         // Update or create profile
         ApplicantProfile::updateOrCreate(
             ['user_id' => $user->id],
@@ -322,6 +323,7 @@ class MessengerController extends Controller
                 'full_name' => $request->full_name,
                 'phone_number' => $request->phone_number,
                 'location' => $request->location,
+                'field' => $request->field,
                 'skills' => $request->skills,
                 'experience' => $request->experience,
                 'education' => $request->education,
@@ -329,7 +331,7 @@ class MessengerController extends Controller
                 'profile_completed' => true,
             ]
         );
-        
+
         return redirect()->route('messenger.applicant-chat')
             ->with('success', 'Your profile has been saved successfully!');
     }

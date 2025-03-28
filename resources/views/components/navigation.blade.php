@@ -19,7 +19,7 @@
                     @else
                         <a href="/" class="text-gray-900 hover:text-neksjob-blue px-3 py-2 text-sm font-medium">Home</a>
                     @endauth
-                    <a href="#" class="text-gray-900 hover:text-neksjob-blue px-3 py-2 text-sm font-medium">Find jobs</a>
+                    <a href="{{ route('jobs.index') }}" class="text-gray-900 hover:text-neksjob-blue px-3 py-2 text-sm font-medium">Find jobs</a>
                 </div>
 
                 <div class="flex items-center space-x-4">
@@ -44,6 +44,11 @@
                             <a href="{{ route('employer.login') }}" class="border border-neksjob-pink rounded-md text-neksjob-pink hover:bg-neksjob-pink hover:text-white px-3 py-1 text-sm font-medium">Employer Login</a>
                         @elseif(Route::currentRouteName() == 'employer.login' || Route::currentRouteName() == 'employer.register')
                             <a href="{{ route('applicant.login') }}" class="border border-neksjob-blue rounded-md text-neksjob-blue hover:bg-neksjob-blue hover:text-white px-3 py-1 text-sm font-medium">Jobseeker Login</a>
+                            @elseif(request()->is('/') || request()->is('jobs') || request()->is('job-details/*'))
+                            <div class="flex space-x-4">
+                                <a href="{{ route('applicant.login') }}" class="border border-neksjob-blue rounded-md text-neksjob-blue hover:bg-neksjob-blue hover:text-white px-3 py-1 text-sm font-medium">Jobseeker Login</a>
+                                <a href="{{ route('employer.login') }}" class="border border-neksjob-pink rounded-md text-neksjob-pink hover:bg-neksjob-pink hover:text-white px-3 py-1 text-sm font-medium">Employer Login</a>
+                            </div>
                         @else
                             <a href="{{ route('applicant.login') }}" class="border border-neksjob-blue rounded-md text-neksjob-blue hover:bg-neksjob-blue hover:text-white px-3 py-1 text-sm font-medium transition-all duration-300 ease-in-out">Jobseeker Login</a>
                         @endif

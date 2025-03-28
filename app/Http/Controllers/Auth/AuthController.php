@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\ApplicantProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -80,6 +81,13 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'is_employer' => false,
+        ]);
+
+        // Create applicant profile
+        $user->applicantProfile()->create([
+            'full_name' => $request->name,
+            // Default values for required fields
+            'phone_number' => null,
             'setup_completed' => false,
         ]);
 
