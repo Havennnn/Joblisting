@@ -1,0 +1,138 @@
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #FFFFFF;
+    overflow-x: hidden;
+}
+
+/*////////// NAVBAR //////////*/
+.navbar {
+    width: 100vw;
+    height: 8vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2vw;
+    background-color: white;
+    box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+/* Left Side */
+.left-nav {
+    display: flex;
+    align-items: center;
+    gap: 2vw;
+}
+
+#logo {
+    height: 5vh;
+    margin-right: -2vw;
+    margin-left: -2.2vw;
+    display: flex;
+    align-items: center;
+}
+
+/* Right Side */
+.right-nav {
+    display: flex;
+    align-items: center;
+    gap: 2vw;
+}
+
+/* Nav Links */
+.nav-link {
+    text-decoration: none;
+    font-size: 1.8vh;
+    color: #202021;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: #dc2626;
+}
+
+/*////////// PROFILE //////////*/
+.profile-header {
+    width: 100vw;
+    height: 30vh;
+    background: linear-gradient(to right, #5d0000, #e00000);
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: center;
+    color: white;
+}
+
+.profile-header h1 {
+    font-size: 2vw;
+    margin: 0;
+    margin-left: 20vw;
+    font-weight: 700;
+}
+
+.profile-header p {
+    font-size: 1vw;
+    opacity: 0.8;
+    margin: 1vh 20vw;
+}
+
+.edit-btn {
+    background-color: transparent;
+    color: white;
+    border: solid 0.3vh white;
+    padding: 1.5vh 2.5vw;
+    font-size: 1vw;
+    cursor: pointer;
+    font-weight: 600;
+    border-radius: 0.5vw;
+    width: fit-content;
+    margin-left: 20vw;
+    margin-top: 0.5vh;
+}
+
+
+.edit-btn:hover {
+    background-color: #f5f5f5;
+    color: #d32f2f;
+    transition: all ease 0.5s;
+}
+
+.section {
+    margin-top: 4vh;
+    margin-left: 20vw;
+}
+
+.section h2 {
+    font-size: 1.8vw;
+    color: black;
+}
+
+.section p {
+    margin-top: -2vh;
+    font-size: 1vw;
+    color: gray;
+}
+
+.add-btn, .upload-btn {
+    margin-top: 0vh;
+    padding: 1vh 2vw;
+    font-size: 1.2vw;
+    border: 0.3vh solid #d32f2f;
+    color: #d32f2f;
+    background: white;
+    border-radius: 0.5vw;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    font-weight: 600;
+}
+
+.add-btn:hover, .upload-btn:hover {
+    background: #d32f2f;
+    color: white;
+}

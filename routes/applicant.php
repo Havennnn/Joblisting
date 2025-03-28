@@ -41,4 +41,10 @@ Route::prefix('applicant')->name('applicant.')->middleware(['auth', 'applicant']
     // Saved jobs routes (Franklin)
     // Route::get('/saved-jobs', [SavedJobController::class, 'index'])->name('saved-jobs');
 
+    Route::get('/jobs', [JobController::class, 'index']); 
+    Route::get('/jobs/{id}', [JobController::class, 'show']);
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/interview', [InterviewController::class, 'index']); 
+    Route::get('/profile', [ProfileController::class, 'index']);
+
 });

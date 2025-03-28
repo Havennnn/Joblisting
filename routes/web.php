@@ -12,6 +12,9 @@ use Livewire\Volt\Volt;
 // Redirect root to applicant login
 Route::redirect('/', '/applicant/login');
 
+//Landing page
+Route::get('/', [LandingController::class, 'index']); 
+
 // Applicant routes
 Route::prefix('applicant')->name('applicant.')->group(function () {
     // Guest routes
