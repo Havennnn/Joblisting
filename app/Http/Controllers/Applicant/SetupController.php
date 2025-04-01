@@ -24,7 +24,9 @@ class SetupController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        $profile = $user->applicantProfile;
+
+        // Ensure applicant profile exists
+        $profile = $user->applicantProfile ?? $user->applicantProfile()->create([]);
 
         $validated = $request->validate([
             'full_name' => 'required|string|max:255',
@@ -59,7 +61,7 @@ class SetupController extends Controller
         }
 
         // Update applicant profile
-        $profile->update([
+        $profile->fill([
             'full_name' => $validated['full_name'],
             'phone_number' => $validated['phone_number'],
             'location' => $validated['location'],
@@ -69,7 +71,7 @@ class SetupController extends Controller
             'age' => $validated['age'],
             'gender' => $validated['gender'],
             'setup_completed' => true
-        ]);
+        ])->save();
 
         return redirect()->route('applicant.dashboard')
             ->with('status', 'Profile setup completed successfully!');

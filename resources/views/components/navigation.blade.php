@@ -8,7 +8,7 @@
                 </a>
             </div>
 
-            <div class="hidden md:flex items-center justify-between flex-1 ml-2">
+            <div class="hidden md:flex items-center justify-between flex-1 ml-6">
                 <div class="flex items-start space-x-4">
                     @auth
                         @if(auth()->user()->is_employer)
