@@ -14,7 +14,7 @@ class Job extends Model
         'location',
         'min_salary',
         'max_salary',
-        'experience',
+        'years_experience',
         'job_type',
     ];
 }

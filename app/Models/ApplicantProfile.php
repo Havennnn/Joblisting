@@ -19,7 +19,6 @@ class ApplicantProfile extends Model
         'field',
         'skills',
         'years_experience',
-        'experience',
         'education',
         'profile_picture_path',
         'resume_path',

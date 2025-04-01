@@ -32,6 +32,7 @@ class ProfileController extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'phone_number' => 'required|string|max:20',
+            'location' => 'required|string|max:255',
             'field' => 'required|string|max:255',
             'skills' => 'required|string',
             'years_experience' => 'required|integer|min:0',
@@ -67,18 +68,5 @@ class ProfileController extends Controller
         $user->update($validated);
 
         return redirect()->route('applicant.profile')->with('status', 'Profile updated successfully!');
-    }
-
-    /**
-     * Handle resume upload
-     *
-     * Accepts PDF/DOCX only.
-     */
-    public function uploadResume(Request $request)
-    {
-        // TODO: Implement resume upload
-        // 1. Validate file
-        // 2. Store file
-        // 3. Update user's resume_path
     }
 }

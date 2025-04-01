@@ -70,33 +70,6 @@
                     </div>
                 </div>
 
-                <div>
-                    <label for="company_name" class="block text-sm font-medium text-gray-700">
-                        Company Name
-                    </label>
-                    <div class="mt-1">
-                        <input id="company_name" name="company_name" type="text" required
-                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            value="{{ old('company_name') }}">
-                    </div>
-                    @error('company_name')
-                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <div>
-                    <label for="company_description" class="block text-sm font-medium text-gray-700">
-                        Company Description
-                    </label>
-                    <div class="mt-1">
-                        <textarea id="company_description" name="company_description" rows="3" required
-                            class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">{{ old('company_description') }}</textarea>
-                    </div>
-                    @error('company_description')
-                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-
                 <div class="flex items-center">
                     <input id="terms" name="terms" type="checkbox" required
                         class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">

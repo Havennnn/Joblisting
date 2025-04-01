@@ -27,10 +27,10 @@ class SetupController extends Controller
         $profile = $user->applicantProfile;
 
         $validated = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'full_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'phone_number' => 'required|string|max:20',
+            'location' => 'required|string|max:255',
             'field' => 'required|string|max:255',
             'skills' => 'required|string',
             'years_experience' => 'required|integer|min:0',
@@ -42,7 +42,7 @@ class SetupController extends Controller
 
         // Update user data
         $user->update([
-            'name' => $validated['first_name'] . ' ' . $validated['last_name'],
+            'name' => $validated['full_name'],
             'email' => $validated['email'],
         ]);
 
@@ -60,8 +60,9 @@ class SetupController extends Controller
 
         // Update applicant profile
         $profile->update([
-            'full_name' => $validated['first_name'] . ' ' . $validated['last_name'],
+            'full_name' => $validated['full_name'],
             'phone_number' => $validated['phone_number'],
+            'location' => $validated['location'],
             'field' => $validated['field'],
             'skills' => $validated['skills'],
             'years_experience' => $validated['years_experience'],

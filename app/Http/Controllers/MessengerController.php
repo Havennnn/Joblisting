@@ -264,7 +264,7 @@ class MessengerController extends Controller
 
         // Check if applicant has a complete profile
         $profile = ApplicantProfile::where('user_id', $user->id)
-            ->where('profile_completed', true)
+            ->where('setup_completed', true)
             ->first();
 
         if (!$profile) {
@@ -328,7 +328,7 @@ class MessengerController extends Controller
                 'experience' => $request->experience,
                 'education' => $request->education,
                 'resume_path' => $resumePath ?: ($request->existing_resume ?? null),
-                'profile_completed' => true,
+                'setup_completed' => true,
             ]
         );
 

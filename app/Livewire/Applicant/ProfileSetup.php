@@ -20,6 +20,7 @@ class ProfileSetup extends Component
     public $full_name;
     public $email;
     public $phone_number;
+    public $location;
     public $gender;
     public $age;
 
@@ -51,6 +52,7 @@ class ProfileSetup extends Component
         // Get values from applicant profile if it exists
         if ($profile) {
             $this->phone_number = $profile->phone_number;
+            $this->location = $profile->location;
             $this->gender = $profile->gender;
             $this->age = $profile->age;
             $this->field = $profile->field;
@@ -64,6 +66,7 @@ class ProfileSetup extends Component
         } else {
             // Fallback to user fields if no profile exists yet (for backwards compatibility)
             if (isset($user->phone_number)) $this->phone_number = $user->phone_number;
+            if (isset($user->location)) $this->location = $user->location;
             if (isset($user->gender)) $this->gender = $user->gender;
             if (isset($user->age)) $this->age = $user->age;
             if (isset($user->field)) $this->field = $user->field;
@@ -98,6 +101,7 @@ class ProfileSetup extends Component
             'full_name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'phone_number' => 'required|string|max:20',
+            'location' => 'required|string|max:255',
             'gender' => 'required|string|in:male,female,other',
             'age' => 'required|integer|min:18',
         ]);
@@ -180,6 +184,7 @@ class ProfileSetup extends Component
         // Update profile data
         $profile->full_name = $this->full_name;
         $profile->phone_number = $this->phone_number;
+        $profile->location = $this->location;
         $profile->gender = $this->gender;
         $profile->age = $this->age;
         $profile->field = $this->field;
@@ -254,6 +259,7 @@ class ProfileSetup extends Component
             // Update profile with basic data
             $profile->full_name = $this->full_name;
             $profile->phone_number = $this->phone_number;
+            $profile->location = $this->location;
             $profile->gender = $this->gender;
             $profile->age = $this->age;
 

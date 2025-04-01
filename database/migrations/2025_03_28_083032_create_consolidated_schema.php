@@ -41,8 +41,13 @@ return new class extends Migration
             Schema::create('employers', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('user_id')->constrained()->onDelete('cascade');
-                $table->string('company_name');
-                $table->text('company_description');
+                $table->string('full_name');
+                $table->string('company_name')->nullable();
+                $table->text('company_description')->nullable();
+                $table->string('company_logo_path')->nullable();
+                $table->string('phone_number')->nullable();
+                $table->string('website')->nullable();
+                $table->boolean('setup_completed')->default(false);
                 $table->timestamps();
             });
         }
@@ -55,16 +60,13 @@ return new class extends Migration
                 $table->string('full_name');
                 $table->string('phone_number')->nullable();
                 $table->string('location')->nullable();
-                $table->string('resume_path')->nullable();
-                $table->text('skills')->nullable();
                 $table->string('gender')->nullable();
                 $table->integer('age')->nullable();
                 $table->string('field')->nullable();
+                $table->text('skills')->nullable();
                 $table->integer('years_experience')->nullable();
-                $table->text('experience')->nullable();
-                $table->text('education')->nullable();
                 $table->string('profile_picture_path')->nullable();
-                $table->boolean('profile_completed')->default(false);
+                $table->string('resume_path')->nullable();
                 $table->boolean('setup_completed')->default(false);
                 $table->timestamps();
             });

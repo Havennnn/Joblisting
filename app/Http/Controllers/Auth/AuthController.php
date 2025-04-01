@@ -12,6 +12,15 @@ use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
+    /**
+     * =========================================================================
+     * Applicant Login Methods
+     * =========================================================================
+     */
+
+    /**
+     * Show the applicant login form
+     */
     public function showApplicantLogin()
     {
         if (Auth::check() && !Auth::user()->is_employer) {
@@ -21,6 +30,9 @@ class AuthController extends Controller
         return view('applicant.login');
     }
 
+    /**
+     * Handle an applicant login request
+     */
     public function loginApplicant(Request $request)
     {
         $credentials = $request->validate([
@@ -46,15 +58,65 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
-    public function logout(Request $request)
+    /**
+     * =========================================================================
+     * Employer Login Methods
+     * =========================================================================
+     */
+
+    /**
+     * Show the employer login form
+     */
+    public function showEmployerLogin()
     {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect('/');
+        // Redirect authenticated users to their dashboard
+        if (Auth::check()) {
+            if (Auth::user()->is_employer) {
+                return redirect()->route('employer.dashboard');
+            }
+            return redirect()->route('applicant.dashboard');
+        }
+
+        return view('employer.login');
     }
 
-    // Applicant registration methods
+    /**
+     * Handle an employer login request
+     */
+    public function loginEmployer(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            if (!Auth::user()->is_employer) {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'This account is registered as an applicant. Please use applicant login.',
+                ]);
+            }
+
+            return redirect()->intended(route('employer.dashboard'));
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+    }
+
+    /**
+     * =========================================================================
+     * Applicant Registration Methods
+     * =========================================================================
+     */
+
+    /**
+     * Show the applicant registration form
+     */
     public function showApplicantRegister()
     {
         // Redirect authenticated users to their dashboard
@@ -68,6 +130,9 @@ class AuthController extends Controller
         return view('applicant.register');
     }
 
+    /**
+     * Handle a registration request for a new applicant
+     */
     public function registerApplicant(Request $request)
     {
         $request->validate([
@@ -86,6 +151,7 @@ class AuthController extends Controller
         // Create applicant profile
         $user->applicantProfile()->create([
             'full_name' => $request->name,
+            'location' => $request->location,
             // Default values for required fields
             'phone_number' => null,
             'setup_completed' => false,
@@ -96,7 +162,15 @@ class AuthController extends Controller
         return redirect()->route('applicant.setup');
     }
 
-    // Employer registration methods
+    /**
+     * =========================================================================
+     * Employer Registration Methods
+     * =========================================================================
+     */
+
+    /**
+     * Show the employer registration form
+     */
     public function showEmployerRegister()
     {
         // Redirect authenticated users to their dashboard
@@ -110,14 +184,15 @@ class AuthController extends Controller
         return view('employer.register');
     }
 
+    /**
+     * Handle a registration request for a new employer
+     */
     public function registerEmployer(Request $request)
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Password::defaults()],
-            'company_name' => ['required', 'string', 'max:255'],
-            'company_description' => ['required', 'string'],
         ]);
 
         $user = User::create([
@@ -129,8 +204,10 @@ class AuthController extends Controller
 
         // Create employer profile
         $user->employer()->create([
-            'company_name' => $request->company_name,
-            'company_description' => $request->company_description,
+            'full_name' => $request->name,
+            'company_name' => $request->company_name ?? null,
+            'company_description' => $request->company_description ?? null,
+            'setup_completed' => false,
         ]);
 
         Auth::login($user);
@@ -138,53 +215,42 @@ class AuthController extends Controller
         return redirect()->route('employer.dashboard');
     }
 
-    // Dashboard methods
+    /**
+     * =========================================================================
+     * Dashboard Methods
+     * =========================================================================
+     */
+
+    /**
+     * Show the applicant dashboard
+     */
     public function applicantDashboard()
     {
         return view('applicant.dashboard');
     }
 
+    /**
+     * Show the employer dashboard
+     */
     public function employerDashboard()
     {
         return view('employer.dashboard');
     }
 
-    public function showRegister()
+    /**
+     * =========================================================================
+     * Authentication Shared Methods
+     * =========================================================================
+     */
+
+    /**
+     * Log the user out of the application
+     */
+    public function logout(Request $request)
     {
-        // Redirect authenticated users to their dashboard
-        if (Auth::check()) {
-            if (Auth::user()->is_employer) {
-                return redirect()->route('employer.dashboard');
-            }
-            return redirect()->route('applicant.dashboard');
-        }
-
-        return view('auth.register');
-    }
-
-    public function showRegisterNextPage()
-    {
-        // Redirect authenticated users to their dashboard
-        if (Auth::check()) {
-            if (Auth::user()->is_employer) {
-                return redirect()->route('employer.dashboard');
-            }
-            return redirect()->route('applicant.dashboard');
-        }
-
-        return view('auth.register-next-page');
-    }
-
-    public function showEmployerLogin()
-    {
-        // Redirect authenticated users to their dashboard
-        if (Auth::check()) {
-            if (Auth::user()->is_employer) {
-                return redirect()->route('employer.dashboard');
-            }
-            return redirect()->route('applicant.dashboard');
-        }
-
-        return view('auth.employer.employer-login');
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect('/');
     }
 }

@@ -40,6 +40,12 @@
                             </div>
 
                             <div>
+                                <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
+                                <input type="text" wire:model="location" id="location" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="City, State, Country">
+                                @error('location') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                            </div>
+
+                            <div>
                                 <label for="age" class="block text-sm font-medium text-gray-700">Age</label>
                                 <input type="number" wire:model="age" id="age" min="18" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 @error('age') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror

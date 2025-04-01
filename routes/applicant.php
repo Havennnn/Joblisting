@@ -5,45 +5,44 @@ use App\Http\Controllers\Applicant\DashboardController;
 use App\Http\Controllers\Applicant\ProfileController;
 use App\Http\Controllers\Applicant\SetupController;
 
-// All applicant routes are prefixed with 'applicant' and named with 'applicant.' - Marab
-Route::prefix('applicant')->name('applicant.')->middleware(['auth', 'applicant'])->group(function () {
+/*
+|--------------------------------------------------------------------------
+| Applicant Routes (Protected)
+|--------------------------------------------------------------------------
+|
+| All routes in this file are for authenticated applicants only.
+| All routes are prefixed with 'applicant' and have the name prefix 'applicant.'
+|
+*/
 
-    // Setup wizard routes (Complete)
+Route::prefix('applicant')->name('applicant.')->middleware(['auth', 'applicant'])->group(function () {
+    // Dashboard route
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Setup wizard routes
     Route::get('/setup', [SetupController::class, 'index'])->name('setup');
     Route::post('/setup', [SetupController::class, 'store'])->name('setup.store');
     Route::get('/setup/skip', [SetupController::class, 'skip'])->name('setup.skip');
 
-    // Dashboard (Incomplete)
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-    // Profile routes (Futher Improvement)
+    // Profile routes
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-    // Job Search routes (Franklin)
+    /*
+     * Future routes to implement:
+     */
+
+    // Job Search routes
     // Route::get('/job-search', [JobSearchController::class, 'index'])->name('job-search');
 
-    // Job recommendation routes (Franklin)
+    // Job recommendations
     // Route::get('/job-recommendations', [JobRecommendationController::class, 'index'])->name('job-recommendations');
 
-    // Interview preparation routes (Franklin)
+    // Interview preparation
     // Route::get('/interview-preparation', [InterviewPreparationController::class, 'index'])->name('interview-preparation');
 
-    // Chat routes (Marab)
-    // Route::get('/chat', [ChatController::class, 'index'])->name('chat');
-
-    // Job application routes (Marab)
+    // Application management
     // Route::get('/applications', [ApplicationController::class, 'index'])->name('applications');
-
-    // Applied jobs routes (Marab)
     // Route::get('/applied-jobs', [AppliedJobController::class, 'index'])->name('applied-jobs');
-
-    // Saved jobs routes (Franklin)
     // Route::get('/saved-jobs', [SavedJobController::class, 'index'])->name('saved-jobs');
-
-    /* These routes are commented out until their controllers are created
-    Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
-    Route::get('/jobs/{id}', [JobController::class, 'show'])->name('jobs.show');
-    Route::get('/interview', [InterviewController::class, 'index'])->name('interview.index');
-    */
 });
