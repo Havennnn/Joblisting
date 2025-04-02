@@ -64,14 +64,17 @@
                                 <dd class="mt-2">
                                     <div class="relative pt-1">
                                         <div class="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
-                                            <div style="width: {{ $profileCompletionPercentage }}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center {{ $profileCompletionPercentage < 50 ? 'bg-red-500' : ($profileCompletionPercentage < 100 ? 'bg-yellow-500' : 'bg-green-500') }}"></div>
+                                            <div style="width: {{ $profileCompletionPercentage }}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center {{ $profileCompletionColor }}"></div>
                                         </div>
                                     </div>
                                 </dd>
+                                <dd class="mt-1 text-sm text-gray-600">
+                                    {{ $profileCompletionMessage }}
+                                </dd>
                                 <dd class="mt-3">
                                     <span class="text-sm text-blue-600 hover:text-blue-500">
-                                        <a href="{{ $profileCompletionPercentage < 100 ? ($user->applicantProfile && $user->applicantProfile->setup_completed ? route('applicant.profile') : route('applicant.setup')) : route('applicant.profile') }}" class="flex items-center">
-                                            {{ $profileCompletionPercentage < 100 ? ($user->applicantProfile && $user->applicantProfile->setup_completed ? 'Enhance your profile' : 'Complete your profile') : 'View your profile' }}
+                                        <a href="{{ $profileActionLink }}" class="flex items-center">
+                                            {{ $profileCompletionPercentage < 100 ? 'Complete your profile' : 'View your profile' }}
                                             <svg class="ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                                             </svg>

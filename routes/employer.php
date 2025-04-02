@@ -17,6 +17,10 @@ Route::middleware(['auth', 'employer'])->prefix('employer')->name('employer.')->
     // Dashboard route
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Profile setup and edit routes
+    Route::get('/setup', [DashboardController::class, 'setup'])->name('setup');
+    Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
+
     /*
      * Future routes to implement:
      */
