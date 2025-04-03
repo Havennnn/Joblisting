@@ -5,6 +5,8 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class EnsureUserIsApplicant
 {
@@ -24,6 +26,24 @@ class EnsureUserIsApplicant
             $user = Auth::user();
             $currentRoute = $request->route()->getName();
 
+            // Log middleware execution for debugging
+            Log::info('EnsureUserIsApplicant middleware executed', [
+                'user_id' => $user->id,
+                'route' => $currentRoute,
+                'has_profile' => $user->applicantProfile ? true : false,
+                'setup_completed' => $user->applicantProfile ? $user->applicantProfile->setup_completed : false,
+                'session_id' => $request->session()->getId(),
+                'session_flag' => Session::has('applicant_setup_completed')
+            ]);
+
+            // Check if we just completed setup (special flag in session)
+            if (Session::has('applicant_setup_completed')) {
+                Log::info('Found applicant_setup_completed flag in session, bypassing setup check', [
+                    'user_id' => $user->id
+                ]);
+                return $next($request);
+            }
+
             // Check if profile exists and setup is not completed
             $setupCompleted = false;
             if ($user->applicantProfile) {
@@ -39,6 +59,11 @@ class EnsureUserIsApplicant
                     'applicant.setup.previous',
                     'applicant.setup.skip'
                 ])) {
+                Log::info('Redirecting to setup from middleware', [
+                    'user_id' => $user->id,
+                    'route' => $currentRoute,
+                    'setup_completed' => $setupCompleted
+                ]);
                 return redirect()->route('applicant.setup');
             }
 

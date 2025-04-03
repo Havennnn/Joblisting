@@ -141,8 +141,14 @@ class SetupController extends Controller
             // Clear session data
             Session::forget(['setup_step', 'setup_data']);
 
-            // Regenerate session to update middleware checks
+            // Regenerate session to ensure the middleware picks up the setup_completed change
             $request->session()->regenerate();
+
+            // Reload the user with fresh relationship data to ensure middleware sees the changes
+            Auth::user()->refresh();
+
+            // Store successful setup flag in session to bypass middleware check
+            Session::put('applicant_setup_completed', true);
 
             // Use direct redirect with 'with' method for flash message
             return redirect()->route('applicant.dashboard')
@@ -190,6 +196,12 @@ class SetupController extends Controller
 
             // Regenerate session to update middleware checks
             $request->session()->regenerate();
+
+            // Reload the user with fresh relationship data to ensure middleware sees the changes
+            Auth::user()->refresh();
+
+            // Store successful setup flag in session to bypass middleware check
+            Session::put('applicant_setup_completed', true);
 
             Log::info('Applicant Setup Skipped Successfully', [
                 'user_id' => $user->id

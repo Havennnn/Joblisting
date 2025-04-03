@@ -172,6 +172,15 @@ class SetupController extends Controller
             // Clear session data before redirecting
             Session::forget(['setup_step', 'setup_data']);
 
+            // Regenerate session to ensure the middleware picks up the setup_completed change
+            $request->session()->regenerate();
+
+            // Reload the user with fresh relationship data to ensure middleware sees the changes
+            Auth::user()->refresh();
+
+            // Store successful setup flag in session to bypass middleware check
+            Session::put('employer_setup_completed', true);
+
             Log::info('Employer Setup Completed Successfully', [
                 'user_id' => $user->id,
                 'employer_id' => $employer->id
@@ -218,6 +227,15 @@ class SetupController extends Controller
 
             // Clear any existing session data
             Session::forget(['setup_step', 'setup_data']);
+
+            // Regenerate session to ensure the middleware picks up the setup_completed change
+            $request->session()->regenerate();
+
+            // Reload the user with fresh relationship data to ensure middleware sees the changes
+            Auth::user()->refresh();
+
+            // Store successful setup flag in session to bypass middleware check
+            Session::put('employer_setup_completed', true);
 
             Log::info('Employer Setup Skipped Successfully', [
                 'user_id' => $user->id
