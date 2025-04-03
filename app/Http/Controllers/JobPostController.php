@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\JobPost;
+use Carbon\Carbon;
 
 class JobPostController extends Controller
 {
@@ -12,9 +13,9 @@ class JobPostController extends Controller
      */
     public function index()
     {
-        $JobPost = JobPost::orderBy('created_at', 'DESC')->get();
+        $JobPosts = JobPost::orderBy('created_at', 'DESC')->get();
 
-        return view('JobPost.index', compact('JobPost'));
+        return view('JobPost.index', compact('JobPosts'));
     }
 
     /**
@@ -30,9 +31,21 @@ class JobPostController extends Controller
      */
     public function store(Request $request)
     {
-        JobPost::create($request->all());
+        // Prepare data with default values for null fields
+        $data = $request->all();
+        
+        // Set default values for date fields if they're null
+        $data['starting_date'] = $data['starting_date'] ?? Carbon::now()->format('Y-m-d');
+        $data['expiration_date'] = $data['expiration_date'] ?? Carbon::now()->addMonths(3)->format('Y-m-d');
+        
+        // Set default values for numeric fields if they're null
+        $data['salary'] = $data['salary'] ?? 0;
+        $data['vacancies'] = $data['vacancies'] ?? 1;
+        
+        // Create the job post with the prepared data
+        JobPost::create($data);
 
-        return redirect()->route('jobposts')->with('success', 'Job added successfully');
+        return redirect()->route('employer.JobPost')->with('success', 'Job added successfully');
     }
 
     /**
@@ -40,9 +53,9 @@ class JobPostController extends Controller
      */
     public function show(string $id)
     {
-        $jobpost = Jobpost::findOrFail($id);
+        $JobPost = JobPost::findOrFail($id);
 
-        return view('jobposts.show', compact('jobpost'));
+        return view('JobPost.show', compact('JobPost'));
     }
 
     /**
@@ -50,9 +63,9 @@ class JobPostController extends Controller
      */
     public function edit(string $id)
     {
-        $jobpost = JobPost::findOrFail($id);
+        $JobPost = JobPost::findOrFail($id);
 
-        return view('jobposts.edit', compact('jobpost'));
+        return view('JobPost.edit', compact('JobPost'));
     }
 
     /**
@@ -60,11 +73,23 @@ class JobPostController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $jobpost = JobPost::findOrFail($id);
+        $JobPost = JobPost::findOrFail($id);
+        
+        // Prepare data with default values for null fields
+        $data = $request->all();
+        
+        // Set default values for date fields if they're null
+        $data['starting_date'] = $data['starting_date'] ?? Carbon::now()->format('Y-m-d');
+        $data['expiration_date'] = $data['expiration_date'] ?? Carbon::now()->addMonths(3)->format('Y-m-d');
+        
+        // Set default values for numeric fields if they're null
+        $data['salary'] = $data['salary'] ?? 0;
+        $data['vacancies'] = $data['vacancies'] ?? 1;
+        
+        // Update the job post with the prepared data
+        $JobPost->update($data);
 
-        $jobpost->update($request->all());
-
-        return redirect()->route('jobposts')->with('success', 'Job updated successfully');
+        return redirect()->route('employer.JobPost')->with('success', 'Job updated successfully');
     }
 
     /**
@@ -72,11 +97,11 @@ class JobPostController extends Controller
      */
     public function destroy(string $id)
     {
-        $jobpost = JobPost::findOrFail($id);
+        $JobPost = JobPost::findOrFail($id);
 
-        $jobpost->delete();
+        $JobPost->delete();
 
-        return redirect()->route('jobposts')->with('success', 'Job deleted successfully');
+        return redirect()->route('employer.JobPost')->with('success', 'Job deleted successfully');
     }
 }
 

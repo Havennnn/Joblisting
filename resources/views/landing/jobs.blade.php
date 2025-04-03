@@ -9,6 +9,8 @@
         <div class="flex justify-center items-center min-h-screen">
             {{-- Delete this line --}}
             <h1 class="text-4xl font-bold text-center mb-8">Put Find Jobs Page Design Here</h1>
+        
+            {{-- Delete this line --}}
         </div>
     </div>
 </div>

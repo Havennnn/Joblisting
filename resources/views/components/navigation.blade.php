@@ -18,10 +18,11 @@
                         @endif
                     @else
                         <a href="/" class="text-gray-900 hover:text-neksjob-blue px-3 py-2 text-sm font-medium">Home</a>
-                    @endauth                    
-                    <a href="{{ route('JobPost.index') }}" class="text-gray-900 hover:text-neksjob-blue px-3 py-2 text-sm font-medium">Post jobs</a>
-                    
+                    @endauth 
+
+                    <a href="{{ route('employer.JobPost') }}" class="text-gray-900 hover:text-neksjob-blue px-3 py-2 text-sm font-medium">Post jobs</a>
                     <a href="{{ route('jobs.index') }}" class="text-gray-900 hover:text-neksjob-blue px-3 py-2 text-sm font-medium">Find jobs</a>
+                
                 </div>
 
                 <div class="flex items-center space-x-4">
