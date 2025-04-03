@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Model\JobPost;
+use App\Http\Controllers\JobPostController;
 use App\Http\Controllers\Employer\DashboardController;
 use App\Http\Controllers\Employer\ProfileController;
 use App\Http\Controllers\Employer\SetupController;
@@ -37,7 +39,16 @@ Route::middleware(['auth', 'employer'])->prefix('employer')->name('employer.')->
 
     // Job management
     // Route::resource('/jobs', JobController::class);
-
+    // Product routes for employers only
+Route::controller(JobPostController::class)->prefix('employer/JobPost')->group(function () {
+    Route::get('', 'index')->name('JobPost');
+    Route::get('create', 'create')->name('JobPost.create');
+    Route::post('store', 'store')->name('JobPost.store');
+    Route::get('{id}', 'show')->name('JobPost.show');
+    Route::get('{id}/edit', 'edit')->name('JobPost.edit');
+    Route::put('{id}', 'update')->name('JobPost.update');
+    Route::delete('{id}', 'destroy')->name('JobPost.destroy');
+});
     // Application management
     // Route::get('/applications', [ApplicationController::class, 'index'])->name('applications');
     // Route::get('/applications/{id}', [ApplicationController::class, 'show'])->name('applications.show');
