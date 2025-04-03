@@ -10,7 +10,7 @@ class ProfileController extends Controller
 {
     public function index()
     {
-        $fakeUserId = 1; 
+        $fakeUserId = 1;
 
         // Fetch user from users table
         $user = User::where('id', $fakeUserId)->first();

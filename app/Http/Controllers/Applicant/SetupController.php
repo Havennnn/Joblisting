@@ -141,6 +141,9 @@ class SetupController extends Controller
             // Clear session data
             Session::forget(['setup_step', 'setup_data']);
 
+            // Regenerate session to update middleware checks
+            $request->session()->regenerate();
+
             // Use direct redirect with 'with' method for flash message
             return redirect()->route('applicant.dashboard')
                 ->with('status', 'Profile setup completed successfully! Thank you for registering.');
@@ -184,6 +187,9 @@ class SetupController extends Controller
 
             // Clear any existing session data
             Session::forget(['setup_step', 'setup_data']);
+
+            // Regenerate session to update middleware checks
+            $request->session()->regenerate();
 
             Log::info('Applicant Setup Skipped Successfully', [
                 'user_id' => $user->id
