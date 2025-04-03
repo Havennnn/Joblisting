@@ -56,8 +56,8 @@ class ProfileEdit extends Component
         $this->years_experience = $profile->years_experience ?? null;
 
         // Set profile picture preview if exists
-        if ($profile && $profile->profile_picture_path && Storage::disk('public')->exists($profile->profile_picture_path)) {
-            $this->profile_picture_preview = Storage::url($profile->profile_picture_path);
+        if ($profile && $profile->profile_picture_path) {
+            $this->profile_picture_preview = route('applicant.profile.picture', ['user' => $this->user->id]);
         }
     }
 
@@ -86,128 +86,78 @@ class ProfileEdit extends Component
     }
 
     /**
-     * Save the user profile data.
+     * Save profile changes.
      */
     public function saveProfile()
     {
-        // Validate form fields - all fields are optional in profile edit mode
+        // Validate basic user information
         $this->validate([
-            'full_name' => 'nullable|string|max:255',
-            'email' => 'required|email|max:255', // Email remains required as it's essential
-            'phone_number' => 'nullable|string|max:20',
-            'location' => 'nullable|string|max:255',
-            'gender' => 'nullable|string|in:male,female,other',
-            'age' => 'nullable|integer|min:18',
+            'full_name' => 'required|min:3|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $this->user->id,
+            'phone_number' => 'required|string|max:20',
+            'location' => 'required|string|max:255',
+            'gender' => 'required|in:male,female,other',
+            'age' => 'required|integer|min:18|max:100',
             'field' => 'nullable|string|max:255',
             'skills' => 'nullable|string',
-            'years_experience' => 'nullable|integer|min:0',
+            'years_experience' => 'nullable|integer|min:0|max:50',
+            'profile_picture' => 'nullable|image|max:1024', // 1MB Max
+            'resume' => 'nullable|file|mimes:pdf,doc,docx|max:5120', // 5MB Max
         ]);
 
-        // Validate file uploads if provided
-        if ($this->profile_picture) {
-            $this->validate([
-                'profile_picture' => 'image|max:1024',
-            ]);
-        }
+        // Prepare user data to update
+        $userData = [
+            'name' => $this->full_name,
+            'email' => $this->email,
+        ];
 
-        if ($this->resume) {
-            $this->validate([
-                'resume' => 'file|mimes:pdf,doc,docx|max:5120',
-            ]);
-        }
+        // Update user record
+        $this->user->update($userData);
 
-        // Get the applicant profile
-        $profile = $this->user->applicantProfile;
-
-        // Only update fields that have been changed
-        $userData = [];
-        $profileData = [];
-
-        // Check each field for changes and only include if changed
-        if ($this->full_name !== $this->user->name) {
-            $userData['name'] = $this->full_name;
-            $profileData['full_name'] = $this->full_name;
-        }
-
-        if ($this->email !== $this->user->email) {
-            $userData['email'] = $this->email;
-        }
-
-        if ($this->phone_number !== $profile->phone_number) {
-            $profileData['phone_number'] = $this->phone_number;
-        }
-
-        if ($this->location !== $profile->location) {
-            $profileData['location'] = $this->location;
-        }
-
-        if ($this->gender !== $profile->gender) {
-            $profileData['gender'] = $this->gender;
-        }
-
-        if ($this->age !== $profile->age) {
-            $profileData['age'] = $this->age;
-        }
-
-        if ($this->field !== $profile->field) {
-            $profileData['field'] = $this->field;
-        }
-
-        if ($this->skills !== $profile->skills) {
-            $profileData['skills'] = $this->skills;
-        }
-
-        if ($this->years_experience !== $profile->years_experience) {
-            $profileData['years_experience'] = $this->years_experience;
-        }
+        // Prepare profile data to update
+        $profileData = [
+            'phone_number' => $this->phone_number,
+            'location' => $this->location,
+            'gender' => $this->gender,
+            'age' => $this->age,
+            'field' => $this->field,
+            'skills' => $this->skills,
+            'years_experience' => $this->years_experience,
+        ];
 
         // Handle profile picture upload
         if ($this->profile_picture) {
-            // Delete old file if exists
-            if ($profile->profile_picture_path) {
-                Storage::delete('public/' . $profile->profile_picture_path);
+            // If there's an existing profile picture, delete it
+            if ($this->user->applicantProfile && $this->user->applicantProfile->profile_picture_path) {
+                Storage::delete($this->user->applicantProfile->profile_picture_path);
             }
 
-            $profilePicturePath = $this->profile_picture->store('profile-pictures', 'public');
+            // Store in private storage (local disk) instead of public
+            $profilePicturePath = $this->profile_picture->store('profile-pictures', 'local');
             $profileData['profile_picture_path'] = $profilePicturePath;
         }
 
         // Handle resume upload
         if ($this->resume) {
-            // Delete old file if exists
-            if ($profile->resume_path) {
-                Storage::delete('public/' . $profile->resume_path);
+            // If there's an existing resume, delete it
+            if ($this->user->applicantProfile && $this->user->applicantProfile->resume_path) {
+                Storage::delete($this->user->applicantProfile->resume_path);
             }
 
-            $resumePath = $this->resume->store('resumes', 'public');
+            // Store in private storage (local disk) instead of public
+            $resumePath = $this->resume->store('resumes', 'local');
             $profileData['resume_path'] = $resumePath;
         }
 
-        // Update user if there are changes
-        if (!empty($userData)) {
-            $this->user->update($userData);
-        }
-
-        // Update profile if there are changes
-        if (!empty($profileData)) {
+        // Update applicant profile
+        $profile = $this->user->applicantProfile;
+        if ($profile) {
             $profile->update($profileData);
-
-            // Mark profile as completed if all required fields are filled
-            if (!$profile->setup_completed &&
-                $profile->full_name &&
-                $profile->phone_number &&
-                $profile->location &&
-                $profile->field &&
-                $profile->skills) {
-                $profile->update(['setup_completed' => true]);
-            }
-
-            // Show success message
-            session()->flash('status', 'Profile updated successfully!');
-        } else if (empty($userData)) {
-            // No changes were made
-            session()->flash('status', 'No changes detected in your profile.');
+        } else {
+            $this->user->applicantProfile()->create($profileData);
         }
+
+        session()->flash('message', 'Profile updated successfully!');
     }
 
     /**

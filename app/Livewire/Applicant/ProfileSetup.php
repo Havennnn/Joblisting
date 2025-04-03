@@ -196,10 +196,11 @@ class ProfileSetup extends Component
         if ($this->profile_picture) {
             // Delete old file if exists
             if ($profile->profile_picture_path) {
-                Storage::delete('public/' . $profile->profile_picture_path);
+                Storage::delete($profile->profile_picture_path);
             }
 
-            $profilePicturePath = $this->profile_picture->store('profile-pictures', 'public');
+            // Store in private storage (local disk) instead of public
+            $profilePicturePath = $this->profile_picture->store('profile-pictures', 'local');
             $profile->profile_picture_path = $profilePicturePath;
         }
 
@@ -207,10 +208,11 @@ class ProfileSetup extends Component
         if ($this->resume) {
             // Delete old file if exists
             if ($profile->resume_path) {
-                Storage::delete('public/' . $profile->resume_path);
+                Storage::delete($profile->resume_path);
             }
 
-            $resumePath = $this->resume->store('resumes', 'public');
+            // Store in private storage (local disk) instead of public
+            $resumePath = $this->resume->store('resumes', 'local');
             $profile->resume_path = $resumePath;
         }
 

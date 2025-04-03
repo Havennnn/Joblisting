@@ -54,8 +54,8 @@ class ProfileEdit extends Component
         $this->location = $employer->location;
 
         // Set company logo preview if exists
-        if ($employer->company_logo_path && Storage::disk('public')->exists($employer->company_logo_path)) {
-            $this->company_logo_preview = Storage::url($employer->company_logo_path);
+        if ($employer->company_logo_path) {
+            $this->company_logo_preview = route('employer.profile.logo', ['user' => $this->user->id]);
         }
     }
 
@@ -103,10 +103,10 @@ class ProfileEdit extends Component
         if ($this->company_logo) {
             // Delete old logo if exists
             if ($employer->company_logo_path) {
-                Storage::delete('public/' . $employer->company_logo_path);
+                Storage::delete($employer->company_logo_path);
             }
 
-            $path = $this->company_logo->store('company-logos', 'public');
+            $path = $this->company_logo->store('company-logos', 'local');
             $employer->company_logo_path = $path;
         }
 

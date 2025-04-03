@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
@@ -50,10 +51,11 @@ class ProfileController extends Controller
         if ($request->hasFile('company_logo')) {
             // Delete old company logo if exists
             if ($employer->company_logo_path) {
-                Storage::disk('public')->delete($employer->company_logo_path);
+                Storage::delete($employer->company_logo_path);
             }
 
-            $path = $request->file('company_logo')->store('company-logos', 'public');
+            // Store in private storage (local disk) instead of public
+            $path = $request->file('company_logo')->store('company-logos', 'local');
             $employer->company_logo_path = $path;
         }
 
@@ -69,5 +71,36 @@ class ProfileController extends Controller
 
         return redirect()->route('employer.profile')
             ->with('status', 'Company profile updated successfully!');
+    }
+
+    /**
+     * Securely serve company logo from private storage
+     */
+    public function showCompanyLogo(User $user)
+    {
+        // Security check - only allow viewing own company logo, the logo's company, or admin access
+        if (Auth::id() !== $user->id && !Auth::user()->is_admin) {
+            abort(403, 'Unauthorized access');
+        }
+
+        // Check if user is an employer and has a company logo
+        if (!$user->is_employer || !$user->employer || !$user->employer->company_logo_path) {
+            abort(404, 'Company logo not found');
+        }
+
+        // Get the company logo path
+        $path = $user->employer->company_logo_path;
+
+        // Check if file exists
+        if (!Storage::exists($path)) {
+            abort(404, 'Company logo not found');
+        }
+
+        // Return the file
+        $file = Storage::get($path);
+        $mimeType = Storage::mimeType($path);
+
+        return response($file, 200)
+            ->header('Content-Type', $mimeType);
     }
 }

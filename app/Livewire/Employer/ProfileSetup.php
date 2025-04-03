@@ -55,52 +55,51 @@ class ProfileSetup extends Component
 
     public function saveProfile()
     {
-        $user = Auth::user();
-
-        $validated = $this->validate([
-            'full_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'company_name' => 'required|string|max:255',
-            'company_description' => 'required|string',
+        $this->validate([
+            'full_name' => 'required|min:3|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . Auth::id(),
+            'company_name' => 'required|min:2|max:255',
+            'company_description' => 'required|min:10',
             'industry' => 'required|string|max:255',
             'website' => 'nullable|url|max:255',
             'phone_number' => 'required|string|max:20',
             'location' => 'required|string|max:255',
-            'company_logo' => 'nullable|image|max:2048', // 2MB max
+            'company_logo' => 'nullable|image|max:2048', // 2MB Max
         ]);
+
+        $user = Auth::user();
+        $employer = $user->employer ?? $user->employer()->create([]);
 
         // Update user data
         $user->update([
-            'name' => $validated['full_name'],
-            'email' => $validated['email'],
+            'name' => $this->full_name,
+            'email' => $this->email,
         ]);
-
-        // Ensure employer profile exists
-        $employer = $user->employer ?? $user->employer()->create([]);
 
         // Handle company logo upload
         if ($this->company_logo) {
             // Delete old logo if exists
             if ($employer->company_logo_path) {
-                Storage::delete('public/' . $employer->company_logo_path);
+                Storage::delete($employer->company_logo_path);
             }
 
-            $path = $this->company_logo->store('company-logos', 'public');
+            // Store in private storage (local disk) instead of public
+            $path = $this->company_logo->store('company-logos', 'local');
             $employer->company_logo_path = $path;
         }
 
         // Update employer profile
-        $employer->fill([
-            'company_name' => $validated['company_name'],
-            'company_description' => $validated['company_description'],
-            'industry' => $validated['industry'],
-            'website' => $validated['website'] ?? null,
-            'phone_number' => $validated['phone_number'],
-            'location' => $validated['location'],
-            'setup_completed' => true
-        ])->save();
+        $employer->update([
+            'company_name' => $this->company_name,
+            'company_description' => $this->company_description,
+            'industry' => $this->industry,
+            'website' => $this->website,
+            'phone_number' => $this->phone_number,
+            'location' => $this->location,
+            'setup_completed' => true,
+        ]);
 
-        session()->flash('status', 'Company profile setup completed successfully!');
+        session()->flash('message', 'Company profile updated successfully!');
         return redirect()->route('employer.dashboard');
     }
 
