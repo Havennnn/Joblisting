@@ -47,6 +47,8 @@ return new class extends Migration
                 $table->string('company_logo_path')->nullable();
                 $table->string('phone_number')->nullable();
                 $table->string('website')->nullable();
+                $table->string('location')->nullable();
+                $table->string('industry')->nullable();
                 $table->boolean('setup_completed')->default(false);
                 $table->timestamps();
             });

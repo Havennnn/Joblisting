@@ -30,26 +30,62 @@ class ProfileCompletionController extends Controller
      */
     public function getCompletionData()
     {
-        $user = Auth::user();
+        try {
+            $user = Auth::user();
+            $employer = $user->employer;
 
-        // Calculate profile completion percentage
-        $completionPercentage = $this->profileCompletionService->calculateEmployerCompletion($user);
+            // Log employer profile data
+            \Illuminate\Support\Facades\Log::info('Employer Profile Data', [
+                'user_id' => $user->id,
+                'employer_id' => $employer ? $employer->id : null,
+                'industry' => $employer ? $employer->industry : null,
+                'phone_number' => $employer ? $employer->phone_number : null,
+                'location' => $employer ? $employer->location : null,
+                'company_name' => $employer ? $employer->company_name : null,
+                'has_logo' => $employer && $employer->company_logo_path ? true : false
+            ]);
 
-        // Determine the progress color
-        $progressColor = $this->getProgressColor($completionPercentage);
+            // Calculate profile completion percentage
+            $completionPercentage = $this->profileCompletionService->calculateEmployerCompletion($user);
 
-        // Determine the message to display
-        $message = $this->getCompletionMessage($completionPercentage, $user);
+            // Determine the progress color
+            $progressColor = $this->getProgressColor($completionPercentage);
 
-        // Determine the action link
-        $actionLink = $this->getActionLink($completionPercentage, $user);
+            // Determine the message to display
+            $message = $this->getCompletionMessage($completionPercentage, $user);
 
-        return [
-            'percentage' => $completionPercentage,
-            'color' => $progressColor,
-            'message' => $message,
-            'action_link' => $actionLink
-        ];
+            // Determine the action link
+            $actionLink = $this->getActionLink($completionPercentage, $user);
+
+            // Log the final result
+            \Illuminate\Support\Facades\Log::info('Profile Completion Result', [
+                'user_id' => $user->id,
+                'percentage' => $completionPercentage,
+                'color' => $progressColor,
+                'message' => $message
+            ]);
+
+            return [
+                'percentage' => $completionPercentage,
+                'color' => $progressColor,
+                'message' => $message,
+                'action_link' => $actionLink
+            ];
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Error calculating profile completion', [
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            // Return default values in case of error
+            return [
+                'percentage' => 0,
+                'color' => 'bg-red-500',
+                'message' => 'We could not calculate your profile completion. Please check your profile.',
+                'action_link' => route('employer.profile')
+            ];
+        }
     }
 
     /**

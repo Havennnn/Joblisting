@@ -35,13 +35,29 @@ class DashboardController extends Controller
         $user = Auth::user();
         $employer = $user->employer;
 
+        \Illuminate\Support\Facades\Log::info('Employer Dashboard Accessed', [
+            'user_id' => $user->id,
+            'has_employer_profile' => (bool)$employer,
+            'setup_completed' => $employer ? $employer->setup_completed : false
+        ]);
+
         // If the employer hasn't completed setup, redirect to setup page
         if (!$employer || !$employer->setup_completed) {
+            \Illuminate\Support\Facades\Log::info('Redirecting to setup from dashboard', [
+                'user_id' => $user->id,
+                'has_employer_profile' => (bool)$employer,
+                'setup_completed' => $employer ? $employer->setup_completed : false
+            ]);
             return redirect()->route('employer.setup');
         }
 
         // Get profile completion data
         $profileCompletionData = $this->profileCompletionController->getCompletionData();
+
+        \Illuminate\Support\Facades\Log::info('Serving employer dashboard', [
+            'user_id' => $user->id,
+            'profile_completion' => $profileCompletionData['percentage']
+        ]);
 
         return view('employer.dashboard', [
             'user' => $user,
@@ -51,16 +67,6 @@ class DashboardController extends Controller
             'profileCompletionMessage' => $profileCompletionData['message'],
             'profileActionLink' => $profileCompletionData['action_link'],
         ]);
-    }
-
-    /**
-     * Display the employer profile setup page.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function setup()
-    {
-        return view('employer.setup');
     }
 
     /**

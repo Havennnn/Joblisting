@@ -49,7 +49,25 @@
                                     @error('company_description') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                                 </div>
 
-<div>
+                                <div>
+                                    <label for="industry" class="block text-sm font-medium text-gray-700">Industry</label>
+                                    <input type="text" wire:model="industry" id="industry" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    @error('industry') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                                </div>
+
+                                <div>
+                                    <label for="phone_number" class="block text-sm font-medium text-gray-700">Phone Number</label>
+                                    <input type="text" wire:model="phone_number" id="phone_number" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    @error('phone_number') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                                </div>
+
+                                <div>
+                                    <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
+                                    <input type="text" wire:model="location" id="location" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    @error('location') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
+                                </div>
+
+                                <div>
                                     <label for="website" class="block text-sm font-medium text-gray-700">Website URL (Optional)</label>
                                     <input type="url" wire:model="website" id="website" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                     @error('website') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror

@@ -4,6 +4,7 @@ namespace App\Services\Dashboard;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class ProfileCompletionService
 {
@@ -90,6 +91,9 @@ class ProfileCompletionService
             'company_name',
             'company_description',
             'website',
+            'industry',
+            'phone_number',
+            'location',
         ];
 
         // Optional file fields
@@ -123,6 +127,15 @@ class ProfileCompletionService
         $profile,
         bool $setupCompleted
     ): int {
+        // Debug the profile fields
+        Log::info('Profile Completion Data', [
+            'profile_type' => get_class($profile),
+            'profile_id' => $profile->id,
+            'industry' => $profile->industry ?? 'not set',
+            'phone_number' => $profile->phone_number ?? 'not set',
+            'location' => $profile->location ?? 'not set'
+        ]);
+
         // Count completed required fields
         $completedRequired = 0;
         $totalRequired = count($requiredFields);
@@ -139,12 +152,26 @@ class ProfileCompletionService
         // Count completed optional fields
         $completedOptional = 0;
         $totalOptional = count($optionalFields);
+        $completedFields = [];
+        $emptyFields = [];
 
         foreach ($optionalFields as $field) {
-            if (!empty($profile->$field)) {
+            if (isset($profile->$field) && ($profile->$field === 0 || $profile->$field === '0' || !empty($profile->$field))) {
                 $completedOptional++;
+                $completedFields[] = $field;
+            } else {
+                $emptyFields[] = $field;
             }
         }
+
+        // Log completed and empty fields
+        Log::info('Optional Fields Analysis', [
+            'profile_id' => $profile->id,
+            'completed_fields' => $completedFields,
+            'empty_fields' => $emptyFields,
+            'completed_count' => $completedOptional,
+            'total_optional' => $totalOptional
+        ]);
 
         // Calculate optional fields percentage (30% of total)
         $optionalPercentage = $totalOptional > 0 ? ($completedOptional / $totalOptional) * 30 : 0;
@@ -164,6 +191,15 @@ class ProfileCompletionService
 
         // Combine percentages
         $totalPercentage = round($requiredPercentage + $optionalPercentage + $filePercentage);
+
+        // Log final calculation
+        Log::info('Profile Completion Result', [
+            'profile_id' => $profile->id,
+            'required_percentage' => $requiredPercentage,
+            'optional_percentage' => $optionalPercentage,
+            'file_percentage' => $filePercentage,
+            'total_percentage' => $totalPercentage
+        ]);
 
         // Ensure minimum 50% if setup is completed and all required fields are filled
         if ($setupCompleted && $completedRequired == $totalRequired) {

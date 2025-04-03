@@ -18,7 +18,10 @@ class ProfileEdit extends Component
     // Company data properties
     public $company_name;
     public $company_description;
+    public $industry;
     public $website;
+    public $phone_number;
+    public $location;
 
     // File upload properties
     public $company_logo;
@@ -45,7 +48,10 @@ class ProfileEdit extends Component
         $this->email = $this->user->email;
         $this->company_name = $employer->company_name;
         $this->company_description = $employer->company_description;
+        $this->industry = $employer->industry;
         $this->website = $employer->website;
+        $this->phone_number = $employer->phone_number;
+        $this->location = $employer->location;
 
         // Set company logo preview if exists
         if ($employer->company_logo_path && Storage::disk('public')->exists($employer->company_logo_path)) {
@@ -59,10 +65,9 @@ class ProfileEdit extends Component
     public function updatedCompanyLogo()
     {
         $this->validate([
-            'company_logo' => 'image|max:1024',
+            'company_logo' => 'image|max:2048', // 2MB max
         ]);
 
-        // Create a temporary URL for preview
         $this->company_logo_preview = $this->company_logo->temporaryUrl();
     }
 
@@ -71,55 +76,28 @@ class ProfileEdit extends Component
      */
     public function saveProfile()
     {
-        // Validate form fields - all fields are optional except email
-        $this->validate([
-            'full_name' => 'nullable|string|max:255',
-            'email' => 'required|email|max:255', // Email remains required as it's essential
-            'company_name' => 'nullable|string|max:255',
-            'company_description' => 'nullable|string',
+        $user = Auth::user();
+
+        $validated = $this->validate([
+            'full_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'company_name' => 'required|string|max:255',
+            'company_description' => 'required|string',
+            'industry' => 'required|string|max:255',
             'website' => 'nullable|url|max:255',
+            'phone_number' => 'required|string|max:20',
+            'location' => 'required|string|max:255',
+            'company_logo' => 'nullable|image|max:2048', // 2MB max
         ]);
 
-        // Validate company logo if provided
-        if ($this->company_logo) {
-            $this->validate([
-                'company_logo' => 'image|max:1024',
-            ]);
-        }
+        // Update user data
+        $user->update([
+            'name' => $validated['full_name'],
+            'email' => $validated['email'],
+        ]);
 
-        // Only update fields that have been changed
-        $userData = [];
-        $employerData = [];
-
-        // Check user fields for changes
-        if ($this->email !== $this->user->email) {
-            $userData['email'] = $this->email;
-        }
-
-        if ($this->full_name !== $this->user->name) {
-            $userData['name'] = $this->full_name;
-        }
-
-        // Update user if needed
-        if (!empty($userData)) {
-            $this->user->update($userData);
-        }
-
-        // Get employer record
-        $employer = $this->user->employer;
-
-        // Check employer fields for changes
-        if ($this->company_name !== $employer->company_name) {
-            $employerData['company_name'] = $this->company_name;
-        }
-
-        if ($this->company_description !== $employer->company_description) {
-            $employerData['company_description'] = $this->company_description;
-        }
-
-        if ($this->website !== $employer->website) {
-            $employerData['website'] = $this->website;
-        }
+        // Ensure employer profile exists
+        $employer = $user->employer ?? $user->employer()->create([]);
 
         // Handle company logo upload
         if ($this->company_logo) {
@@ -128,21 +106,21 @@ class ProfileEdit extends Component
                 Storage::delete('public/' . $employer->company_logo_path);
             }
 
-            // Store new logo
-            $logoPath = $this->company_logo->store('company-logos', 'public');
-            $employerData['company_logo_path'] = $logoPath;
+            $path = $this->company_logo->store('company-logos', 'public');
+            $employer->company_logo_path = $path;
         }
 
-        // Update employer if needed
-        if (!empty($employerData)) {
-            $employer->update($employerData);
+        // Update employer profile
+        $employer->fill([
+            'company_name' => $validated['company_name'],
+            'company_description' => $validated['company_description'],
+            'industry' => $validated['industry'],
+            'website' => $validated['website'] ?? null,
+            'phone_number' => $validated['phone_number'],
+            'location' => $validated['location'],
+        ])->save();
 
-            // Show success message
-            session()->flash('status', 'Profile updated successfully!');
-        } else {
-            // No changes were made
-            session()->flash('status', 'No changes detected in your profile.');
-        }
+        session()->flash('status', 'Company profile updated successfully!');
     }
 
     public function render()

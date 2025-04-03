@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Applicant\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Services\Dashboard\ProfileCompletionService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ProfileCompletionController extends Controller
 {
@@ -30,26 +31,56 @@ class ProfileCompletionController extends Controller
      */
     public function getCompletionData()
     {
-        $user = Auth::user();
+        try {
+            $user = Auth::user();
 
-        // Calculate profile completion percentage
-        $completionPercentage = $this->profileCompletionService->calculateApplicantCompletion($user);
+            // Log user information
+            Log::info('Calculating Applicant Profile Completion', [
+                'user_id' => $user->id,
+                'has_profile' => $user->applicantProfile ? true : false
+            ]);
 
-        // Determine the progress color
-        $progressColor = $this->getProgressColor($completionPercentage);
+            // Calculate profile completion percentage
+            $completionPercentage = $this->profileCompletionService->calculateApplicantCompletion($user);
 
-        // Determine the message to display
-        $message = $this->getCompletionMessage($completionPercentage, $user);
+            // Determine the progress color
+            $progressColor = $this->getProgressColor($completionPercentage);
 
-        // Determine the action link
-        $actionLink = $this->getActionLink($completionPercentage, $user);
+            // Determine the message to display
+            $message = $this->getCompletionMessage($completionPercentage, $user);
 
-        return [
-            'percentage' => $completionPercentage,
-            'color' => $progressColor,
-            'message' => $message,
-            'action_link' => $actionLink
-        ];
+            // Determine the action link
+            $actionLink = $this->getActionLink($completionPercentage, $user);
+
+            // Log the final result
+            Log::info('Applicant Profile Completion Result', [
+                'user_id' => $user->id,
+                'percentage' => $completionPercentage,
+                'color' => $progressColor,
+                'message' => $message
+            ]);
+
+            return [
+                'percentage' => $completionPercentage,
+                'color' => $progressColor,
+                'message' => $message,
+                'action_link' => $actionLink
+            ];
+        } catch (\Exception $e) {
+            Log::error('Error calculating applicant profile completion', [
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            // Return default values in case of error
+            return [
+                'percentage' => 0,
+                'color' => 'bg-yellow-500',
+                'message' => 'We could not calculate your profile completion. Please check your profile.',
+                'action_link' => route('applicant.profile')
+            ];
+        }
     }
 
     /**

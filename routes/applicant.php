@@ -21,7 +21,10 @@ Route::prefix('applicant')->name('applicant.')->middleware(['auth', 'applicant']
 
     // Setup wizard routes
     Route::get('/setup', [SetupController::class, 'index'])->name('setup');
-    Route::post('/setup', [SetupController::class, 'store'])->name('setup.store');
+    Route::post('/setup/step-one', [SetupController::class, 'processStepOne'])->name('setup.step-one');
+    Route::post('/setup/step-two', [SetupController::class, 'processStepTwo'])->name('setup.step-two');
+    Route::post('/setup/step-three', [SetupController::class, 'processStepThree'])->name('setup.step-three');
+    Route::get('/setup/previous', [SetupController::class, 'previous'])->name('setup.previous');
     Route::get('/setup/skip', [SetupController::class, 'skip'])->name('setup.skip');
 
     // Profile routes

@@ -31,7 +31,14 @@ class EnsureUserIsApplicant
             }
 
             if (!$setupCompleted &&
-                !in_array($currentRoute, ['applicant.setup', 'applicant.setup.store', 'applicant.setup.skip'])) {
+                !in_array($currentRoute, [
+                    'applicant.setup',
+                    'applicant.setup.step-one',
+                    'applicant.setup.step-two',
+                    'applicant.setup.step-three',
+                    'applicant.setup.previous',
+                    'applicant.setup.skip'
+                ])) {
                 return redirect()->route('applicant.setup');
             }
 
