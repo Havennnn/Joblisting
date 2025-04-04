@@ -8,17 +8,17 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('applicant.applications') ?? '#' }}" class="{{ request()->routeIs('applicant.applications') ? 'text-gray-900 font-semibold' : 'text-gray-600 hover:text-gray-900' }}">
+                <a href="{{ route('applicant.dashboard') }}" class="{{ request()->routeIs('applicant.applications') ? 'text-gray-900 font-semibold' : 'text-gray-600 hover:text-gray-900' }}">
                     My Applications
                 </a>
             </li>
             <li>
-                <a href="{{ route('applicant.interested-jobs') ?? '#' }}" class="{{ request()->routeIs('applicant.interested-jobs') ? 'text-gray-900 font-semibold' : 'text-gray-600 hover:text-gray-900' }}">
+                <a href="{{ route('applicant.dashboard') }}" class="{{ request()->routeIs('applicant.interested-jobs') ? 'text-gray-900 font-semibold' : 'text-gray-600 hover:text-gray-900' }}">
                     Interested Jobs
                 </a>
             </li>
             <li>
-                <a href="{{ route('applicant.interviews') ?? '#' }}" class="{{ request()->routeIs('applicant.interviews') ? 'text-gray-900 font-semibold' : 'text-gray-600 hover:text-gray-900' }}">
+                <a href="{{ route('applicant.dashboard') }}" class="{{ request()->routeIs('applicant.interviews') ? 'text-gray-900 font-semibold' : 'text-gray-600 hover:text-gray-900' }}">
                     Scheduled Interview
                 </a>
             </li>
