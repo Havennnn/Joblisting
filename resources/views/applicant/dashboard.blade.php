@@ -3,215 +3,308 @@
 @section('title', 'Applicant Dashboard')
 
 @section('content')
-<div class="bg-gray-100">
-    <!-- Dashboard header -->
-    <header class="bg-white shadow">
-        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-bold text-gray-900">Applicant Dashboard</h1>
+<div class="flex">
+    <!-- Sidebar -->
+    <div class="w-64 min-h-screen bg-white border-r border-gray-200">
+        <div class="py-8 px-6">
+            <ul class="space-y-6">
+                <li>
+                    <a href="#" class="text-gray-900 font-semibold">Dashboard</a>
+                </li>
+                <li>
+                    <a href="#" class="text-gray-600 hover:text-gray-900">My Applications</a>
+                </li>
+                <li>
+                    <a href="#" class="text-gray-600 hover:text-gray-900">Interested Jobs</a>
+                </li>
+                <li>
+                    <a href="#" class="text-gray-600 hover:text-gray-900">Scheduled Interview</a>
+                </li>
+            </ul>
         </div>
-    </header>
+    </div>
 
-    <!-- Main content -->
-    <main class="pt-6 pb-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Welcome message -->
-            <div class="px-4 py-6 sm:px-0">
-                <div class="bg-white overflow-hidden shadow rounded-lg">
-                    <div class="px-4 py-5 sm:p-6">
-                        <h2 class="text-lg leading-6 font-medium text-gray-900">Welcome back, {{ $user->name }}!</h2>
-                        <p class="mt-1 text-sm text-gray-500">Here's an overview of your job search progress.</p>
+    <!-- Main Content -->
+    <div class="flex-1 bg-gray-50">
+        <div class="py-8 px-12">
+            <h1 class="text-3xl font-bold text-gray-900 mb-6">Dashboard</h1>
+            <p class="text-xl mb-10">Welcome User</p>
+
+            <!-- Dashboard Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+                <!-- Profile Completion Card -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h2 class="text-sm font-semibold uppercase mb-5">Profile Completion</h2>
+                    <div class="flex items-center justify-center mb-4">
+                        <div class="relative h-24 w-24">
+                            <!-- Circular progress indicator -->
+                            <svg class="w-full h-full" viewBox="0 0 36 36">
+                                <path
+                                    d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    fill="none"
+                                    stroke="#E6E6E6"
+                                    stroke-width="3"
+                                />
+                                <path
+                                    d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831"
+                                    fill="none"
+                                    stroke="#00CC00"
+                                    stroke-width="3"
+                                    stroke-dasharray="100, 100"
+                                />
+                            </svg>
+                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                                <span class="text-lg font-bold">100%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-center mb-4">You're all set! Start applying now!</p>
+                    <div class="text-center">
+                        <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">View your profile</a>
+                    </div>
+                </div>
+
+                <!-- Interested Jobs Card -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h2 class="text-sm font-semibold uppercase mb-5">Interested Jobs</h2>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-5xl font-bold">5</div>
+                    </div>
+                    <p class="mb-4">Saved jobs you're interested in</p>
+                    <div>
+                        <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">View your interested jobs</a>
+                    </div>
+                </div>
+
+                <!-- Scheduled Interviews Card -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h2 class="text-sm font-semibold uppercase mb-5">Scheduled Interviews</h2>
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="text-5xl font-bold">1</div>
+                    </div>
+                    <p class="mb-4">Job interviews that are scheduled</p>
+                    <div>
+                        <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">View your scheduled interviews</a>
                     </div>
                 </div>
             </div>
 
-            <!-- Stats -->
-            <div class="mt-8 ">
-                <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                    <!-- Jobs applied -->
-                    <div class="bg-white overflow-hidden shadow rounded-lg">
-                        <div class="px-4 py-5 sm:p-6">
-                            <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">
-                                    Total Applications
-                                </dt>
-                                <dd class="mt-1 text-3xl font-semibold text-gray-900">
-                                    {{ count($applications) }}
-                                </dd>
-                                <dd class="mt-3">
-                                    <span class="text-sm text-blue-600 hover:text-blue-500">
-                                        <a href="#" class="flex items-center">
-                                            View all applications
-                                            <svg class="ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                                            </svg>
-                                        </a>
-                                    </span>
-                                </dd>
-                            </dl>
-                        </div>
-                        </div>
-
-                    <!-- Profile completion -->
-                    <div class="bg-white overflow-hidden shadow rounded-lg">
-                        <div class="px-4 py-5 sm:p-6">
-                            <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">
-                                    Profile Completion
-                                </dt>
-                                <dd class="mt-1 text-3xl font-semibold text-gray-900">
-                                    {{ $profileCompletionPercentage }}%
-                                </dd>
-                                <dd class="mt-2">
-                                    <div class="relative pt-1">
-                                        <div class="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
-                                            <div style="width: {{ $profileCompletionPercentage }}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center {{ $profileCompletionColor }}"></div>
-                                        </div>
-                                    </div>
-                                </dd>
-                                <dd class="mt-1 text-sm text-gray-600">
-                                    {{ $profileCompletionMessage }}
-                                </dd>
-                                <dd class="mt-3">
-                                    <span class="text-sm text-blue-600 hover:text-blue-500">
-                                        <a href="{{ $profileActionLink }}" class="flex items-center">
-                                            {{ $profileCompletionPercentage < 100 ? 'Complete your profile' : 'View your profile' }}
-                                            <svg class="ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                                            </svg>
-                                        </a>
-                                    </span>
-                                </dd>
-                            </dl>
-                        </div>
-                        </div>
-
-                    <!-- Interviews -->
-                    <div class="bg-white overflow-hidden shadow rounded-lg">
-                        <div class="px-4 py-5 sm:p-6">
-                            <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">
-                                    Upcoming Interviews
-                                </dt>
-                                <dd class="mt-1 text-3xl font-semibold text-gray-900">
-                                    0
-                                </dd>
-                                <dd class="mt-3">
-                                    <span class="text-sm text-blue-600 hover:text-blue-500">
-                                        <a href="#" class="flex items-center">
-                                            View calendar
-                                            <svg class="ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
-                                            </svg>
-                                        </a>
-                                    </span>
-                                </dd>
-                            </dl>
-                        </div>
-                    </div>
+            <!-- My Applications Section -->
+            <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold">My Applications</h2>
+                    <a href="#" class="text-blue-600 hover:text-blue-800">View All</a>
                 </div>
-            </div>
 
-            <!-- Recommended Jobs -->
-            <div class="mt-8">
-                <div class="bg-white shadow overflow-hidden sm:rounded-md">
-                    <div class="px-4 py-5 border-b border-gray-200 sm:px-6">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">
-                            Recommended Jobs
-                        </h3>
-                        <p class="mt-1 text-sm text-gray-500">
-                            Jobs matching your skills and interests
-                        </p>
-                    </div>
-                    <ul class="divide-y divide-gray-200">
-                        <li>
-                            <a href="#" class="block hover:bg-gray-50">
-                                <div class="px-4 py-4 sm:px-6">
-                                    <div class="flex items-center justify-between">
-                                        <p class="text-sm font-medium text-blue-600 truncate">
-                                            Frontend Developer
-                                        </p>
-                                        <div class="ml-2 flex-shrink-0 flex">
-                                            <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                New
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="mt-2 sm:flex sm:justify-between">
-                                        <div class="sm:flex">
-                                            <p class="flex items-center text-sm text-gray-500">
-                                                <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm3 1h6v4H7V5zm8 8v2h1v1H4v-1h1v-2H4v-1h16v1h-1z" clip-rule="evenodd"></path>
-                                                </svg>
-                                                TechCorp Inc.
-                                            </p>
-                                            <p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
-                                                <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
-                                                </svg>
-                                                Remote
-                                            </p>
-                                        </div>
-                                        <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                                            <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                <!-- Applications Table -->
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="py-4 px-3 text-left font-medium text-gray-500 w-2/5">Jobs</th>
+                                <th class="py-4 px-3 text-center font-medium text-gray-500">Applied</th>
+                                <th class="py-4 px-3 text-center font-medium text-gray-500">Interview</th>
+                                <th class="py-4 px-3 text-center font-medium text-gray-500">Hired</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b">
+                                <td class="py-4 px-3">
+                                    <div class="flex items-center">
+                                        <div class="bg-red-600 text-white p-2 rounded-full mr-4">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                             </svg>
-                                            <p>
-                                                Posted <time datetime="2023-01-15">Jan 15, 2023</time>
-                                            </p>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium">Customer Service Representative</p>
+                                            <p class="text-sm text-gray-500">March 25, 2025</p>
                                         </div>
                                     </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="block hover:bg-gray-50">
-                                <div class="px-4 py-4 sm:px-6">
-                                    <div class="flex items-center justify-between">
-                                        <p class="text-sm font-medium text-blue-600 truncate">
-                                            UX Designer
-                                        </p>
-                                        <div class="ml-2 flex-shrink-0 flex">
-                                            <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                                New
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="mt-2 sm:flex sm:justify-between">
-                                        <div class="sm:flex">
-                                            <p class="flex items-center text-sm text-gray-500">
-                                                <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                    <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm3 1h6v4H7V5zm8 8v2h1v1H4v-1h1v-2H4v-1h16v1h-1z" clip-rule="evenodd"></path>
-                                                </svg>
-                                                Design Studio
-                                            </p>
-                                            <p class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
-                                                <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                    <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
-                                                </svg>
-                                                Manila, Philippines
-                                            </p>
-                                        </div>
-                                        <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                                            <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
+                                </td>
+                                <td class="py-4 px-3 text-center">
+                                    <div class="flex justify-center">
+                                        <div class="bg-green-500 rounded-full p-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                             </svg>
-                                            <p>
-                                                Posted <time datetime="2023-01-13">Jan 13, 2023</time>
-                                            </p>
                                         </div>
                                     </div>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
-                        <a href="#" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            View all jobs
-                        </a>
-                    </div>
+                                </td>
+                                <td class="py-4 px-3 text-center">
+                                    <div class="flex justify-center">
+                                        <div class="bg-green-500 rounded-full p-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-3 text-center">
+                                    <div class="bg-green-100 text-green-800 px-3 py-1 rounded-full inline-block font-medium">
+                                        Hired
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="py-4 px-3">
+                                    <div class="flex items-center">
+                                        <div class="bg-red-600 text-white p-2 rounded-full mr-4">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium">Customer Service Representative</p>
+                                            <p class="text-sm text-gray-500">March 25, 2025</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-3 text-center">
+                                    <div class="flex justify-center">
+                                        <div class="bg-green-500 rounded-full p-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-3 text-center">
+                                    <div class="flex justify-center">
+                                        <div class="bg-green-500 rounded-full p-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-3 text-center">
+                                    <div class="bg-green-100 text-green-800 px-3 py-1 rounded-full inline-block font-medium">
+                                        Hired
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="py-4 px-3">
+                                    <div class="flex items-center">
+                                        <div class="bg-red-600 text-white p-2 rounded-full mr-4">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium">Customer Service Representative</p>
+                                            <p class="text-sm text-gray-500">March 25, 2025</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-3 text-center">
+                                    <div class="flex justify-center">
+                                        <div class="bg-green-500 rounded-full p-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-3 text-center">
+                                    <div class="flex justify-center">
+                                        <div class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full inline-block font-medium">
+                                            Waiting
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-3 text-center">
+                                    <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full inline-block font-medium">
+                                        Rejected
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="border-b">
+                                <td class="py-4 px-3">
+                                    <div class="flex items-center">
+                                        <div class="bg-red-600 text-white p-2 rounded-full mr-4">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium">Customer Service Representative</p>
+                                            <p class="text-sm text-gray-500">March 25, 2025</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-3 text-center">
+                                    <div class="flex justify-center">
+                                        <div class="bg-green-500 rounded-full p-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-3 text-center">
+                                    <div class="flex justify-center">
+                                        <div class="bg-green-500 rounded-full p-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-3 text-center">
+                                    <div class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full inline-block font-medium">
+                                        Waiting
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 px-3">
+                                    <div class="flex items-center">
+                                        <div class="bg-red-600 text-white p-2 rounded-full mr-4">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <p class="font-medium">Customer Service Representative</p>
+                                            <p class="text-sm text-gray-500">March 25, 2025</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-3 text-center">
+                                    <div class="flex justify-center">
+                                        <div class="bg-green-500 rounded-full p-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-3 text-center">
+                                    <div class="flex justify-center">
+                                        <div class="bg-green-500 rounded-full p-1">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="py-4 px-3 text-center">
+                                    <div class="bg-green-100 text-green-800 px-3 py-1 rounded-full inline-block font-medium">
+                                        Hired
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 </div>
 @endsection
