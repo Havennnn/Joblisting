@@ -5,38 +5,21 @@
 @section('content')
 <div class="flex">
     <!-- Sidebar -->
-    <div class="w-64 min-h-screen bg-white border-r border-gray-200">
-        <div class="py-8 px-6">
-            <ul class="space-y-6">
-                <li>
-                    <a href="#" class="text-gray-900 font-semibold">Dashboard</a>
-                </li>
-                <li>
-                    <a href="#" class="text-gray-600 hover:text-gray-900">My Applications</a>
-                </li>
-                <li>
-                    <a href="#" class="text-gray-600 hover:text-gray-900">Interested Jobs</a>
-                </li>
-                <li>
-                    <a href="#" class="text-gray-600 hover:text-gray-900">Scheduled Interview</a>
-                </li>
-            </ul>
-        </div>
-    </div>
+    <x-applicant.sidebar />
 
     <!-- Main Content -->
     <div class="flex-1 bg-gray-50">
         <div class="py-8 px-12">
-            <h1 class="text-3xl font-bold text-gray-900 mb-6">Dashboard</h1>
-            <p class="text-xl mb-10">Welcome User</p>
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">Dashboard</h1>
+            <p class="text-xl mb-8">Welcome User</p>
 
             <!-- Dashboard Stats Cards -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <!-- Profile Completion Card -->
-                <div class="bg-white rounded-lg shadow-sm p-6">
-                    <h2 class="text-sm font-semibold uppercase mb-5">Profile Completion</h2>
-                    <div class="flex items-center justify-center mb-4">
-                        <div class="relative h-24 w-24">
+                <div class="bg-white rounded-lg shadow-sm p-5">
+                    <h2 class="text-sm font-semibold uppercase mb-4">Profile Completion</h2>
+                    <div class="flex items-center justify-center mb-3">
+                        <div class="relative h-20 w-20">
                             <!-- Circular progress indicator -->
                             <svg class="w-full h-full" viewBox="0 0 36 36">
                                 <path
@@ -62,31 +45,31 @@
                             </div>
                         </div>
                     </div>
-                    <p class="text-center mb-4">You're all set! Start applying now!</p>
+                    <p class="text-center mb-3 text-sm">You're all set! Start applying now!</p>
                     <div class="text-center">
                         <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">View your profile</a>
                     </div>
                 </div>
 
                 <!-- Interested Jobs Card -->
-                <div class="bg-white rounded-lg shadow-sm p-6">
-                    <h2 class="text-sm font-semibold uppercase mb-5">Interested Jobs</h2>
-                    <div class="flex items-center justify-between mb-4">
+                <div class="bg-white rounded-lg shadow-sm p-5">
+                    <h2 class="text-sm font-semibold uppercase mb-4">Interested Jobs</h2>
+                    <div class="flex items-center mb-3">
                         <div class="text-5xl font-bold">5</div>
                     </div>
-                    <p class="mb-4">Saved jobs you're interested in</p>
+                    <p class="mb-3 text-sm">Saved jobs you're interested in</p>
                     <div>
                         <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">View your interested jobs</a>
                     </div>
                 </div>
 
                 <!-- Scheduled Interviews Card -->
-                <div class="bg-white rounded-lg shadow-sm p-6">
-                    <h2 class="text-sm font-semibold uppercase mb-5">Scheduled Interviews</h2>
-                    <div class="flex items-center justify-between mb-4">
+                <div class="bg-white rounded-lg shadow-sm p-5">
+                    <h2 class="text-sm font-semibold uppercase mb-4">Scheduled Interviews</h2>
+                    <div class="flex items-center mb-3">
                         <div class="text-5xl font-bold">1</div>
                     </div>
-                    <p class="mb-4">Job interviews that are scheduled</p>
+                    <p class="mb-3 text-sm">Job interviews that are scheduled</p>
                     <div>
                         <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">View your scheduled interviews</a>
                     </div>
