@@ -16,7 +16,7 @@
     @livewireStyles
 </head>
 <body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100 flex flex-col">
+    <div class="min-h-screen bg-white-100 flex flex-col">
         <!-- Navigation using component -->
         <nav class="w-full bg-white border-b border-gray-200 py-3">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

@@ -3,7 +3,7 @@
 @section('title', 'Complete Your Company Profile')
 
 @section('content')
-<div class="min-h-screen bg-gray-100 py-6">
+<div class="min-h-screen bg-white-100 py-6">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="max-w-3xl mx-auto">
             <!-- Progress Steps -->
@@ -52,7 +52,7 @@
             </div>
 
             <!-- Setup Form -->
-            <div class="bg-white shadow sm:rounded-lg">
+            <div class="bg-white shadow sm:rounded-lg border border-gray-300">
                 <div class="px-4 py-5 sm:p-6">
                     @if($errors->any())
                         <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
@@ -81,8 +81,9 @@
                         <form action="{{ route('employer.setup.step-one') }}" method="POST" class="space-y-6">
                             @csrf
                             <div>
-                                <h2 class="text-lg font-medium text-gray-900 mb-4">Personal Information</h2>
+                                <h2 class="text-lg font-medium text-gray-900 mb-4">Complete your employer profile</h2>
                                 <p class="text-sm text-gray-500 mb-6">Please provide your basic contact information.</p>
+                                <hr class="border-t-2 border-gray-300 mb-4">
                             </div>
 
                             <div class="space-y-6">
@@ -121,6 +122,7 @@
                             <div>
                                 <h2 class="text-lg font-medium text-gray-900 mb-4">Company Information</h2>
                                 <p class="text-sm text-gray-500 mb-6">Tell us about your company.</p>
+                                <hr class="border-t-2 border-gray-300 mb-4">
                             </div>
 
                             <div class="space-y-6">
@@ -189,6 +191,7 @@
                             <div>
                                 <h2 class="text-lg font-medium text-gray-900 mb-4">Confirm Your Information</h2>
                                 <p class="text-sm text-gray-500 mb-6">Please review your information before finalizing your setup.</p>
+                                <hr class="border-t-2 border-gray-300 mb-4">
                             </div>
 
                             <div class="bg-gray-50 p-4 rounded-lg space-y-6">
