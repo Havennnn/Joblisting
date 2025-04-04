@@ -25,23 +25,39 @@
                             @php
                                 // Calculate profile completion percentage
                                 $user = Auth::user();
-                                $fieldsToCheck = [
-                                    // Add fields to check for completion
-                                    'name', 'email', 'phone', 'address',
-                                    'resume', 'education', 'experience'
-                                ];
                                 $completedFields = 0;
+                                $totalFields = 0;
 
-                                // Count completed fields
-                                // This is a simplified example - adjust according to your actual user model
-                                foreach ($fieldsToCheck as $field) {
-                                    if ($user && !empty($user->{$field})) {
-                                        $completedFields++;
+                                // Define profile fields to check - these should match your actual database fields
+                                $profileFields = [
+                                    'name' => 'Full Name',
+                                    'email' => 'Email Address',
+                                    'phone' => 'Phone Number',
+                                    'address' => 'Address',
+                                    'education' => 'Education',
+                                    'experience' => 'Work Experience',
+                                    'skills' => 'Skills',
+                                    'resume' => 'Resume'
+                                ];
+
+                                // For testing/demo purposes - hardcode values if user data isn't available yet
+                                if (!$user || app()->environment('local', 'staging')) {
+                                    // Demo mode - set these values for development testing
+                                    $completedFields = 6; // Change this for testing different percentages
+                                    $totalFields = 8;
+                                } else {
+                                    // Production mode - actually check user fields
+                                    $totalFields = count($profileFields);
+
+                                    // Count completed fields from the user model
+                                    foreach ($profileFields as $field => $label) {
+                                        if ($user && !empty($user->{$field})) {
+                                            $completedFields++;
+                                        }
                                     }
                                 }
 
                                 // Calculate percentage
-                                $totalFields = count($fieldsToCheck);
                                 $percentage = $totalFields > 0 ? round(($completedFields / $totalFields) * 100) : 0;
 
                                 // Set color based on percentage
