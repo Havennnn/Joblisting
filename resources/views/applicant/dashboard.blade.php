@@ -22,52 +22,6 @@
                     </div>
                     <div class="px-4 flex items-center">
                         <div class="mr-4">
-                            @php
-                                // Calculate profile completion percentage
-                                $user = Auth::user();
-                                $completedFields = 0;
-                                $totalFields = 0;
-
-                                // Define profile fields to check - these should match your actual database fields
-                                $profileFields = [
-                                    'name' => 'Full Name',
-                                    'email' => 'Email Address',
-                                    'phone' => 'Phone Number',
-                                    'address' => 'Address',
-                                    'education' => 'Education',
-                                    'experience' => 'Work Experience',
-                                    'skills' => 'Skills',
-                                    'resume' => 'Resume'
-                                ];
-
-                                // For testing/demo purposes - hardcode values if user data isn't available yet
-                                if (!$user || app()->environment('local', 'staging')) {
-                                    // Demo mode - set these values for development testing
-                                    $completedFields = 6; // Change this for testing different percentages
-                                    $totalFields = 8;
-                                } else {
-                                    // Production mode - actually check user fields
-                                    $totalFields = count($profileFields);
-
-                                    // Count completed fields from the user model
-                                    foreach ($profileFields as $field => $label) {
-                                        if ($user && !empty($user->{$field})) {
-                                            $completedFields++;
-                                        }
-                                    }
-                                }
-
-                                // Calculate percentage
-                                $percentage = $totalFields > 0 ? round(($completedFields / $totalFields) * 100) : 0;
-
-                                // Set color based on percentage
-                                $progressColor = "#FF3B30"; // Red for low completion
-                                if ($percentage >= 70) {
-                                    $progressColor = "#00CC00"; // Green for high completion
-                                } elseif ($percentage >= 30) {
-                                    $progressColor = "#FF9500"; // Orange for medium completion
-                                }
-                            @endphp
                             <div class="relative h-16 w-16">
                                 <!-- Circular progress indicator -->
                                 <svg class="w-full h-full" viewBox="0 0 36 36">
@@ -84,27 +38,19 @@
                                         a 15.9155 15.9155 0 0 1 0 31.831
                                         a 15.9155 15.9155 0 0 1 0 -31.831"
                                         fill="none"
-                                        stroke="{{ $progressColor }}"
+                                        stroke="{{ $progressColor ?? '#00CC00' }}"
                                         stroke-width="3"
-                                        stroke-dasharray="{{ $percentage }}, 100"
+                                        stroke-dasharray="{{ $profileCompletionPercentage ?? 75 }}, 100"
                                     />
                                 </svg>
                                 <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                                    <span class="text-base font-bold">{{ $percentage }}%</span>
+                                    <span class="text-base font-bold">{{ $profileCompletionPercentage ?? 75 }}%</span>
                                 </div>
                             </div>
                         </div>
                         <div>
-                            @if($percentage == 100)
-                                <p class="text-sm mb-1">You're all set! Start applying!</p>
-                            @elseif($percentage >= 70)
-                                <p class="text-sm mb-1">Almost there! Complete your profile.</p>
-                            @elseif($percentage >= 30)
-                                <p class="text-sm mb-1">Keep going! Your profile needs more details.</p>
-                            @else
-                                <p class="text-sm mb-1">Get started by completing your profile.</p>
-                            @endif
-                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">View your profile</a>
+                            <p class="text-sm mb-1">{{ $profileCompletionMessage ?? "You're all set! Start applying now!" }}</p>
+                            <a href="{{ $profileActionLink ?? '#' }}" class="text-blue-600 hover:text-blue-800 text-sm">View your profile</a>
                         </div>
                     </div>
                 </div>
