@@ -20,8 +20,38 @@
                     <div class="p-4">
                         <h2 class="text-sm font-semibold uppercase">PROFILE COMPLETION</h2>
                     </div>
-                    <div class="p-4 flex items-center">
+                    <div class="px-4 flex items-center">
                         <div class="mr-4">
+                            @php
+                                // Calculate profile completion percentage
+                                $user = Auth::user();
+                                $fieldsToCheck = [
+                                    // Add fields to check for completion
+                                    'name', 'email', 'phone', 'address',
+                                    'resume', 'education', 'experience'
+                                ];
+                                $completedFields = 0;
+
+                                // Count completed fields
+                                // This is a simplified example - adjust according to your actual user model
+                                foreach ($fieldsToCheck as $field) {
+                                    if ($user && !empty($user->{$field})) {
+                                        $completedFields++;
+                                    }
+                                }
+
+                                // Calculate percentage
+                                $totalFields = count($fieldsToCheck);
+                                $percentage = $totalFields > 0 ? round(($completedFields / $totalFields) * 100) : 0;
+
+                                // Set color based on percentage
+                                $progressColor = "#FF3B30"; // Red for low completion
+                                if ($percentage >= 70) {
+                                    $progressColor = "#00CC00"; // Green for high completion
+                                } elseif ($percentage >= 30) {
+                                    $progressColor = "#FF9500"; // Orange for medium completion
+                                }
+                            @endphp
                             <div class="relative h-16 w-16">
                                 <!-- Circular progress indicator -->
                                 <svg class="w-full h-full" viewBox="0 0 36 36">
@@ -38,18 +68,26 @@
                                         a 15.9155 15.9155 0 0 1 0 31.831
                                         a 15.9155 15.9155 0 0 1 0 -31.831"
                                         fill="none"
-                                        stroke="#00CC00"
+                                        stroke="{{ $progressColor }}"
                                         stroke-width="3"
-                                        stroke-dasharray="100, 100"
+                                        stroke-dasharray="{{ $percentage }}, 100"
                                     />
                                 </svg>
                                 <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                                    <span class="text-base font-bold">100%</span>
+                                    <span class="text-base font-bold">{{ $percentage }}%</span>
                                 </div>
                             </div>
                         </div>
                         <div>
-                            <p class="text-sm mb-1">You're all set! Start applying now!</p>
+                            @if($percentage == 100)
+                                <p class="text-sm mb-1">You're all set! Start applying!</p>
+                            @elseif($percentage >= 70)
+                                <p class="text-sm mb-1">Almost there! Complete your profile.</p>
+                            @elseif($percentage >= 30)
+                                <p class="text-sm mb-1">Keep going! Your profile needs more details.</p>
+                            @else
+                                <p class="text-sm mb-1">Get started by completing your profile.</p>
+                            @endif
                             <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">View your profile</a>
                         </div>
                     </div>
@@ -60,7 +98,7 @@
                     <div class="p-4">
                         <h2 class="text-sm font-semibold uppercase">INTERESTED JOBS</h2>
                     </div>
-                    <div class="p-4 flex items-center">
+                    <div class="px-4 flex items-center">
                         <div class="text-5xl font-bold mr-6">5</div>
                         <div>
                             <p class="text-sm mb-1">Saved jobs you're interested in</p>
@@ -74,7 +112,7 @@
                     <div class="p-4">
                         <h2 class="text-sm font-semibold uppercase">SCHEDULED INTERVIEWS</h2>
                     </div>
-                    <div class="p-4 flex items-center">
+                    <div class="px-4 flex items-center">
                         <div class="text-5xl font-bold mr-6">1</div>
                         <div>
                             <p class="text-sm mb-1">Job interviews that are scheduled</p>
