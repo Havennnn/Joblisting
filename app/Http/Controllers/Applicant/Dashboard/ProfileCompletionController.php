@@ -110,11 +110,11 @@ class ProfileCompletionController extends Controller
     private function getCompletionMessage(int $percentage, $user): string
     {
         if ($percentage < 50) {
-            return 'Your profile is incomplete. Complete it to increase your visibility to employers.';
+            return 'Your profile is incomplete.';
         } elseif ($percentage < 100) {
-            return 'Your profile is partially complete. Add more details to stand out to employers.';
+            return 'Your profile is partially complete.';
         } else {
-            return 'Your profile is complete! You\'re ready to apply for jobs.';
+            return 'You\'re ready to apply for jobs!';
         }
     }
 

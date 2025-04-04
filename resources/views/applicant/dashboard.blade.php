@@ -20,9 +20,9 @@
                     <div class="p-4">
                         <h2 class="text-sm font-semibold uppercase">PROFILE COMPLETION</h2>
                     </div>
-                    <div class="px-4 flex items-center">
+                    <div class="px-4 pb-4 flex items-center">
                         <div class="mr-4">
-                            <div class="relative h-16 w-16">
+                            <div class="relative h-14 w-14">
                                 <!-- Circular progress indicator -->
                                 <svg class="w-full h-full" viewBox="0 0 36 36">
                                     <path
@@ -60,8 +60,8 @@
                     <div class="p-4">
                         <h2 class="text-sm font-semibold uppercase">INTERESTED JOBS</h2>
                     </div>
-                    <div class="px-4 flex items-center">
-                        <div class="text-5xl font-bold mr-6">5</div>
+                    <div class="px-4 pb-4 flex items-center">
+                        <div class="text-4xl font-bold ml-1 mr-5">25</div>
                         <div>
                             <p class="text-sm mb-1">Saved jobs you're interested in</p>
                             <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">View your interested jobs</a>
@@ -74,8 +74,8 @@
                     <div class="p-4">
                         <h2 class="text-sm font-semibold uppercase">SCHEDULED INTERVIEWS</h2>
                     </div>
-                    <div class="px-4 flex items-center">
-                        <div class="text-5xl font-bold mr-6">1</div>
+                    <div class="px-4 pb-4 flex items-center">
+                        <div class="text-4xl font-bold ml-1 mr-5">12</div>
                         <div>
                             <p class="text-sm mb-1">Job interviews that are scheduled</p>
                             <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">View your scheduled interviews</a>
