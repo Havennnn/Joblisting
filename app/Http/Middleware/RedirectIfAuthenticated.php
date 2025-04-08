@@ -23,11 +23,27 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                // Redirect to appropriate dashboard based on user type
-                if (Auth::user()->is_employer) {
-                    return redirect()->route('employer.dashboard');
+                $user = Auth::user();
+
+                // Check if we're in the middle of a setup process
+                if (session()->has('employer_setup_completed') || session()->has('applicant_setup_completed')) {
+                    return $next($request);
                 }
-                return redirect()->route('applicant.dashboard');
+
+                // Redirect to appropriate dashboard based on user type
+                if ($user->is_employer) {
+                    // Check if setup is completed
+                    if (!$user->employer || !$user->employer->setup_completed) {
+                        return redirect()->route('employer.setup');
+                    }
+                    return redirect()->route('employer.dashboard');
+                } else {
+                    // Check if setup is completed
+                    if (!$user->applicantProfile || !$user->applicantProfile->setup_completed) {
+                        return redirect()->route('applicant.setup');
+                    }
+                    return redirect()->route('applicant.dashboard');
+                }
             }
         }
 

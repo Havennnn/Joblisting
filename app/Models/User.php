@@ -24,8 +24,9 @@ class User extends Authenticatable
         'password',
         'is_employer',
         'last_active_at',
-        'facebook_id',
-        'google_id',
+        'social_id',
+        'social_type',
+        'email_verified_at'
     ];
 
     /**

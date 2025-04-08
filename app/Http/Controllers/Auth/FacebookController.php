@@ -9,11 +9,14 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class FacebookController extends Controller
 {
     public function redirectToFacebook()
     {
+        $userType = request()->get('user_type', 'applicant');
+        session()->put('facebook_user_type', $userType);
         return Socialite::driver('facebook')->redirect();
     }
 
@@ -21,41 +24,160 @@ class FacebookController extends Controller
     {
         try {
             $facebookUser = Socialite::driver('facebook')->user();
-            $userType = request()->get('user_type', 'applicant');
+            $userType = session()->get('facebook_user_type', 'applicant');
+            session()->forget('facebook_user_type');
+
+            Log::info('Facebook callback received', [
+                'user_type' => $userType,
+                'facebook_id' => $facebookUser->getId(),
+                'email' => $facebookUser->getEmail(),
+                'name' => $facebookUser->getName()
+            ]);
 
             // Check if user exists
             $user = User::where('email', $facebookUser->getEmail())->first();
 
             if (!$user) {
-                // Download and store Facebook profile picture
-                $profilePictureUrl = $facebookUser->getAvatar();
-                $profilePictureContents = file_get_contents($profilePictureUrl);
-                $filename = 'profile_pictures/' . Str::random(40) . '.jpg';
-                Storage::disk('public')->put($filename, $profilePictureContents);
-
-                // Create new user
-                $user = User::create([
-                    'name' => $facebookUser->getName(),
+                Log::info('Creating new user from Facebook', [
                     'email' => $facebookUser->getEmail(),
-                    'password' => bcrypt(Str::random(24)),
-                    'email_verified_at' => now(),
-                    'type' => $userType,
-                    'profile_picture' => $filename,
+                    'name' => $facebookUser->getName(),
+                    'user_type' => $userType,
+                    'facebook_id' => $facebookUser->getId()
+                ]);
+
+                try {
+                    // Create new user
+                    $userData = [
+                        'name' => $facebookUser->getName(),
+                        'email' => $facebookUser->getEmail(),
+                        'password' => bcrypt(Str::random(24)),
+                        'email_verified_at' => now(),
+                        'is_employer' => ($userType === 'employer'),
+                        'social_id' => $facebookUser->getId(),
+                        'social_type' => 'facebook'
+                    ];
+
+                    Log::info('Attempting to create user with data', [
+                        'user_data' => array_merge($userData, ['password' => '[HIDDEN]'])
+                    ]);
+
+                    $user = User::create($userData);
+
+                    Log::info('New user created successfully', [
+                        'user_id' => $user->id,
+                        'is_employer' => $user->is_employer,
+                        'social_id' => $user->social_id,
+                        'social_type' => $user->social_type
+                    ]);
+
+                    // Create the appropriate profile based on user type
+                    if ($userType === 'employer') {
+                        $employer = $user->employer()->create([
+                            'company_name' => $user->name . "'s Company",
+                            'setup_completed' => false
+                        ]);
+                        Log::info('Employer profile created', [
+                            'employer_id' => $employer->id
+                        ]);
+                    } else {
+                        $applicant = $user->applicantProfile()->create([
+                            'full_name' => $user->name,
+                            'setup_completed' => false
+                        ]);
+                        Log::info('Applicant profile created', [
+                            'applicant_id' => $applicant->id
+                        ]);
+                    }
+                } catch (\Exception $e) {
+                    Log::error('Failed to create user: ' . $e->getMessage(), [
+                        'exception' => $e,
+                        'trace' => $e->getTraceAsString()
+                    ]);
+                    throw $e;
+                }
+            } else {
+                Log::info('Existing user found', [
+                    'user_id' => $user->id,
+                    'is_employer' => $user->is_employer,
+                    'social_id' => $user->social_id,
+                    'social_type' => $user->social_type
+                ]);
+
+                // Update existing user's Facebook ID if not set
+                if (!$user->social_id) {
+                    $user->update([
+                        'social_id' => $facebookUser->getId(),
+                        'social_type' => 'facebook'
+                    ]);
+                    Log::info('Updated user with Facebook ID', [
+                        'user_id' => $user->id,
+                        'social_id' => $facebookUser->getId(),
+                        'social_type' => 'facebook'
+                    ]);
+                }
+
+                // Don't change user type for existing users
+                // This prevents changing from employer to applicant or vice versa
+                Log::info('Keeping existing user type', [
+                    'user_id' => $user->id,
+                    'current_type' => $user->is_employer ? 'employer' : 'applicant',
+                    'requested_type' => $userType
                 ]);
             }
 
             // Login the user
             Auth::login($user);
+            Log::info('User logged in', [
+                'user_id' => $user->id,
+                'is_employer' => $user->is_employer
+            ]);
 
-            // If it's a new employer, redirect to setup
-            if ($userType === 'employer' && !$user->setup_completed) {
+            // Clear any existing session data
+            session()->forget(['setup_step', 'setup_data']);
+
+            // Regenerate session to ensure middleware picks up the changes
+            session()->regenerate();
+
+            // If it's a new employer or applicant, redirect to setup
+            if ($userType === 'employer' && !$user->employer?->setup_completed) {
+                // Set a flag in the session to bypass middleware check
+                session()->put('employer_setup_completed', true);
+                Log::info('Redirecting to employer setup', [
+                    'user_id' => $user->id
+                ]);
                 return redirect()->route('employer.setup');
+            } elseif ($userType === 'applicant' && !$user->applicantProfile?->setup_completed) {
+                // Set a flag in the session to bypass middleware check
+                session()->put('applicant_setup_completed', true);
+                Log::info('Redirecting to applicant setup', [
+                    'user_id' => $user->id
+                ]);
+                return redirect()->route('applicant.setup');
             }
 
             // Otherwise, redirect to dashboard
+            Log::info('Redirecting to dashboard', [
+                'user_id' => $user->id,
+                'user_type' => $userType
+            ]);
             return redirect()->route($userType . '.dashboard');
 
         } catch (\Exception $e) {
+            Log::error('Facebook authentication failed: ' . $e->getMessage(), [
+                'exception' => $e,
+                'trace' => $e->getTraceAsString(),
+                'facebook_data' => [
+                    'id' => $facebookUser->getId() ?? null,
+                    'email' => $facebookUser->getEmail() ?? null,
+                    'name' => $facebookUser->getName() ?? null
+                ]
+            ]);
+
+            if ($e instanceof \Illuminate\Database\QueryException) {
+                return redirect()->route('login')
+                    ->with('error', 'Database error during Facebook authentication. Please try again.');
+            }
+
             return redirect()->route('login')
                 ->with('error', 'Facebook authentication failed. Please try again.');
         }

@@ -50,6 +50,13 @@ class AuthController extends Controller
                 ]);
             }
 
+            // Check if setup is completed
+            if (Auth::user()->applicantProfile && !Auth::user()->applicantProfile->setup_completed) {
+                // Set a flag in the session to bypass middleware check
+                session()->put('applicant_setup_completed', true);
+                return redirect()->route('applicant.setup');
+            }
+
             return redirect()->intended(route('applicant.dashboard'));
         }
 
@@ -98,6 +105,13 @@ class AuthController extends Controller
                 return back()->withErrors([
                     'email' => 'This account is registered as an applicant. Please use applicant login.',
                 ]);
+            }
+
+            // Check if setup is completed
+            if (Auth::user()->employer && !Auth::user()->employer->setup_completed) {
+                // Set a flag in the session to bypass middleware check
+                session()->put('employer_setup_completed', true);
+                return redirect()->route('employer.setup');
             }
 
             return redirect()->intended(route('employer.dashboard'));
@@ -159,6 +173,9 @@ class AuthController extends Controller
 
         Auth::login($user);
 
+        // Set a flag in the session to bypass middleware check
+        session()->put('applicant_setup_completed', true);
+
         return redirect()->route('applicant.setup');
     }
 
@@ -212,7 +229,10 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('employer.dashboard');
+        // Set a flag in the session to bypass middleware check
+        session()->put('employer_setup_completed', true);
+
+        return redirect()->route('employer.setup');
     }
 
     /**
