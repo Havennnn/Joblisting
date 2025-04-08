@@ -3,79 +3,100 @@
 namespace App\Http\Controllers\Employer;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Employer\Dashboard\ProfileCompletionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class DashboardController extends Controller
 {
-    /**
-     * @var ProfileCompletionController
-     */
-    protected $profileCompletionController;
-
-    /**
-     * Constructor.
-     *
-     * @param ProfileCompletionController $profileCompletionController
-     */
-    public function __construct(ProfileCompletionController $profileCompletionController)
-    {
-        $this->profileCompletionController = $profileCompletionController;
-    }
-
-    /**
-     * Display the employer's dashboard.
-     *
-     * @return \Illuminate\View\View
-     */
     public function index()
     {
         $user = Auth::user();
-        $employer = $user->employer;
+        $profileCompletion = $this->calculateProfileCompletion($user);
 
-        \Illuminate\Support\Facades\Log::info('Employer Dashboard Accessed', [
-            'user_id' => $user->id,
-            'has_employer_profile' => (bool)$employer,
-            'setup_completed' => $employer ? $employer->setup_completed : false
-        ]);
-
-        // If the employer hasn't completed setup, redirect to setup page
-        if (!$employer || !$employer->setup_completed) {
-            \Illuminate\Support\Facades\Log::info('Redirecting to setup from dashboard', [
-                'user_id' => $user->id,
-                'has_employer_profile' => (bool)$employer,
-                'setup_completed' => $employer ? $employer->setup_completed : false
-            ]);
-            return redirect()->route('employer.setup');
-        }
-
-        // Get profile completion data
-        $profileCompletionData = $this->profileCompletionController->getCompletionData();
-
-        \Illuminate\Support\Facades\Log::info('Serving employer dashboard', [
-            'user_id' => $user->id,
-            'profile_completion' => $profileCompletionData['percentage']
-        ]);
-
-        return view('employer.dashboard', [
-            'user' => $user,
-            'employer' => $employer,
-            'profileCompletionPercentage' => $profileCompletionData['percentage'],
-            'profileCompletionColor' => $profileCompletionData['color'],
-            'profileCompletionMessage' => $profileCompletionData['message'],
-            'profileActionLink' => $profileCompletionData['action_link'],
-        ]);
+        return view('employer.dashboard', compact('profileCompletion'));
     }
 
-    /**
-     * Display the employer profile edit page.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function profile()
+    private function calculateProfileCompletion($user)
     {
-        return view('employer.profile');
+        $totalFields = 0;
+        $completedFields = 0;
+
+        // Company Name
+        $totalFields++;
+        if ($user->company_name) $completedFields++;
+
+        // Company Description
+        $totalFields++;
+        if ($user->company_description) $completedFields++;
+
+        // Company Logo
+        $totalFields++;
+        if ($user->company_logo) $completedFields++;
+
+        // Company Website
+        $totalFields++;
+        if ($user->company_website) $completedFields++;
+
+        // Company Address
+        $totalFields++;
+        if ($user->company_address) $completedFields++;
+
+        // Company Phone
+        $totalFields++;
+        if ($user->company_phone) $completedFields++;
+
+        // Company Size
+        $totalFields++;
+        if ($user->company_size) $completedFields++;
+
+        // Industry
+        $totalFields++;
+        if ($user->industry) $completedFields++;
+
+        // Founded Year
+        $totalFields++;
+        if ($user->founded_year) $completedFields++;
+
+        // Mission Statement
+        $totalFields++;
+        if ($user->mission_statement) $completedFields++;
+
+        // Vision Statement
+        $totalFields++;
+        if ($user->vision_statement) $completedFields++;
+
+        // Values
+        $totalFields++;
+        if ($user->values) $completedFields++;
+
+        // Benefits
+        $totalFields++;
+        if ($user->benefits) $completedFields++;
+
+        // Culture
+        $totalFields++;
+        if ($user->culture) $completedFields++;
+
+        // Social Media Links
+        $totalFields++;
+        if ($user->social_media_links) $completedFields++;
+
+        // Contact Person
+        $totalFields++;
+        if ($user->contact_person) $completedFields++;
+
+        // Contact Email
+        $totalFields++;
+        if ($user->contact_email) $completedFields++;
+
+        // Contact Phone
+        $totalFields++;
+        if ($user->contact_phone) $completedFields++;
+
+        // Additional Information
+        $totalFields++;
+        if ($user->additional_info) $completedFields++;
+
+        return round(($completedFields / $totalFields) * 100);
     }
 }
