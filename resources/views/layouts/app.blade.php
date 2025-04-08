@@ -17,6 +17,9 @@
     <!-- Navigation Component -->
     <x-navigation />
 
+    <!-- Flash Message Component -->
+    <x-flash-message />
+
     <!-- Main Content -->
     <main class="flex-grow w-full">
         @yield('content')

@@ -147,11 +147,11 @@ class GoogleController extends Controller
             Log::error('Google authentication failed: ' . $e->getMessage(), [
                 'exception' => $e,
                 'trace' => $e->getTraceAsString(),
-                'google_data' => [
+                'google_data' => isset($googleUser) ? [
                     'id' => $googleUser->getId() ?? null,
                     'email' => $googleUser->getEmail() ?? null,
                     'name' => $googleUser->getName() ?? null
-                ]
+                ] : null
             ]);
 
             if ($e instanceof \Illuminate\Database\QueryException) {
