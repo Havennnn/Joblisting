@@ -6,6 +6,8 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class UserSettings extends Component
 {
@@ -14,16 +16,20 @@ class UserSettings extends Component
     public $newEmail;
     public $currentPassword;
     public $newPassword;
-    public $newPasswordConfirmation;
+    public $newPassword_confirmation;
     public $activeTab = 'email';
+    public $showEmailForm = true;
+    public $emailChangeToken;
+    public $emailChangeRequested = false;
 
     // Define rules for validation
-    protected function rules()
+    public function rules()
     {
         return [
-            'newEmail' => 'required|email|unique:users,email,' . $this->user->id,
-            'newPassword' => ['required', 'confirmed', Password::defaults()],
-            'currentPassword' => 'required',
+            'newEmail' => 'required|email|unique:users,email,' . auth()->id(),
+            'currentPassword' => 'required_with:newPassword',
+            'newPassword' => 'required_with:currentPassword|min:8|confirmed',
+            'newPassword_confirmation' => 'required_with:newPassword',
         ];
     }
 
@@ -39,49 +45,41 @@ class UserSettings extends Component
         $this->resetValidation();
     }
 
-    public function updateEmail()
+    public function requestEmailChange()
     {
-        // Validate email and current password
         $this->validate([
             'newEmail' => 'required|email|unique:users,email,' . $this->user->id,
-            'currentPassword' => 'required',
         ]);
 
-        // Verify current password
-        if (!Hash::check($this->currentPassword, $this->user->password)) {
-            $this->addError('currentPassword', 'The current password is incorrect.');
-            return;
-        }
+        // Generate a unique token for email change
+        $this->emailChangeToken = Str::random(60);
 
-        // Update the email
-        $this->user->email = $this->newEmail;
+        // Store the new email and token in the user's record
+        $this->user->email_change_token = $this->emailChangeToken;
+        $this->user->pending_email = $this->newEmail;
         $this->user->save();
 
-        $this->currentEmail = $this->newEmail;
-        $this->reset(['newEmail', 'currentPassword']);
-        session()->flash('emailSuccess', 'Your email has been updated successfully.');
+        // Send confirmation email
+        Mail::to($this->newEmail)->send(new \App\Mail\EmailChangeConfirmation($this->user, $this->emailChangeToken));
+
+        $this->emailChangeRequested = true;
+        session()->flash('emailChangeRequested', 'Please check your new email address for a confirmation link.');
     }
 
     public function updatePassword()
     {
-        // Validate passwords
         $this->validate([
-            'currentPassword' => 'required',
-            'newPassword' => ['required', 'confirmed', Password::defaults()],
+            'currentPassword' => 'required|current_password',
+            'newPassword' => 'required|min:8|confirmed',
+            'newPassword_confirmation' => 'required|same:newPassword'
         ]);
 
-        // Verify current password
-        if (!Hash::check($this->currentPassword, $this->user->password)) {
-            $this->addError('currentPassword', 'The current password is incorrect.');
-            return;
-        }
+        $this->user->update([
+            'password' => Hash::make($this->newPassword)
+        ]);
 
-        // Update the password
-        $this->user->password = Hash::make($this->newPassword);
-        $this->user->save();
-
-        $this->reset(['currentPassword', 'newPassword', 'newPasswordConfirmation']);
-        session()->flash('passwordSuccess', 'Your password has been updated successfully.');
+        $this->reset(['currentPassword', 'newPassword', 'newPassword_confirmation']);
+        session()->flash('passwordSuccess', 'Password updated successfully.');
     }
 
     public function render()

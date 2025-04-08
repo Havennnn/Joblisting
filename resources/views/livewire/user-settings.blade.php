@@ -22,13 +22,13 @@
             </div>
 
             <!-- Email Settings Tab -->
-            <div x-show="$wire.activeTab === 'email'" class="{{ $activeTab === 'email' ? '' : 'hidden' }}">
+            <div class="{{ $activeTab === 'email' ? '' : 'hidden' }}">
                 <div class="mb-6">
-                    <p class="text-gray-700 mb-4">Update your email address. For security, you'll need to confirm your current password.</p>
+                    <p class="text-gray-700 mb-4">Update your email address. You'll need to confirm the change through your new email address.</p>
 
-                    @if (session('emailSuccess'))
+                    @if (session('emailChangeRequested'))
                         <div class="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
-                            {{ session('emailSuccess') }}
+                            {{ session('emailChangeRequested') }}
                         </div>
                     @endif
 
@@ -39,43 +39,40 @@
                         </div>
                     </div>
 
-                    <div class="space-y-4">
-                        <div>
-                            <label for="newEmail" class="block text-sm font-medium text-gray-700">New Email Address</label>
-                            <input
-                                type="email"
-                                id="newEmail"
-                                wire:model.live="newEmail"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                            >
-                            @error('newEmail') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
-                        </div>
+                    @if(!$emailChangeRequested)
+                        <div class="space-y-4">
+                            <div>
+                                <label for="newEmail" class="block text-sm font-medium text-gray-700">New Email Address</label>
+                                <input
+                                    type="email"
+                                    id="newEmail"
+                                    wire:model="newEmail"
+                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                >
+                                @error('newEmail') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                            </div>
 
-                        <div>
-                            <label for="currentPassword" class="block text-sm font-medium text-gray-700">Current Password</label>
-                            <input
-                                type="password"
-                                id="currentPassword"
-                                wire:model.live="currentPassword"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                            >
-                            @error('currentPassword') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                            <div class="pt-3">
+                                <button
+                                    wire:click="requestEmailChange"
+                                    class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                >
+                                    Request Email Change
+                                </button>
+                            </div>
                         </div>
-
-                        <div class="pt-3">
-                            <button
-                                wire:click="updateEmail"
-                                class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                            >
-                                Update Email
-                            </button>
+                    @else
+                        <div class="p-4 bg-yellow-50 border border-yellow-200 rounded-md">
+                            <p class="text-sm text-yellow-800">
+                                A confirmation email has been sent to {{ $newEmail }}. Please check your inbox and click the confirmation link to complete the email change.
+                            </p>
                         </div>
-                    </div>
+                    @endif
                 </div>
             </div>
 
             <!-- Password Settings Tab -->
-            <div x-show="$wire.activeTab === 'password'" class="{{ $activeTab === 'password' ? '' : 'hidden' }}">
+            <div class="{{ $activeTab === 'password' ? '' : 'hidden' }}">
                 <div class="mb-6">
                     <p class="text-gray-700 mb-4">Change your password. For security, you'll need to confirm your current password.</p>
 
@@ -87,11 +84,11 @@
 
                     <div class="space-y-4">
                         <div>
-                            <label for="currentPasswordForPwd" class="block text-sm font-medium text-gray-700">Current Password</label>
+                            <label for="currentPassword" class="block text-sm font-medium text-gray-700">Current Password</label>
                             <input
                                 type="password"
-                                id="currentPasswordForPwd"
-                                wire:model.live="currentPassword"
+                                id="currentPassword"
+                                wire:model="currentPassword"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                             >
                             @error('currentPassword') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
@@ -102,18 +99,18 @@
                             <input
                                 type="password"
                                 id="newPassword"
-                                wire:model.live="newPassword"
+                                wire:model="newPassword"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                             >
                             @error('newPassword') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                         </div>
 
                         <div>
-                            <label for="newPasswordConfirmation" class="block text-sm font-medium text-gray-700">Confirm New Password</label>
+                            <label for="newPassword_confirmation" class="block text-sm font-medium text-gray-700">Confirm New Password</label>
                             <input
                                 type="password"
-                                id="newPasswordConfirmation"
-                                wire:model.live="newPassword_confirmation"
+                                id="newPassword_confirmation"
+                                wire:model="newPassword_confirmation"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                             >
                         </div>
