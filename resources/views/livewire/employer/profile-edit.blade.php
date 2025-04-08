@@ -11,7 +11,7 @@
                     </div>
                 @endif
 
-                <form wire:submit.prevent="saveProfile" class="mt-6">
+                <form wire:submit.prevent="saveProfile" class="mt-6" enctype="multipart/form-data">
                     <!-- Personal Information Section -->
                     <div class="bg-white shadow sm:rounded-lg">
                         <div class="px-4 py-5 sm:p-6">

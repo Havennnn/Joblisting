@@ -15,7 +15,7 @@
             @endif
 
             <!-- Profile Form -->
-            <form wire:submit.prevent="saveProfile" class="space-y-8">
+            <form wire:submit.prevent="saveProfile" class="space-y-8" enctype="multipart/form-data">
                 <!-- Basic Information Section -->
                 <div class="bg-white shadow sm:rounded-lg">
                     <div class="px-4 py-5 sm:p-6">

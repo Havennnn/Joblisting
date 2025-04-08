@@ -29,6 +29,7 @@ Route::prefix('applicant')->name('applicant.')->middleware(['auth', 'applicant']
 
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/profile/picture/{user}', [ProfileController::class, 'showProfilePicture'])->name('profile.picture');
     Route::get('/profile/resume/{user}', [ProfileController::class, 'downloadResume'])->name('profile.resume');

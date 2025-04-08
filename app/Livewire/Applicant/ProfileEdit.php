@@ -132,7 +132,7 @@ class ProfileEdit extends Component
                 Storage::delete($this->user->applicantProfile->profile_picture_path);
             }
 
-            // Store in private storage (local disk) instead of public
+            // Store in private storage (local disk)
             $profilePicturePath = $this->profile_picture->store('profile-pictures', 'local');
             $profileData['profile_picture_path'] = $profilePicturePath;
         }
@@ -144,7 +144,7 @@ class ProfileEdit extends Component
                 Storage::delete($this->user->applicantProfile->resume_path);
             }
 
-            // Store in private storage (local disk) instead of public
+            // Store in private storage (local disk)
             $resumePath = $this->resume->store('resumes', 'local');
             $profileData['resume_path'] = $resumePath;
         }
@@ -157,7 +157,8 @@ class ProfileEdit extends Component
             $this->user->applicantProfile()->create($profileData);
         }
 
-        session()->flash('message', 'Profile updated successfully!');
+        session()->flash('status', 'Profile updated successfully!');
+        return redirect()->route('applicant.profile');
     }
 
     /**

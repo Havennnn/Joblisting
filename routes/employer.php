@@ -31,6 +31,7 @@ Route::middleware(['auth', 'employer'])->prefix('employer')->name('employer.')->
 
     // Profile routes
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/profile/logo/{user}', [ProfileController::class, 'showCompanyLogo'])->name('profile.logo');
 

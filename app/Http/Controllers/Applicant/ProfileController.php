@@ -11,12 +11,19 @@ use App\Models\User;
 class ProfileController extends Controller
 {
     /**
-     * Show applicant's profile page
+     * Show applicant's profile view page
      */
     public function show()
     {
-        $user = Auth::user();
-        return view('applicant.profile', compact('user'));
+        return view('applicant.profile-view');
+    }
+
+    /**
+     * Show applicant's profile edit page
+     */
+    public function edit()
+    {
+        return view('applicant.profile-edit');
     }
 
     /**

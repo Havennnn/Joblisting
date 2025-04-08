@@ -72,57 +72,67 @@ class ProfileEdit extends Component
     }
 
     /**
-     * Save the employer profile data with all fields optional
+     * Save profile changes
      */
     public function saveProfile()
     {
-        $user = Auth::user();
-
-        $validated = $this->validate([
+        // Validate input
+        $this->validate([
             'full_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'company_name' => 'required|string|max:255',
-            'company_description' => 'required|string',
-            'industry' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $this->user->id,
+            'company_name' => 'nullable|string|max:255',
+            'company_description' => 'nullable|string',
+            'industry' => 'nullable|string|max:255',
             'website' => 'nullable|url|max:255',
-            'phone_number' => 'required|string|max:20',
-            'location' => 'required|string|max:255',
+            'phone_number' => 'nullable|string|max:20',
+            'location' => 'nullable|string|max:255',
             'company_logo' => 'nullable|image|max:2048', // 2MB max
         ]);
 
         // Update user data
-        $user->update([
-            'name' => $validated['full_name'],
-            'email' => $validated['email'],
+        $this->user->update([
+            'name' => $this->full_name,
+            'email' => $this->email,
         ]);
 
-        // Ensure employer profile exists
-        $employer = $user->employer ?? $user->employer()->create([]);
+        // Prepare employer data
+        $employerData = [
+            'full_name' => $this->full_name,
+            'company_name' => $this->company_name,
+            'company_description' => $this->company_description,
+            'industry' => $this->industry,
+            'website' => $this->website,
+            'phone_number' => $this->phone_number,
+            'location' => $this->location,
+        ];
 
         // Handle company logo upload
         if ($this->company_logo) {
-            // Delete old logo if exists
-            if ($employer->company_logo_path) {
-                Storage::delete($employer->company_logo_path);
+            // Delete old company logo if it exists
+            if ($this->user->employer && $this->user->employer->company_logo_path) {
+                Storage::delete($this->user->employer->company_logo_path);
             }
 
+            // Store in private storage (local disk)
             $path = $this->company_logo->store('company-logos', 'local');
-            $employer->company_logo_path = $path;
+            $employerData['company_logo_path'] = $path;
         }
 
-        // Update employer profile
-        $employer->fill([
-            'company_name' => $validated['company_name'],
-            'company_description' => $validated['company_description'],
-            'industry' => $validated['industry'],
-            'website' => $validated['website'] ?? null,
-            'phone_number' => $validated['phone_number'],
-            'location' => $validated['location'],
-        ])->save();
+        // Update or create employer profile
+        $employer = $this->user->employer;
+        if ($employer) {
+            $employer->update($employerData);
+        } else {
+            $this->user->employer()->create($employerData);
+        }
 
-        session()->flash('status', 'Company profile updated successfully!');
+        session()->flash('status', 'Profile updated successfully!');
+        return redirect()->route('employer.profile');
     }
 
+    /**
+     * Render the component
+     */
     public function render()
     {
         return view('livewire.employer.profile-edit');
