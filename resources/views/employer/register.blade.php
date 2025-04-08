@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="flex flex-col items-center justify-center min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
-    <h1 class="text-3xl font-medium text-gray-900 mb-8">Create an account before posting jobs</h1>
+    <h1 class="text-3xl font-medium text-gray-900 mb-8">Create an account to post jobs</h1>
 
     <div class="max-w-md w-full bg-white rounded-lg border border-gray-200 shadow-sm p-8">
         <h2 class="text-2xl font-semibold text-center text-gray-900 mb-6">
@@ -16,10 +16,10 @@
 
             <div>
                 <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
-                    Full Name
+                    Company Name
                 </label>
                 <input id="name" name="name" type="text" autocomplete="name" required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#e83e8c] focus:border-[#e83e8c] sm:text-sm"
+                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#2271b1] focus:border-[#2271b1] sm:text-sm"
                     value="{{ old('name') }}">
                 @error('name')
                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -31,7 +31,7 @@
                     Email address
                 </label>
                 <input id="email" name="email" type="email" autocomplete="email" required
-                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#e83e8c] focus:border-[#e83e8c] sm:text-sm"
+                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#2271b1] focus:border-[#2271b1] sm:text-sm"
                     value="{{ old('email') }}">
                 @error('email')
                 <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -44,7 +44,7 @@
                 </label>
                 <div class="relative">
                     <input id="password" name="password" type="password" autocomplete="new-password" required
-                        class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#e83e8c] focus:border-[#e83e8c] sm:text-sm">
+                        class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#2271b1] focus:border-[#2271b1] sm:text-sm">
                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
                         <button type="button" id="togglePassword" class="text-gray-400 focus:outline-none">
                             <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -66,7 +66,7 @@
                 <div class="relative">
                     <input id="password_confirmation" name="password_confirmation" type="password"
                         autocomplete="new-password" required
-                        class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#e83e8c] focus:border-[#e83e8c] sm:text-sm">
+                        class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#2271b1] focus:border-[#2271b1] sm:text-sm">
                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
                         <button type="button" id="toggleConfirmPassword" class="text-gray-400 focus:outline-none">
                             <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -80,7 +80,7 @@
 
             <div class="flex items-center">
                 <input id="terms" name="terms" type="checkbox" required
-                    class="h-4 w-4 text-[#e83e8c] focus:ring-[#e83e8c] border-gray-300 rounded">
+                    class="h-4 w-4 text-[#2271b1] focus:ring-[#2271b1] border-gray-300 rounded">
                 <label for="terms" class="ml-2 block text-xs text-gray-700">
                     By registering, I agree to the Terms and Conditions and confirm that the information I provide is accurate. I acknowledge that I may receive job-related updates.
                 </label>
@@ -88,15 +88,45 @@
 
             <div>
                 <button type="submit"
-                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#dc3545] hover:bg-[#c82333] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#dc3545]">
-                    Register Account
+                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#2271b1] hover:bg-[#135e96] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2271b1]">
+                    Register
                 </button>
             </div>
-
-            <div class="text-center text-sm">
-                Already have an account? <a href="{{ route('employer.login') }}" class="font-medium text-[#e83e8c] hover:underline">Sign in</a>
-            </div>
         </form>
+
+        <div class="mt-6">
+            <div class="relative">
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-gray-300"></div>
+                </div>
+                <div class="relative flex justify-center text-sm">
+                    <span class="px-2 bg-white text-gray-500">Or continue with</span>
+                </div>
+            </div>
+
+            <div class="mt-6 space-y-3">
+                <a href="{{ route('facebook.login', ['user_type' => 'employer']) }}" class="w-full flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                    Continue with Facebook
+                </a>
+
+                <a href="{{ route('google.login', ['user_type' => 'employer']) }}" class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
+                    </svg>
+                    Continue with Google
+                </a>
+            </div>
+        </div>
+
+        <p class="mt-8 text-center text-sm text-gray-600">
+            Already have an account?
+            <a href="{{ route('employer.login') }}" class="font-medium text-[#2271b1] hover:text-[#135e96]">
+                Sign in
+            </a>
+        </p>
     </div>
 </div>
 @endsection
