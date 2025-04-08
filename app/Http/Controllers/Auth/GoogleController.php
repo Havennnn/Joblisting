@@ -68,6 +68,26 @@ class GoogleController extends Controller
                     'social_type' => $user->social_type
                 ]);
 
+                // Check if the user type matches the requested type
+                $isEmployerMismatch = ($userType === 'employer' && !$user->is_employer);
+                $isApplicantMismatch = ($userType === 'applicant' && $user->is_employer);
+
+                if ($isEmployerMismatch || $isApplicantMismatch) {
+                    Log::warning('User type mismatch', [
+                        'user_id' => $user->id,
+                        'is_employer' => $user->is_employer,
+                        'requested_type' => $userType
+                    ]);
+
+                    // Redirect to appropriate login page with error
+                    $errorMessage = $user->is_employer
+                        ? 'This account is registered as an employer. Please use employer login.'
+                        : 'This account is registered as an applicant. Please use applicant login.';
+
+                    return redirect()->route($user->is_employer ? 'employer.login' : 'applicant.login')
+                        ->with('error', $errorMessage);
+                }
+
                 // Update existing user's social login info if not set
                 if (!$user->social_id) {
                     $user->update([
@@ -124,6 +144,21 @@ class GoogleController extends Controller
             return redirect()->route($userType . '.dashboard');
 
         } catch (\Exception $e) {
+            Log::error('Google authentication failed: ' . $e->getMessage(), [
+                'exception' => $e,
+                'trace' => $e->getTraceAsString(),
+                'google_data' => [
+                    'id' => $googleUser->getId() ?? null,
+                    'email' => $googleUser->getEmail() ?? null,
+                    'name' => $googleUser->getName() ?? null
+                ]
+            ]);
+
+            if ($e instanceof \Illuminate\Database\QueryException) {
+                return redirect()->route('login')
+                    ->with('error', 'Database error during Google authentication. Please try again.');
+            }
+
             return redirect()->route('login')
                 ->with('error', 'Google authentication failed. Please try again.');
         }
