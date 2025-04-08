@@ -17,7 +17,6 @@ class ProfileEdit extends Component
 
     // User data properties
     public $full_name;
-    public $email;
     public $phone_number;
     public $location;
     public $gender;
@@ -46,7 +45,6 @@ class ProfileEdit extends Component
 
         // Pre-fill form with user data
         $this->full_name = $this->user->name;
-        $this->email = $this->user->email;
         $this->phone_number = $profile->phone_number ?? null;
         $this->location = $profile->location ?? null;
         $this->gender = $profile->gender ?? null;
@@ -93,7 +91,6 @@ class ProfileEdit extends Component
         // Validate basic user information
         $this->validate([
             'full_name' => 'required|min:3|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $this->user->id,
             'phone_number' => 'required|string|max:20',
             'location' => 'required|string|max:255',
             'gender' => 'required|in:male,female,other',
@@ -108,7 +105,6 @@ class ProfileEdit extends Component
         // Prepare user data to update
         $userData = [
             'name' => $this->full_name,
-            'email' => $this->email,
         ];
 
         // Update user record

@@ -28,12 +28,6 @@
                             </div>
 
                             <div>
-                                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                                <input type="email" wire:model="email" id="email" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                @error('email') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
-                            </div>
-
-                            <div>
                                 <label for="phone_number" class="block text-sm font-medium text-gray-700">Phone Number</label>
                                 <input type="tel" wire:model="phone_number" id="phone_number" class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 @error('phone_number') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror

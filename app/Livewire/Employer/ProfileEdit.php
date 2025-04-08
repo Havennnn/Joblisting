@@ -13,7 +13,6 @@ class ProfileEdit extends Component
 
     // User data properties
     public $full_name;
-    public $email;
 
     // Company data properties
     public $company_name;
@@ -45,7 +44,6 @@ class ProfileEdit extends Component
 
         // Populate form fields from employer data
         $this->full_name = $employer->full_name ?? $this->user->name;
-        $this->email = $this->user->email;
         $this->company_name = $employer->company_name;
         $this->company_description = $employer->company_description;
         $this->industry = $employer->industry;
@@ -79,7 +77,6 @@ class ProfileEdit extends Component
         // Validate input
         $this->validate([
             'full_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $this->user->id,
             'company_name' => 'nullable|string|max:255',
             'company_description' => 'nullable|string',
             'industry' => 'nullable|string|max:255',
@@ -92,7 +89,6 @@ class ProfileEdit extends Component
         // Update user data
         $this->user->update([
             'name' => $this->full_name,
-            'email' => $this->email,
         ]);
 
         // Prepare employer data

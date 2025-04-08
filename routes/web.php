@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LandingPage\LandingController;
 use App\Http\Controllers\LandingPage\JobController;
+use App\Http\Controllers\SettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +21,11 @@ Route::get('/', [LandingController::class, 'index'])->name('landing');
 // Public job listing routes
 Route::get('/jobs', [JobController::class, 'index'])->name('jobs.index');
 Route::get('/job-details/{id}', [JobController::class, 'show'])->name('jobs.show');
+
+// Route for settings (accessible by both applicants and employers)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+});
 
 /*
 |--------------------------------------------------------------------------
