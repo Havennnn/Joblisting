@@ -123,24 +123,12 @@
                                     <div>
                                         <label for="job_description" class="block text-sm font-medium text-gray-700">
                                             Job Description
-                                            <span class="text-sm text-gray-500">(Be specific and include key responsibilities)</span>
+                                            <span class="text-sm text-gray-500">(Include responsibilities, requirements, and qualifications)</span>
                                         </label>
                                         <div class="mt-1">
-                                            <textarea name="job_description" id="job_description" rows="5" required
+                                            <textarea name="job_description" id="job_description" rows="8" required
                                                 class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-neksjob-blue focus:ring-neksjob-blue sm:text-sm"
-                                                placeholder="Describe the main responsibilities, objectives, and expectations for this position..."></textarea>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label for="qualifications" class="block text-sm font-medium text-gray-700">
-                                            Qualifications
-                                            <span class="text-sm text-gray-500">(List required skills and experience)</span>
-                                        </label>
-                                        <div class="mt-1">
-                                            <textarea name="qualifications" id="qualifications" rows="5" required
-                                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-neksjob-blue focus:ring-neksjob-blue sm:text-sm"
-                                                placeholder="List the required qualifications, skills, certifications, and experience..."></textarea>
+                                                placeholder="Describe the main responsibilities, objectives, qualifications, required skills, certifications, and experience for this position..."></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -296,24 +284,6 @@
                                     </div>
 
                                     <div>
-                                        <label for="starting_date" class="block text-sm font-medium text-gray-700">Starting Date</label>
-                                        <div class="mt-1">
-                                            <input type="date" name="starting_date" id="starting_date"
-                                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-neksjob-blue focus:ring-neksjob-blue sm:text-sm">
-                                        </div>
-                                        <p class="mt-1 text-sm text-gray-500">When should the candidate start working?</p>
-                                    </div>
-
-                                    <div>
-                                        <label for="expiration_date" class="block text-sm font-medium text-gray-700">Application Deadline</label>
-                                        <div class="mt-1">
-                                            <input type="date" name="expiration_date" id="expiration_date"
-                                                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-neksjob-blue focus:ring-neksjob-blue sm:text-sm">
-                                        </div>
-                                        <p class="mt-1 text-sm text-gray-500">When should the job posting expire?</p>
-                                    </div>
-
-                                    <div>
                                         <label for="vacancies" class="block text-sm font-medium text-gray-700">Number of Vacancies</label>
                                         <div class="mt-1">
                                             <input type="number" name="vacancies" id="vacancies" min="1" required
@@ -333,6 +303,7 @@
                                                 <option value="Regular">Regular</option>
                                             </select>
                                         </div>
+                                        <p class="mt-1 text-sm text-gray-500">Note: Job posts will automatically expire after 7 days.</p>
                                     </div>
                                 </div>
                             </div>

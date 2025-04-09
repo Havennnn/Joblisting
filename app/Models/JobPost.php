@@ -18,22 +18,26 @@ class JobPost extends Model
 
     protected $fillable = [
         'title',
+        'job_description',
+        'location',
+        'type',
+        'work_setup',
         'industry',
         'role',
-        'job_description',
-        'qualifications',
-        'starting_date',
-        'expiration_date',
+        'salary',
+        'vacancies',
         'work_experience_level',
         'educational_level',
-        'work_setup',
         'shift',
-        'type',
-        'location',
-        'vacancies',
-        'salary',
         'tags',
+        'auto_delete_at',
         'employer_id',
+    ];
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'auto_delete_at'
     ];
 
     /**

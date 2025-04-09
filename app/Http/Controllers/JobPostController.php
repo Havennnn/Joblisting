@@ -35,22 +35,29 @@ class JobPostController extends Controller
      */
     public function store(Request $request)
     {
-        // Prepare data with default values for null fields
-        $data = $request->all();
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'job_description' => 'required|string',
+            'location' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+            'work_setup' => 'required|string|max:255',
+            'industry' => 'required|string|max:255',
+            'role' => 'required|string|max:255',
+            'salary' => 'nullable|numeric',
+            'vacancies' => 'required|integer',
+            'work_experience_level' => 'required|string|max:255',
+            'educational_level' => 'required|string|max:255',
+            'shift' => 'required|string|max:255',
+            'tags' => 'nullable|string|max:255',
+        ]);
 
-        // Set default values for date fields if they're null
-        $data['starting_date'] = $data['starting_date'] ?? Carbon::now()->format('Y-m-d');
-        $data['expiration_date'] = $data['expiration_date'] ?? Carbon::now()->addMonths(3)->format('Y-m-d');
+        // Set default values for nullable fields
+        $validatedData['salary'] = $validatedData['salary'] ?? 0;
+        $validatedData['employer_id'] = Auth::user()->employer->id;
+        $validatedData['auto_delete_at'] = now()->addDays(7);
 
-        // Set default values for numeric fields if they're null
-        $data['salary'] = $data['salary'] ?? 0;
-        $data['vacancies'] = $data['vacancies'] ?? 1;
-
-        // Add employer_id to the data
-        $data['employer_id'] = Auth::user()->employer->id;
-
-        // Create the job post with the prepared data
-        JobPost::create($data);
+        // Create the job post
+        JobPost::create($validatedData);
 
         return redirect()->route('employer.JobPost')->with('success', 'Job added successfully');
     }
@@ -88,19 +95,30 @@ class JobPostController extends Controller
         $JobPost = JobPost::where('employer_id', $employer->id)
                           ->findOrFail($id);
 
-        // Prepare data with default values for null fields
-        $data = $request->all();
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'job_description' => 'required|string',
+            'location' => 'required|string|max:255',
+            'type' => 'required|string|max:255',
+            'work_setup' => 'required|string|max:255',
+            'industry' => 'required|string|max:255',
+            'role' => 'required|string|max:255',
+            'salary' => 'nullable|numeric',
+            'vacancies' => 'required|integer',
+            'work_experience_level' => 'required|string|max:255',
+            'educational_level' => 'required|string|max:255',
+            'shift' => 'required|string|max:255',
+            'tags' => 'nullable|string|max:255',
+        ]);
 
-        // Set default values for date fields if they're null
-        $data['starting_date'] = $data['starting_date'] ?? Carbon::now()->format('Y-m-d');
-        $data['expiration_date'] = $data['expiration_date'] ?? Carbon::now()->addMonths(3)->format('Y-m-d');
+        // Set default values for nullable fields
+        $validatedData['salary'] = $validatedData['salary'] ?? 0;
 
-        // Set default values for numeric fields if they're null
-        $data['salary'] = $data['salary'] ?? 0;
-        $data['vacancies'] = $data['vacancies'] ?? 1;
+        // Reset auto_delete_at to 7 days from now when updated
+        $validatedData['auto_delete_at'] = now()->addDays(7);
 
-        // Update the job post with the prepared data
-        $JobPost->update($data);
+        // Update the job post
+        $JobPost->update($validatedData);
 
         return redirect()->route('employer.JobPost')->with('success', 'Job updated successfully');
     }
