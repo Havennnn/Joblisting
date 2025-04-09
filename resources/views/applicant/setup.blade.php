@@ -95,8 +95,10 @@
 
                                 <div>
                                     <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
-                                    <input type="email" name="email" id="email" value="{{ old('email', $data['email'] ?? $user->email) }}"
-                                        class="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <div class="mt-1 block w-full px-3 py-2 sm:text-sm border border-gray-300 rounded-md bg-gray-50 text-gray-700">
+                                        {{ old('email', $data['email'] ?? $user->email) }}
+                                    </div>
+                                    <input type="hidden" name="email" value="{{ old('email', $data['email'] ?? $user->email) }}">
                                 </div>
 
                                 <div>
