@@ -19,8 +19,8 @@ class EnsureUserIsApplicant
      */
     public function handle(Request $request, Closure $next)
     {
-        // Check if user is logged in and is not an employer
-        if (Auth::check() && !Auth::user()->is_employer) {
+        // Check if user is logged in and is an applicant
+        if (Auth::check() && Auth::user()->isApplicant()) {
             // If the user is an applicant but setup is not completed,
             // and the current route is not setup-related, redirect to setup
             $user = Auth::user();

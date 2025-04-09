@@ -91,7 +91,7 @@ class ProfileController extends Controller
         }
 
         // Check if user is an employer and has a company logo
-        if (!$user->is_employer || !$user->employer || !$user->employer->company_logo_path) {
+        if (!$user->isEmployer() || !$user->employer || !$user->employer->company_logo_path) {
             abort(404, 'Company logo not found');
         }
 

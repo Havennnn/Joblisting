@@ -19,7 +19,7 @@ class SetUserLayout
     public function handle(Request $request, Closure $next)
     {
         if (Auth::check()) {
-            if (Auth::user()->is_employer) {
+            if (Auth::user()->isEmployer()) {
                 View::share('layout', 'layouts.employer');
             } else {
                 View::share('layout', 'layouts.applicant');

@@ -25,7 +25,7 @@ class AuthController extends Controller
      */
     public function showApplicantLogin()
     {
-        if (Auth::check() && !Auth::user()->is_employer) {
+        if (Auth::check() && Auth::user()->isApplicant()) {
             return redirect()->route('applicant.dashboard');
         }
 
@@ -45,7 +45,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            if (Auth::user()->is_employer) {
+            if (Auth::user()->isEmployer()) {
                 Auth::logout();
                 return back()->withErrors([
                     'email' => 'This account is registered as an employer. Please use employer login.',
@@ -80,7 +80,7 @@ class AuthController extends Controller
     {
         // Redirect authenticated users to their dashboard
         if (Auth::check()) {
-            if (Auth::user()->is_employer) {
+            if (Auth::user()->isEmployer()) {
                 return redirect()->route('employer.dashboard');
             }
             return redirect()->route('applicant.dashboard');
@@ -102,7 +102,7 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            if (!Auth::user()->is_employer) {
+            if (!Auth::user()->isEmployer()) {
                 Auth::logout();
                 return back()->withErrors([
                     'email' => 'This account is registered as an applicant. Please use applicant login.',
@@ -137,7 +137,7 @@ class AuthController extends Controller
     {
         // Redirect authenticated users to their dashboard
         if (Auth::check()) {
-            if (Auth::user()->is_employer) {
+            if (Auth::user()->isEmployer()) {
                 return redirect()->route('employer.dashboard');
             }
             return redirect()->route('applicant.dashboard');
@@ -177,7 +177,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'is_employer' => false,
+            'role' => 'applicant',
         ]);
 
         // Create applicant profile
@@ -210,7 +210,7 @@ class AuthController extends Controller
     {
         // Redirect authenticated users to their dashboard
         if (Auth::check()) {
-            if (Auth::user()->is_employer) {
+            if (Auth::user()->isEmployer()) {
                 return redirect()->route('employer.dashboard');
             }
             return redirect()->route('applicant.dashboard');
@@ -250,7 +250,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'is_employer' => true,
+            'role' => 'employer',
         ]);
 
         // Create employer profile

@@ -52,7 +52,7 @@ class FacebookController extends Controller
                         'email' => $facebookUser->getEmail(),
                         'password' => bcrypt(Str::random(24)),
                         'email_verified_at' => now(),
-                        'is_employer' => ($userType === 'employer'),
+                        'role' => ($userType === 'employer') ? 'employer' : 'applicant',
                         'social_id' => $facebookUser->getId(),
                         'social_type' => 'facebook'
                     ];
@@ -65,7 +65,7 @@ class FacebookController extends Controller
 
                     Log::info('New user created successfully', [
                         'user_id' => $user->id,
-                        'is_employer' => $user->is_employer,
+                        'role' => $user->role,
                         'social_id' => $user->social_id,
                         'social_type' => $user->social_type
                     ]);
@@ -98,28 +98,28 @@ class FacebookController extends Controller
             } else {
                 Log::info('Existing user found', [
                     'user_id' => $user->id,
-                    'is_employer' => $user->is_employer,
+                    'role' => $user->role,
                     'social_id' => $user->social_id,
                     'social_type' => $user->social_type
                 ]);
 
                 // Check if the user type matches the requested type
-                $isEmployerMismatch = ($userType === 'employer' && !$user->is_employer);
-                $isApplicantMismatch = ($userType === 'applicant' && $user->is_employer);
+                $isEmployerMismatch = ($userType === 'employer' && !$user->isEmployer());
+                $isApplicantMismatch = ($userType === 'applicant' && $user->isEmployer());
 
                 if ($isEmployerMismatch || $isApplicantMismatch) {
                     Log::warning('User type mismatch', [
                         'user_id' => $user->id,
-                        'is_employer' => $user->is_employer,
+                        'role' => $user->role,
                         'requested_type' => $userType
                     ]);
 
                     // Redirect to appropriate login page with error
-                    $errorMessage = $user->is_employer
+                    $errorMessage = $user->isEmployer()
                         ? 'This account is registered as an employer. Please use employer login.'
                         : 'This account is registered as an applicant. Please use applicant login.';
 
-                    return redirect()->route($user->is_employer ? 'employer.login' : 'applicant.login')
+                    return redirect()->route($user->isEmployer() ? 'employer.login' : 'applicant.login')
                         ->with('error', $errorMessage);
                 }
 
@@ -140,7 +140,7 @@ class FacebookController extends Controller
                 // This prevents changing from employer to applicant or vice versa
                 Log::info('Keeping existing user type', [
                     'user_id' => $user->id,
-                    'current_type' => $user->is_employer ? 'employer' : 'applicant',
+                    'current_type' => $user->role,
                     'requested_type' => $userType
                 ]);
             }
@@ -149,7 +149,7 @@ class FacebookController extends Controller
             Auth::login($user);
             Log::info('User logged in', [
                 'user_id' => $user->id,
-                'is_employer' => $user->is_employer
+                'role' => $user->role
             ]);
 
             // Clear any existing session data

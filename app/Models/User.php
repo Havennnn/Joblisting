@@ -22,7 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'is_employer',
+        'role',
         'last_active_at',
         'social_id',
         'social_type',
@@ -49,7 +49,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'is_employer' => 'boolean',
+            'role' => 'string',
             'last_active_at' => 'datetime',
         ];
     }
@@ -62,5 +62,21 @@ class User extends Authenticatable
     public function applicantProfile()
     {
         return $this->hasOne(ApplicantProfile::class);
+    }
+
+    /**
+     * Check if user is an employer
+     */
+    public function isEmployer(): bool
+    {
+        return $this->role === 'employer';
+    }
+
+    /**
+     * Check if user is an applicant
+     */
+    public function isApplicant(): bool
+    {
+        return $this->role === 'applicant';
     }
 }

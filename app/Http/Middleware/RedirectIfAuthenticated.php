@@ -31,7 +31,7 @@ class RedirectIfAuthenticated
                 }
 
                 // Redirect to appropriate dashboard based on user type
-                if ($user->is_employer) {
+                if ($user->isEmployer()) {
                     // Check if setup is completed
                     if (!$user->employer || !$user->employer->setup_completed) {
                         return redirect()->route('employer.setup');

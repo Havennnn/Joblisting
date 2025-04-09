@@ -19,7 +19,7 @@ return new class extends Migration
                 $table->string('email')->unique();
                 $table->timestamp('email_verified_at')->nullable();
                 $table->string('password');
-                $table->boolean('is_employer')->default(false);
+                $table->enum('role', ['employer', 'applicant'])->default('applicant');
                 $table->timestamp('last_active_at')->nullable();
                 $table->rememberToken();
                 $table->timestamps();
@@ -27,8 +27,8 @@ return new class extends Migration
         } else {
             // Add any columns that might be missing from the users table
             Schema::table('users', function (Blueprint $table) {
-                if (!Schema::hasColumn('users', 'is_employer')) {
-                    $table->boolean('is_employer')->default(false);
+                if (!Schema::hasColumn('users', 'role')) {
+                    $table->enum('role', ['employer', 'applicant'])->default('applicant');
                 }
                 if (!Schema::hasColumn('users', 'last_active_at')) {
                     $table->timestamp('last_active_at')->nullable();
@@ -138,7 +138,7 @@ return new class extends Migration
 
         // Remove columns from users table that were added
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['is_employer', 'last_active_at']);
+            $table->dropColumn(['role', 'last_active_at']);
         });
     }
 };

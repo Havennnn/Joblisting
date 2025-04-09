@@ -18,7 +18,7 @@ class TestUsersSeeder extends Seeder
             'name' => 'Applicant Test',
             'email' => 'applicant@test.com',
             'password' => Hash::make('password'),
-            'is_employer' => false,
+            'role' => 'applicant',
             'email_verified_at' => now(),
         ]);
 
@@ -33,7 +33,7 @@ class TestUsersSeeder extends Seeder
             'name' => 'Employer Test',
             'email' => 'employer@test.com',
             'password' => Hash::make('password'),
-            'is_employer' => true,
+            'role' => 'employer',
             'email_verified_at' => now(),
         ]);
 

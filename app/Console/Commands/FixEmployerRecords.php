@@ -20,7 +20,7 @@ class FixEmployerRecords extends Command
      *
      * @var string
      */
-    protected $description = 'Creates employer records for users that have is_employer=true but no entry in the employers table';
+    protected $description = 'Creates employer records for users that have role=employer but no entry in the employers table';
 
     /**
      * Execute the console command.
@@ -30,7 +30,7 @@ class FixEmployerRecords extends Command
         $this->info('Finding employer users without employer records...');
 
         // Get users who are employers but don't have records in the employers table
-        $employerUsers = User::where('is_employer', true)
+        $employerUsers = User::where('role', 'employer')
             ->whereDoesntHave('employer')
             ->get();
 

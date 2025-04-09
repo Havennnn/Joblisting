@@ -20,7 +20,7 @@ class EnsureUserIsEmployer
     public function handle(Request $request, Closure $next)
     {
         // Check if user is logged in and is an employer
-        if (Auth::check() && Auth::user()->is_employer) {
+        if (Auth::check() && Auth::user()->isEmployer()) {
             $user = Auth::user();
             $currentRoute = $request->route()->getName();
 
