@@ -35,22 +35,24 @@ Route::middleware(['auth', 'employer'])->prefix('employer')->name('employer.')->
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/profile/logo/{user}', [ProfileController::class, 'showCompanyLogo'])->name('profile.logo');
 
+    // Job Post routes
+    Route::controller(JobPostController::class)->prefix('JobPost')->group(function () {
+        Route::get('', 'index')->name('JobPost');
+        Route::get('create', 'create')->name('JobPost.create');
+        Route::post('store', 'store')->name('JobPost.store');
+        Route::get('{id}', 'show')->name('JobPost.show');
+        Route::get('{id}/edit', 'edit')->name('JobPost.edit');
+        Route::put('{id}', 'update')->name('JobPost.update');
+        Route::delete('{id}', 'destroy')->name('JobPost.destroy');
+    });
+
     /*
      * Future routes to implement:
      */
 
     // Job management
     // Route::resource('/jobs', JobController::class);
-    // Product routes for employers only
-Route::controller(JobPostController::class)->prefix('employer/JobPost')->group(function () {
-    Route::get('', 'index')->name('JobPost');
-    Route::get('create', 'create')->name('JobPost.create');
-    Route::post('store', 'store')->name('JobPost.store');
-    Route::get('{id}', 'show')->name('JobPost.show');
-    Route::get('{id}/edit', 'edit')->name('JobPost.edit');
-    Route::put('{id}', 'update')->name('JobPost.update');
-    Route::delete('{id}', 'destroy')->name('JobPost.destroy');
-});
+
     // Application management
     // Route::get('/applications', [ApplicationController::class, 'index'])->name('applications');
     // Route::get('/applications/{id}', [ApplicationController::class, 'show'])->name('applications.show');

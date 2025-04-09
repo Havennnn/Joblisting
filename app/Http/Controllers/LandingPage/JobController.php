@@ -3,23 +3,21 @@
 namespace App\Http\Controllers\LandingPage;
 
 use App\Http\Controllers\Controller;
-use App\Models\Job;
+use App\Models\JobPost;
 use Illuminate\Http\Request;
 
 class JobController extends Controller
 {
     public function index()
     {
-        // We'll simplify here since the model might not exist yet
-        $jobs = []; // Job::all();
+        $jobs = JobPost::orderBy('created_at', 'DESC')->get();
 
         return view('landing.jobs', compact('jobs'));
     }
 
     public function show($id)
     {
-        // We'll simplify here since the model might not exist yet
-        $job = null; // Job::findOrFail($id);
+        $job = JobPost::findOrFail($id);
 
         return view('landing.job-details', compact('job'));
     }

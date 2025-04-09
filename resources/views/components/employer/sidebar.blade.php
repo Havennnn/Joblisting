@@ -8,7 +8,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="{{ request()->routeIs('employer.job-posts*') ? 'text-gray-900 font-semibold' : 'text-gray-600' }} hover:text-gray-900">
+                <a href="{{ route('employer.JobPost') }}" class="{{ request()->routeIs('employer.JobPost*') ? 'text-gray-900 font-semibold' : 'text-gray-600' }} hover:text-gray-900">
                     Job Listings
                 </a>
             </li>

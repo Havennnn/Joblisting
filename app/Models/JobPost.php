@@ -33,5 +33,14 @@ class JobPost extends Model
         'vacancies',
         'salary',
         'tags',
+        'employer_id',
     ];
+
+    /**
+     * Get the employer that owns the job post.
+     */
+    public function employer()
+    {
+        return $this->belongsTo(Employer::class);
+    }
 }
