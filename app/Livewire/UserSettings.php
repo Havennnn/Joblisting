@@ -26,7 +26,7 @@ class UserSettings extends Component
     public function rules()
     {
         return [
-            'newEmail' => 'required|email|unique:users,email,' . auth()->id(),
+            'newEmail' => 'required|email|unique:users,email,' . Auth::id(),
             'currentPassword' => 'required_with:newPassword',
             'newPassword' => 'required_with:currentPassword|min:8|confirmed',
             'newPassword_confirmation' => 'required_with:newPassword',
@@ -60,7 +60,7 @@ class UserSettings extends Component
         $this->user->save();
 
         // Send confirmation email
-        Mail::to($this->newEmail)->send(new \App\Mail\EmailChangeConfirmation($this->user, $this->emailChangeToken));
+        /* Mail::to($this->newEmail)->send(new \App\Mail\EmailChangeConfirmation($this->user, $this->emailChangeToken)); */
 
         $this->emailChangeRequested = true;
         session()->flash('emailChangeRequested', 'Please check your new email address for a confirmation link.');
