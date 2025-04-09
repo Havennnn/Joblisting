@@ -29,6 +29,30 @@ class ProfileCompletionService
             return 0;
         }
 
+        // Check if all essential fields are filled
+        $essentialFields = [
+            'name' => $user->name,
+            'email' => $user->email,
+            'phone_number' => $profile->phone_number ?? null,
+            'gender' => $profile->gender ?? null,
+            'age' => $profile->age ?? null,
+            'field' => $profile->field ?? null,
+            'skills' => $profile->skills ?? null,
+            'years_experience' => $profile->years_experience ?? null,
+        ];
+
+        $filledEssentials = 0;
+        foreach ($essentialFields as $field => $value) {
+            if (!empty($value) || $value === 0 || $value === '0') {
+                $filledEssentials++;
+            }
+        }
+
+        // If all essential fields are filled or at most one is missing, return 100%
+        if ($filledEssentials >= count($essentialFields) - 1) {
+            return 100;
+        }
+
         // Required fields for basic profile
         $requiredFields = [
             'name' => $user->name,

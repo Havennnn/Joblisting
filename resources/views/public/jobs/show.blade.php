@@ -142,14 +142,19 @@
                     @csrf
                     <input type="hidden" name="job_id" value="{{ $job->id }}">
 
-                    <div>
-                        <label for="cover_letter" class="block text-sm font-medium text-gray-700 mb-1">Cover Letter</label>
-                        <textarea id="cover_letter" name="cover_letter" rows="4" class="shadow-sm block w-full focus:ring-neksjob-blue focus:border-neksjob-blue sm:text-sm border-gray-300 rounded-md"></textarea>
-                    </div>
-
-                    <div>
-                        <label for="resume" class="block text-sm font-medium text-gray-700 mb-1">Resume/CV</label>
-                        <input type="file" id="resume" name="resume" class="shadow-sm block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-neksjob-blue/10 file:text-neksjob-blue hover:file:bg-neksjob-blue/20">
+                    <div class="bg-blue-50 p-3 rounded-md mb-4">
+                        <div class="flex">
+                            <div class="flex-1 md:flex md:justify-between">
+                                <p class="text-sm text-blue-700">
+                                    Your application will include your profile information and resume from your profile.
+                                </p>
+                                <p class="mt-3 text-sm md:mt-0 md:ml-6">
+                                    <a href="{{ route('applicant.profile.edit') }}" class="whitespace-nowrap font-medium text-blue-700 hover:text-blue-600">
+                                        Update Profile <span aria-hidden="true">&rarr;</span>
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
                     </div>
 
                     <div>
