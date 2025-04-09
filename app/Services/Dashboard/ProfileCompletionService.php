@@ -146,8 +146,9 @@ class ProfileCompletionService
             }
         }
 
-        // Calculate required fields percentage (50% of total)
-        $requiredPercentage = ($completedRequired / $totalRequired) * 50;
+        // Calculate required fields percentage (20% of total instead of 50%)
+        // This reduces the weight of just having name and email
+        $requiredPercentage = ($completedRequired / $totalRequired) * 20;
 
         // Count completed optional fields
         $completedOptional = 0;
@@ -173,8 +174,9 @@ class ProfileCompletionService
             'total_optional' => $totalOptional
         ]);
 
-        // Calculate optional fields percentage (30% of total)
-        $optionalPercentage = $totalOptional > 0 ? ($completedOptional / $totalOptional) * 30 : 0;
+        // Calculate optional fields percentage (50% of total instead of 30%)
+        // This increases the importance of filling out profile details
+        $optionalPercentage = $totalOptional > 0 ? ($completedOptional / $totalOptional) * 50 : 0;
 
         // Count completed optional file fields
         $completedFiles = 0;
@@ -186,8 +188,9 @@ class ProfileCompletionService
             }
         }
 
-        // Calculate file percentage (20% of total)
-        $filePercentage = $totalFiles > 0 ? ($completedFiles / $totalFiles) * 20 : 0;
+        // Calculate file percentage (30% of total instead of 20%)
+        // This increases the importance of uploading profile picture and resume
+        $filePercentage = $totalFiles > 0 ? ($completedFiles / $totalFiles) * 30 : 0;
 
         // Combine percentages
         $totalPercentage = round($requiredPercentage + $optionalPercentage + $filePercentage);
@@ -201,9 +204,9 @@ class ProfileCompletionService
             'total_percentage' => $totalPercentage
         ]);
 
-        // Ensure minimum 50% if setup is completed and all required fields are filled
-        if ($setupCompleted && $completedRequired == $totalRequired) {
-            $totalPercentage = max($totalPercentage, 50);
+        // If setup is skipped with only required fields, cap at 20% instead of 50%
+        if ($setupCompleted && $completedRequired == $totalRequired && $completedOptional == 0 && $completedFiles == 0) {
+            $totalPercentage = 20;
         }
 
         return $totalPercentage;
