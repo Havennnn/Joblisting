@@ -3,6 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Models\JobPost;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class DeleteExpiredJobPosts extends Command
 {
@@ -18,13 +21,32 @@ class DeleteExpiredJobPosts extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Delete job posts that have passed their auto-delete date';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        //
+        $now = Carbon::now();
+        $expiredJobs = JobPost::where('auto_delete_at', '<', $now)->get();
+
+        $count = $expiredJobs->count();
+
+        if ($count > 0) {
+            foreach ($expiredJobs as $job) {
+                $this->info("Deleting expired job: {$job->title} (ID: {$job->id})");
+                Log::info("Auto-deleting expired job: {$job->title} (ID: {$job->id})");
+                $job->delete();
+            }
+
+            $this->info("Successfully deleted {$count} expired job posts.");
+            Log::info("Deleted {$count} expired job posts via scheduled command.");
+        } else {
+            $this->info("No expired job posts found.");
+            Log::info("No expired job posts found during scheduled deletion check.");
+        }
+
+        return 0;
     }
 }

@@ -24,7 +24,7 @@
                         <div class="text-4xl font-bold ml-1 mr-5">8</div>
                         <div>
                             <p class="text-sm mb-1">Currently active job listings</p>
-                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">View all job posts</a>
+                            <a href="{{ route('employer.JobPost') }}" class="text-blue-600 hover:text-blue-800 text-sm">View all job posts</a>
                         </div>
                     </div>
                 </div>

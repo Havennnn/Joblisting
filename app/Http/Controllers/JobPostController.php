@@ -6,9 +6,20 @@ use Illuminate\Http\Request;
 use App\Models\JobPost;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use App\Services\Dashboard\ProfileCompletionService;
 
 class JobPostController extends Controller
 {
+    protected $profileCompletionService;
+
+    /**
+     * Constructor to inject the ProfileCompletionService.
+     */
+    public function __construct(ProfileCompletionService $profileCompletionService)
+    {
+        $this->profileCompletionService = $profileCompletionService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -19,7 +30,10 @@ class JobPostController extends Controller
                            ->orderBy('created_at', 'DESC')
                            ->get();
 
-        return view('JobPost.index', compact('JobPosts'));
+        // Get the employer profile completion percentage
+        $completionPercentage = $this->profileCompletionService->calculateEmployerCompletion(Auth::user());
+
+        return view('JobPost.index', compact('JobPosts', 'completionPercentage'));
     }
 
     /**
@@ -27,7 +41,15 @@ class JobPostController extends Controller
      */
     public function create()
     {
-        return view('JobPost.create');
+        // Check if employer profile is complete enough (at least 70%)
+        $completionPercentage = $this->profileCompletionService->calculateEmployerCompletion(Auth::user());
+
+        if ($completionPercentage < 70) {
+            return redirect()->route('employer.profile.edit')
+                ->with('warning', 'Please complete your employer profile before posting a job. Your profile is ' . $completionPercentage . '% complete.');
+        }
+
+        return view('JobPost.create', compact('completionPercentage'));
     }
 
     /**
@@ -35,6 +57,14 @@ class JobPostController extends Controller
      */
     public function store(Request $request)
     {
+        // Check if employer profile is complete enough (at least 70%)
+        $completionPercentage = $this->profileCompletionService->calculateEmployerCompletion(Auth::user());
+
+        if ($completionPercentage < 70) {
+            return redirect()->route('employer.profile.edit')
+                ->with('warning', 'Please complete your employer profile before posting a job. Your profile is ' . $completionPercentage . '% complete.');
+        }
+
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'job_description' => 'required|string',
@@ -71,7 +101,10 @@ class JobPostController extends Controller
         $JobPost = JobPost::where('employer_id', $employer->id)
                           ->findOrFail($id);
 
-        return view('JobPost.show', compact('JobPost'));
+        // Get the employer profile completion percentage
+        $completionPercentage = $this->profileCompletionService->calculateEmployerCompletion(Auth::user());
+
+        return view('JobPost.show', compact('JobPost', 'completionPercentage'));
     }
 
     /**
@@ -79,11 +112,19 @@ class JobPostController extends Controller
      */
     public function edit(string $id)
     {
+        // Check if employer profile is complete enough (at least 70%)
+        $completionPercentage = $this->profileCompletionService->calculateEmployerCompletion(Auth::user());
+
+        if ($completionPercentage < 70) {
+            return redirect()->route('employer.profile.edit')
+                ->with('warning', 'Please complete your employer profile before editing a job post. Your profile is ' . $completionPercentage . '% complete.');
+        }
+
         $employer = Auth::user()->employer;
         $JobPost = JobPost::where('employer_id', $employer->id)
                           ->findOrFail($id);
 
-        return view('JobPost.edit', compact('JobPost'));
+        return view('JobPost.edit', compact('JobPost', 'completionPercentage'));
     }
 
     /**
@@ -91,6 +132,14 @@ class JobPostController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        // Check if employer profile is complete enough (at least 70%)
+        $completionPercentage = $this->profileCompletionService->calculateEmployerCompletion(Auth::user());
+
+        if ($completionPercentage < 70) {
+            return redirect()->route('employer.profile.edit')
+                ->with('warning', 'Please complete your employer profile before updating a job post. Your profile is ' . $completionPercentage . '% complete.');
+        }
+
         $employer = Auth::user()->employer;
         $JobPost = JobPost::where('employer_id', $employer->id)
                           ->findOrFail($id);

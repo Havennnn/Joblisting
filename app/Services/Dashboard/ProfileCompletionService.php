@@ -80,6 +80,29 @@ class ProfileCompletionService
             return 0;
         }
 
+        // Check if all essential fields are filled
+        $essentialFields = [
+            'name' => $user->name,
+            'email' => $user->email,
+            'company_name' => $employer->company_name ?? null,
+            'company_description' => $employer->company_description ?? null,
+            'industry' => $employer->industry ?? null,
+            'phone_number' => $employer->phone_number ?? null,
+            'location' => $employer->location ?? null,
+        ];
+
+        $filledEssentials = 0;
+        foreach ($essentialFields as $field => $value) {
+            if (!empty($value)) {
+                $filledEssentials++;
+            }
+        }
+
+        // If all essential fields are filled, return 100%
+        if ($filledEssentials >= count($essentialFields) - 1) {
+            return 100;
+        }
+
         // Required fields for basic profile
         $requiredFields = [
             'name' => $user->name,
@@ -146,10 +169,6 @@ class ProfileCompletionService
             }
         }
 
-        // Calculate required fields percentage (20% of total instead of 50%)
-        // This reduces the weight of just having name and email
-        $requiredPercentage = ($completedRequired / $totalRequired) * 20;
-
         // Count completed optional fields
         $completedOptional = 0;
         $totalOptional = count($optionalFields);
@@ -174,10 +193,6 @@ class ProfileCompletionService
             'total_optional' => $totalOptional
         ]);
 
-        // Calculate optional fields percentage (50% of total instead of 30%)
-        // This increases the importance of filling out profile details
-        $optionalPercentage = $totalOptional > 0 ? ($completedOptional / $totalOptional) * 50 : 0;
-
         // Count completed optional file fields
         $completedFiles = 0;
         $totalFiles = count($optionalFileFields);
@@ -188,9 +203,26 @@ class ProfileCompletionService
             }
         }
 
-        // Calculate file percentage (30% of total instead of 20%)
-        // This increases the importance of uploading profile picture and resume
-        $filePercentage = $totalFiles > 0 ? ($completedFiles / $totalFiles) * 30 : 0;
+        // If all required fields are complete and we have at least 70% of optional fields and files
+        $isHighlyCompleted = $completedRequired == $totalRequired &&
+            (($completedOptional / max(1, $totalOptional)) >= 0.7 ||
+             $completedOptional == $totalOptional) &&
+            (($completedFiles / max(1, $totalFiles)) >= 0.7 ||
+             $completedFiles == $totalFiles);
+
+        // If profile is highly completed, just return 100%
+        if ($isHighlyCompleted) {
+            return 100;
+        }
+
+        // Calculate required fields percentage (20% of total)
+        $requiredPercentage = ($completedRequired / max(1, $totalRequired)) * 20;
+
+        // Calculate optional fields percentage (50% of total)
+        $optionalPercentage = ($completedOptional / max(1, $totalOptional)) * 50;
+
+        // Calculate file percentage (30% of total)
+        $filePercentage = ($completedFiles / max(1, $totalFiles)) * 30;
 
         // Combine percentages
         $totalPercentage = round($requiredPercentage + $optionalPercentage + $filePercentage);
@@ -204,8 +236,15 @@ class ProfileCompletionService
             'total_percentage' => $totalPercentage
         ]);
 
-        // If setup is skipped with only required fields, cap at 20% instead of 50%
-        if ($setupCompleted && $completedRequired == $totalRequired && $completedOptional == 0 && $completedFiles == 0) {
+        // If all fields and files are completed, ensure it's 100%
+        if ($completedRequired == $totalRequired &&
+            $completedOptional == $totalOptional &&
+            $completedFiles == $totalFiles) {
+            $totalPercentage = 100;
+        }
+
+        // If setup is skipped with only required fields, cap at 20%
+        else if ($setupCompleted && $completedRequired == $totalRequired && $completedOptional == 0 && $completedFiles == 0) {
             $totalPercentage = 20;
         }
 

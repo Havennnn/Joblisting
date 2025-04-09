@@ -3,6 +3,7 @@
 @section('title', 'Post New Job')
 
 @section('content')
+
 <div class="flex">
     <!-- Sidebar -->
     <x-employer.sidebar />
@@ -19,25 +20,6 @@
                     </svg>
                     Back to Jobs
                 </a>
-            </div>
-
-            <!-- Welcome card -->
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-xl mb-8">
-                <div class="p-6 sm:p-8">
-                    <div class="flex items-center space-x-4">
-                        <div class="flex-shrink-0">
-                            <div class="h-12 w-12 rounded-full bg-neksjob-blue bg-opacity-10 flex items-center justify-center">
-                                <svg class="h-6 w-6 text-neksjob-blue" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                        </div>
-                        <div>
-                            <h2 class="text-xl font-semibold text-gray-900">Welcome back, {{ auth()->user()->name }}!</h2>
-                            <p class="mt-1 text-sm text-gray-600">Create a compelling job posting to attract the perfect candidates.</p>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- Form card -->
