@@ -12,7 +12,9 @@ class PublicJobController extends Controller
      */
     public function index()
     {
-        $jobs = JobPost::orderBy('created_at', 'DESC')->get();
+        $jobs = JobPost::with('employer')
+            ->orderBy('created_at', 'DESC')
+            ->paginate(10);
 
         return view('public.jobs.index', compact('jobs'));
     }
@@ -22,7 +24,7 @@ class PublicJobController extends Controller
      */
     public function show($id)
     {
-        $job = JobPost::findOrFail($id);
+        $job = JobPost::with('employer')->findOrFail($id);
 
         return view('public.jobs.show', compact('job'));
     }

@@ -1,4 +1,4 @@
-@extends('layouts.landing')
+@extends('layouts.jobs')
 
 @section('title', $job->title . ' - NeksJob')
 
@@ -13,7 +13,7 @@
                     <p class="mt-1 text-lg text-gray-600">{{ $job->employer->company_name ?? 'Company' }}</p>
                 </div>
                 <div class="mt-4 md:mt-0">
-                    <a href="#apply" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <a href="#apply" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-neksjob-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neksjob-blue">
                         Apply Now
                     </a>
                 </div>
@@ -43,7 +43,7 @@
                             <p class="mt-1 text-sm text-gray-600">{{ $job->employer->industry }}</p>
                             <p class="mt-1 text-sm text-gray-600">{{ $job->employer->location }}</p>
                             @if($job->employer->website)
-                                <a href="{{ $job->employer->website }}" target="_blank" class="mt-2 text-sm text-blue-600 hover:text-blue-800 inline-flex items-center">
+                                <a href="{{ $job->employer->website }}" target="_blank" class="mt-2 text-sm text-neksjob-blue hover:text-blue-800 inline-flex items-center">
                                     <svg class="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.56-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.56.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z" clip-rule="evenodd" />
                                     </svg>
@@ -125,7 +125,7 @@
                         </div>
                     </div>
                     <div class="mt-3 pt-3 border-t border-gray-200">
-                        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium {{ $job->tags == 'Urgent' ? 'bg-red-100 text-red-800' : ($job->tags == 'Featured' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800') }}">
+                        <span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium {{ $job->tags == 'Urgent' ? 'bg-neksjob-pink text-white' : ($job->tags == 'Featured' ? 'bg-neksjob-blue text-white' : 'bg-gray-100 text-gray-800') }}">
                             {{ $job->tags }}
                         </span>
                     </div>
@@ -144,16 +144,16 @@
 
                     <div>
                         <label for="cover_letter" class="block text-sm font-medium text-gray-700 mb-1">Cover Letter</label>
-                        <textarea id="cover_letter" name="cover_letter" rows="4" class="shadow-sm block w-full focus:ring-blue-500 focus:border-blue-500 sm:text-sm border-gray-300 rounded-md"></textarea>
+                        <textarea id="cover_letter" name="cover_letter" rows="4" class="shadow-sm block w-full focus:ring-neksjob-blue focus:border-neksjob-blue sm:text-sm border-gray-300 rounded-md"></textarea>
                     </div>
 
                     <div>
                         <label for="resume" class="block text-sm font-medium text-gray-700 mb-1">Resume/CV</label>
-                        <input type="file" id="resume" name="resume" class="shadow-sm block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <input type="file" id="resume" name="resume" class="shadow-sm block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-neksjob-blue/10 file:text-neksjob-blue hover:file:bg-neksjob-blue/20">
                     </div>
 
                     <div>
-                        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-neksjob-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neksjob-blue">
                             Submit Application
                         </button>
                     </div>
@@ -161,7 +161,7 @@
                 @else
                 <div class="text-center py-4">
                     <p class="text-gray-600 mb-4">You need an applicant account to apply for this job.</p>
-                    <a href="{{ route('applicant.login') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    <a href="{{ route('applicant.login') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-neksjob-blue bg-neksjob-blue/10 hover:bg-neksjob-blue/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neksjob-blue">
                         Sign in as Jobseeker
                     </a>
                 </div>
@@ -169,7 +169,7 @@
             @else
             <div class="text-center py-4">
                 <p class="text-gray-600 mb-4">Please sign in to apply for this job.</p>
-                <a href="{{ route('applicant.login') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <a href="{{ route('applicant.login') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-neksjob-blue bg-neksjob-blue/10 hover:bg-neksjob-blue/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neksjob-blue">
                     Sign in as Jobseeker
                 </a>
             </div>

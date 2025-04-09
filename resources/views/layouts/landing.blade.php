@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>Neksjob</title>
-        
+
         <!-- CSS -->
         <link rel="stylesheet" href="{{ asset('css/landing.css') }}">
 
@@ -29,7 +29,7 @@
                 <a class="nav-link" href="/">Home</a>
                 <a class="nav-link" href="/jobs">Find Job</a>
             </div>
-            
+
             <div class="right-nav">
                 <a class="nav-link" href="#">Register</a>
                 <p id="nav-divider">|</p>
@@ -43,21 +43,21 @@
                 <div class="searchbar">
                     <span class="icon"><i class="fa fa-search"></i></span>
                     <input type="text" name="job-title" id="job-title" placeholder="Job Title">
-                    
+
                     <span class="divider"></span>
-                    
+
                     <span class="icon"><i class="fa fa-map-marker-alt"></i></span>
                     <input type="text" name="location" id="location" placeholder="City">
-                    
+
                     <button class="search-btn">Search</button>
                 </div>
             </div>
-            
+
             <!-- Hero Section -->
             <div class="hero">
                 <h1 id="catchphrase">Find your Dream Job today with <span id="company">Neksjob</span>!</h1>
                 <p id="subtitle">Discover job opportunities today. Apply and get interviewed now!</p>
-                
+
                 <div class="auth-buttons">
                     <input type="button" name="sign-in" id="sign-in" value="Sign In"></input>
                     <a id="register" href="#">Register</a>
@@ -67,7 +67,7 @@
             <!-- Events -->
             <div class="events">
                 <h1 id="event">Events for you</h1>
-            
+
                 <div class="event-container">
                     @foreach($events as $event)
                         <div class="event-card">
@@ -75,7 +75,7 @@
                             <div class="event-content">
                                 <h3 class="event-title">{{ $event->title }}</h3>
                                 <p class="event-date">{{ \Carbon\Carbon::parse($event->date)->format('D, F d') }} • {{ \Carbon\Carbon::parse($event->time)->format('g:i A') }} GMT+8</p>
-                                
+
                                 <p class="event-price">
                                     <strong>
                                         @if($event->price === 'Free')
@@ -84,11 +84,11 @@
                                             Php {{ number_format($event->price, 2) }}
                                         @endif
                                     </strong>
-                                </p>                                
-                                
+                                </p>
+
                                 <p class="event-company">{{ $event->company }}</p>
                                 <p class="event-followers"><i class="fa-solid fa-user"></i> {{ number_format($event->followers) }} followers</p>
-                                
+
                                 @if($event->is_promoted)
                                     <p class="event-promoted">Promoted <i class="material-icons">info_outline</i></p>
                                 @endif
@@ -96,7 +96,7 @@
                         </div>
                     @endforeach
                 </div>
-            </div>            
+            </div>
 
             <!-- Jobs -->
             <div class="jobs">
@@ -128,9 +128,9 @@
                     <div class="about-text">
                         <h2>About Us</h2>
                         <p>
-                            Neksjob is an outsourcing and social enterprise that provides quality services to our clients locally and abroad. 
-                            We are driven by the innate desire to bring about change by encouraging out-of-the-box solutions to well-worn 
-                            path challenges at a cost-effective rate. We aim to bridge the gap between countries and cultures, distance, 
+                            Neksjob is an outsourcing and social enterprise that provides quality services to our clients locally and abroad.
+                            We are driven by the innate desire to bring about change by encouraging out-of-the-box solutions to well-worn
+                            path challenges at a cost-effective rate. We aim to bridge the gap between countries and cultures, distance,
                             and time zones, to bring the world closer through the help of emerging technology.
                         </p>
                     </div>
@@ -166,13 +166,13 @@
                         <a href="https://maps.app.goo.gl/ZCwkt3FjH32PRAdA9"><p>2nd Floor Fuentes Bldg. Waling Waling St. Mla. East Road, San Isidro, Angono, Rizal</p></a>
                         <a href="https://www.neksjob.com/"><p>neksjob.com</p></a>
                         <p>Monday to Friday, 6:00 AM to 4:00 PM</p>
-                        
+
                         <div class="social-icons">
                             <a href="#" class="facebook"><i class="fa-brands fa-facebook-f"></i></a>
                             <a href="#" class="linkedin"><i class="fa-brands fa-linkedin-in"></i></a>
                             <a href="#" class="twitter"><i class="fa-brands fa-twitter"></i></a>
                         </div>
-    
+
                         <p id="copyright">© 2025 Copyright: neksjobph</p>
                     </div>
 
@@ -205,12 +205,12 @@
 
         <script>
             document.querySelector('.jobs-container').addEventListener('wheel', function(event) {
-                if (event.deltaY !== 0) { 
+                if (event.deltaY !== 0) {
                     event.preventDefault();
                     this.scrollLeft += event.deltaY;
                 }
             });
         </script>
-        
+
     </body>
 </html>
