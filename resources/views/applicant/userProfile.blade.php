@@ -37,31 +37,50 @@
         </div>
     </div>
 
-     <div class="profile-container">
-        <div class="profile-header">
-            <h1>{{ $user->name ?? 'Meryl Bennett Castro' }}</h1>
-            <p>{{ $user->email ?? 'meryl.neksjob@gmail.com' }}</p>
-            <button class="edit-btn">Edit</button>
+    <!-- Header -->
+    <div class="profile-banner">
+        <div class="profile-picture">
+            <img src="{{ asset('images/avatar.png') }}" alt="Profile Photo">
         </div>
-
-        <div class="section">
-            <h2>Skills</h2>
-            <p>Let employers know how valuable you can be to them.</p>
-            <button class="add-btn">Add Skills</button>
-        </div>
-
-        <div class="section">
-            <h2>Education</h2>
-            <p>Tell employers about your education.</p>
-            <button class="add-btn">Add Education</button>
-        </div>
-
-        <div class="section">
-            <h2>Resumé</h2>
-            <p>Upload a resumé for easy applying and access no matter where you are.</p>
-            <button class="upload-btn">Upload Resume</button>
+        <div class="profile-name">
+            <h1>{{ $user->name ?? 'Jimuel Sgv' }}</h1>
         </div>
     </div>
 
+    <!-- Info Boxes -->
+    <div class="info-container">
+
+        <div class="info-box">
+            <h3><u>Personal Information</u></h3>
+            <div class="info-grid">
+                <p><span>Full Name</span><br>{{ $user->name ?? 'Meryl Bennett Castro' }}</p>
+                <p><span>Email address</span><br>{{ $user->email ?? 'meryl.neksjob@gmail.com' }}</p>
+                <p><span>Phone Number</span><br>{{ $user->number ?? '09381234567' }}</p>
+                <p><span>Location</span><br>{{ $user->location ?? 'Binangonan, Rizal' }}</p>
+                <p><span>Gender</span><br>{{ $user->gender ?? 'Male' }}</p>
+                <p><span>Age</span><br>{{ $user->number ?? '23' }}</p>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h3><u>Professional Information</u></h3>
+            <div class="info-grid" id="professional-info">
+                <p><span>Field of Expertise</span><br>{{ $user->expertise ?? 'Computer Science' }}</p>
+                <p><span>Skills</span><br>{{ $user->skills ?? 'Javascript, PHP, CSS' }}</p>
+                <p><span>Years of Experience</span><br>{{ $user->experience ?? '7' }}</p>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h3><u>Document</u></h3>
+            <p><span>Resume</span><br>
+                <a href="#">View attached File</a>
+            </p>
+        </div>
+
+        <div class="edit-container">
+            <button class="edit-btn">Edit Profile</button>
+        </div>
+    </div>
 </body>
 </html>
