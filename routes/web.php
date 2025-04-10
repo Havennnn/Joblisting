@@ -21,6 +21,7 @@ Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 // Public job listing routes
 Route::get('/jobs', [PublicJobController::class, 'index'])->name('jobs.index');
+Route::get('/jobs/search', [PublicJobController::class, 'search'])->name('jobs.search');
 Route::get('/job-details/{id}', [PublicJobController::class, 'show'])->name('jobs.show');
 
 // Route for settings (accessible by both applicants and employers)
