@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Employer;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\JobPost;
 
 class DashboardController extends Controller
 {
@@ -12,8 +13,13 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         $profileCompletion = $this->calculateProfileCompletion($user);
+        
+        // Get the count of active job posts for the employer
+        $activeJobPosts = JobPost::where('employer_id', $user->employer->id)
+                                ->where('auto_delete_at', '>', now())
+                                ->count();
 
-        return view('employer.dashboard', compact('profileCompletion'));
+        return view('employer.dashboard', compact('profileCompletion', 'activeJobPosts'));
     }
 
     private function calculateProfileCompletion($user)

@@ -21,7 +21,7 @@
                         <h2 class="text-sm font-semibold uppercase">ACTIVE JOB POSTS</h2>
                     </div>
                     <div class="px-4 pb-4 flex items-center">
-                        <div class="text-4xl font-bold ml-1 mr-5">8</div>
+                        <div class="text-4xl font-bold ml-1 mr-5">{{ $activeJobPosts }}</div>
                         <div>
                             <p class="text-sm mb-1">Currently active job listings</p>
                             <a href="{{ route('employer.JobPost') }}" class="text-blue-600 hover:text-blue-800 text-sm">View all job posts</a>
