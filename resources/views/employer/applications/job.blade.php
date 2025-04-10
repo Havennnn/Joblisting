@@ -1,6 +1,6 @@
 @extends('layouts.employer')
 
-@section('title', 'Manage Applications')
+@section('title', 'Applications for ' . $job->title)
 
 @section('content')
 <div class="flex">
@@ -10,7 +10,21 @@
     <!-- Main Content -->
     <div class="flex-1 bg-gray-50">
         <div class="py-8 px-12">
-            <h1 class="text-3xl font-bold text-gray-900 mb-4">Applications</h1>
+            <div class="mb-6">
+                <a href="{{ route('employer.applications.index') }}" class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Back to All Applications
+                </a>
+            </div>
+
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-3xl font-bold text-gray-900">Applications for: {{ $job->title }}</h1>
+                <a href="{{ route('employer.job-posts.show', $job->id) }}" class="inline-flex items-center px-4 py-2 bg-gray-100 border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-200 active:bg-gray-300 focus:outline-none focus:border-gray-900 focus:ring ring-gray-300">
+                    View Job Post
+                </a>
+            </div>
 
             @if(session('success'))
                 <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
@@ -38,15 +52,14 @@
                 </div>
             @endif
 
-            <div class="bg-white rounded-lg shadow-sm">
+            <div class="bg-white rounded-lg shadow-sm mb-6">
                 <div class="p-6">
                     @if(count($applications) > 0)
                         <div class="overflow-x-auto">
-                            <table class="min-w-full divide-y divide-gray-200">
+                            <table class="min-w-full">
                                 <thead>
                                     <tr class="border-b">
                                         <th class="py-4 px-3 text-left font-medium text-gray-500">Applicant</th>
-                                        <th class="py-4 px-3 text-left font-medium text-gray-500">Job</th>
                                         <th class="py-4 px-3 text-left font-medium text-gray-500">Applied Date</th>
                                         <th class="py-4 px-3 text-center font-medium text-gray-500">Status</th>
                                         <th class="py-4 px-3 text-left font-medium text-gray-500">Actions</th>
@@ -67,10 +80,6 @@
                                                         <p class="text-sm text-gray-500">{{ $application->applicant->email }}</p>
                                                     </div>
                                                 </div>
-                                            </td>
-                                            <td class="py-4 px-3">
-                                                <p class="font-medium">{{ $application->job->title }}</p>
-                                                <p class="text-sm text-gray-500">{{ $application->job->location }}</p>
                                             </td>
                                             <td class="py-4 px-3">
                                                 <p class="font-medium">{{ $application->applied_at->format('M d, Y') }}</p>
@@ -113,10 +122,38 @@
                             </svg>
                             <h3 class="mt-2 text-sm font-medium text-gray-900">No applications</h3>
                             <p class="mt-1 text-sm text-gray-500">
-                                You haven't received any job applications yet.
+                                You haven't received any applications for this job post yet.
                             </p>
                         </div>
                     @endif
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm">
+                <div class="p-6">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">Job Details</h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <p class="mb-1"><span class="font-medium">Position:</span> {{ $job->title }}</p>
+                            <p class="mb-1"><span class="font-medium">Location:</span> {{ $job->location }}</p>
+                            @if($job->salary)
+                                <p class="mb-1"><span class="font-medium">Salary:</span> {{ $job->salary }}</p>
+                            @endif
+                        </div>
+                        <div>
+                            <p class="mb-1"><span class="font-medium">Job Type:</span> {{ $job->job_type }}</p>
+                            <p class="mb-1"><span class="font-medium">Experience Required:</span> {{ $job->experience_required }} years</p>
+                            <p class="mb-1"><span class="font-medium">Posted:</span> {{ $job->created_at->format('M d, Y') }}</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <h3 class="font-medium text-gray-700 mb-2">Job Description</h3>
+                        <div class="prose max-w-none border p-4 rounded-md bg-gray-50">
+                            {!! $job->job_description !!}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

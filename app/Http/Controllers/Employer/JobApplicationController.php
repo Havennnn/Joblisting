@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\JobApplication;
 use App\Models\JobPost;
+use App\Notifications\ApplicationStatusChanged;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Services\Dashboard\ProfileCompletionService;
@@ -104,6 +105,8 @@ class JobApplicationController extends Controller
         $application = JobApplication::where('employer_id', $employer->id)
             ->findOrFail($id);
 
+        // Track old status to check if it changed
+        $oldStatus = $application->status;
         $application->status = $request->status;
 
         if ($request->has('notes')) {
@@ -111,6 +114,12 @@ class JobApplicationController extends Controller
         }
 
         $application->save();
+
+        // Send notification if status changed
+        if ($oldStatus !== $application->status) {
+            $application->load(['job', 'applicant']); // Make sure relations are loaded
+            $application->applicant->notify(new ApplicationStatusChanged($application));
+        }
 
         return redirect()->back()->with('success', 'Application status updated successfully.');
     }

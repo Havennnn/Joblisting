@@ -5,9 +5,10 @@ use App\Http\Controllers\JobPostController;
 use App\Http\Controllers\Employer\DashboardController;
 use App\Http\Controllers\Employer\ProfileController;
 use App\Http\Controllers\Employer\SetupController;
+use App\Http\Controllers\Employer\NotificationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Employer\ApplicationController;
+use App\Http\Controllers\Employer\JobApplicationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,15 +35,12 @@ Route::middleware(['auth', 'employer'])->prefix('employer')->name('employer.')->
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Setup wizard routes
-    Route::middleware('employer.setup')->group(function () {
-        Route::controller(SetupController::class)->prefix('setup')->name('setup')->group(function () {
-            Route::get('/', 'index');
-            Route::post('/step-1', 'processStepOne')->name('.step-1');
-            Route::post('/step-2', 'processStepTwo')->name('.step-2');
-            Route::post('/step-3', 'processStepThree')->name('.step-3');
-            Route::post('/complete', 'complete')->name('.complete');
-        });
-    });
+    Route::get('/setup', [SetupController::class, 'index'])->name('setup');
+    Route::post('/setup/step-one', [SetupController::class, 'processStepOne'])->name('setup.step-one');
+    Route::post('/setup/step-two', [SetupController::class, 'processStepTwo'])->name('setup.step-two');
+    Route::post('/setup/step-three', [SetupController::class, 'processStepThree'])->name('setup.step-three');
+    Route::get('/setup/previous', [SetupController::class, 'previous'])->name('setup.previous');
+    Route::get('/setup/skip', [SetupController::class, 'skip'])->name('setup.skip');
 
     // Profile routes
     Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
@@ -63,13 +61,6 @@ Route::middleware(['auth', 'employer'])->prefix('employer')->name('employer.')->
         Route::delete('{id}', 'destroy')->name('JobPost.destroy');
     });
 
-    // Application management
-    Route::controller(ApplicationController::class)->prefix('applications')->name('applications.')->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('/{id}', 'show')->name('show');
-        Route::patch('/{id}/status', 'updateStatus')->name('update-status');
-    });
-
     /**
      * Job Posts Management Routes
      */
@@ -78,11 +69,23 @@ Route::middleware(['auth', 'employer'])->prefix('employer')->name('employer.')->
     /**
      * Application Management Routes
      */
-    Route::get('applications', [App\Http\Controllers\Employer\JobApplicationController::class, 'index'])->name('applications.index');
-    Route::get('applications/job/{jobId}', [App\Http\Controllers\Employer\JobApplicationController::class, 'showJobApplications'])->name('applications.job');
-    Route::get('applications/{id}', [App\Http\Controllers\Employer\JobApplicationController::class, 'show'])->name('applications.show');
-    Route::put('applications/{id}/status', [App\Http\Controllers\Employer\JobApplicationController::class, 'updateStatus'])->name('applications.update-status');
-    Route::get('applications/{id}/resume', [App\Http\Controllers\Employer\JobApplicationController::class, 'downloadResume'])->name('applications.download-resume');
+    Route::controller(JobApplicationController::class)->prefix('applications')->name('applications.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/job/{jobId}', 'showJobApplications')->name('job');
+        Route::get('/{id}', 'show')->name('show');
+        Route::patch('/{id}/status', 'updateStatus')->name('update-status');
+        Route::get('/{id}/resume', 'downloadResume')->name('download-resume');
+    });
+
+    /**
+     * Notification Routes
+     */
+    Route::controller(NotificationController::class)->prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/{id}/read', 'markAsRead')->name('read');
+        Route::post('/read-all', 'markAllAsRead')->name('read-all');
+        Route::delete('/{id}', 'delete')->name('delete');
+    });
 
     /*
      * Future routes to implement:

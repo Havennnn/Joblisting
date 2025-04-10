@@ -234,35 +234,35 @@
                                 <dl class="space-y-3 text-sm">
                                     <div class="flex justify-between">
                                         <dt class="text-gray-500">Total Applications:</dt>
-                                        <dd class="text-gray-900 font-medium">{{ isset($totalApplications) ? $totalApplications : 0 }}</dd>
+                                        <dd class="text-gray-900 font-medium">{{ isset($JobPost->applications) ? $JobPost->applications->count() : 0 }}</dd>
                                     </div>
                                     <div class="flex justify-between">
                                         <dt class="text-gray-500">New Applications:</dt>
                                         <dd class="text-gray-900">
-                                            {{ isset($newApplications) ? $newApplications : 0 }}
+                                            {{ isset($JobPost->applications) ? $JobPost->applications->where('status', 'pending')->count() : 0 }}
                                         </dd>
                                     </div>
                                     <div class="flex justify-between">
                                         <dt class="text-gray-500">Under Review:</dt>
                                         <dd class="text-gray-900">
-                                            {{ isset($reviewingApplications) ? $reviewingApplications : 0 }}
+                                            {{ isset($JobPost->applications) ? $JobPost->applications->where('status', 'reviewing')->count() : 0 }}
                                         </dd>
                                     </div>
                                     <div class="flex justify-between">
                                         <dt class="text-gray-500">Accepted:</dt>
-                                        <dd class="text-gray-900 text-green-600">
-                                            {{ isset($acceptedApplications) ? $acceptedApplications : 0 }}
+                                        <dd class="text-green-600 font-medium">
+                                            {{ isset($JobPost->applications) ? $JobPost->applications->where('status', 'accepted')->count() : 0 }}
                                         </dd>
                                     </div>
                                     <div class="flex justify-between">
                                         <dt class="text-gray-500">Rejected:</dt>
-                                        <dd class="text-gray-900 text-red-600">
-                                            {{ isset($rejectedApplications) ? $rejectedApplications : 0 }}
+                                        <dd class="text-red-600 font-medium">
+                                            {{ isset($JobPost->applications) ? $JobPost->applications->where('status', 'rejected')->count() : 0 }}
                                         </dd>
                                     </div>
-                                    @if(isset($totalApplications) && $totalApplications > 0)
+                                    @if(isset($JobPost->applications) && $JobPost->applications->count() > 0)
                                     <div class="mt-4 pt-3 border-t border-gray-200">
-                                        <a href="{{ route('employer.applications.index', ['job_id' => $JobPost->id]) }}" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-blue-700 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        <a href="{{ route('employer.applications.job', ['jobId' => $JobPost->id]) }}" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-blue-700 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                             View All Applications
                                         </a>
                                     </div>
