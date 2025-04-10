@@ -69,7 +69,8 @@ class ProfileCompletionController extends Controller
                 'percentage' => $completionPercentage,
                 'color' => $progressColor,
                 'message' => $message,
-                'action_link' => $actionLink
+                'action_link' => $actionLink,
+                'action_text' => 'Complete Your Profile'
             ];
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Error calculating profile completion', [
@@ -83,7 +84,8 @@ class ProfileCompletionController extends Controller
                 'percentage' => 0,
                 'color' => 'bg-red-500',
                 'message' => 'We could not calculate your profile completion. Please check your profile.',
-                'action_link' => route('employer.profile')
+                'action_link' => route('employer.profile.show'),
+                'action_text' => 'Complete Your Profile'
             ];
         }
     }
@@ -124,18 +126,18 @@ class ProfileCompletionController extends Controller
     }
 
     /**
-     * Get the action link based on completion status.
+     * Get the appropriate action link based on completion percentage and user profile data.
      *
-     * @param int $percentage
-     * @param mixed $user
+     * @param int $completionPercentage
+     * @param User $user
      * @return string
      */
-    private function getActionLink(int $percentage, $user): string
+    private function getActionLink($completionPercentage, $user)
     {
-        if ($percentage < 100) {
-            return route('employer.profile');
-        } else {
-            return route('employer.profile');
+        if ($completionPercentage < 100) {
+            return route('employer.profile.show');
         }
+
+        return route('employer.profile.show');
     }
 }

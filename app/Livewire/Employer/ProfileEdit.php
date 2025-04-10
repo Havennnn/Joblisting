@@ -122,8 +122,10 @@ class ProfileEdit extends Component
             $this->user->employer()->create($employerData);
         }
 
-        session()->flash('status', 'Profile updated successfully!');
-        return redirect()->route('employer.profile');
+        $this->company_logo = null;
+        session()->flash('message', 'Profile updated successfully.');
+
+        return redirect()->route('employer.profile.show');
     }
 
     /**

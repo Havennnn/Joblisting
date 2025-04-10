@@ -84,6 +84,75 @@
                                 {{ $JobPost->job_description }}
                             </div>
                         </div>
+
+                        <!-- Applications Received -->
+                        @if(isset($JobPost->applications) && count($JobPost->applications) > 0)
+                        <div class="mt-8 bg-gray-50 rounded-lg p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-lg font-medium text-gray-900">Applications Received</h3>
+                                <a href="{{ route('employer.applications.index') }}" class="text-sm text-blue-600 hover:text-blue-800">
+                                    View All Applications
+                                </a>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-100">
+                                        <tr>
+                                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Applicant
+                                            </th>
+                                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Applied Date
+                                            </th>
+                                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Status
+                                            </th>
+                                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Actions
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        @foreach($JobPost->applications as $application)
+                                            <tr>
+                                                <td class="px-4 py-3 whitespace-nowrap">
+                                                    <div class="flex items-center">
+                                                        <div>
+                                                            <div class="text-sm font-medium text-gray-900">
+                                                                {{ $application->applicant->name }}
+                                                            </div>
+                                                            <div class="text-sm text-gray-500">
+                                                                {{ $application->applicant->email }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="px-4 py-3 whitespace-nowrap">
+                                                    <div class="text-sm text-gray-900">{{ $application->applied_at->format('M d, Y') }}</div>
+                                                    <div class="text-sm text-gray-500">{{ $application->applied_at->format('h:i A') }}</div>
+                                                </td>
+                                                <td class="px-4 py-3 whitespace-nowrap">
+                                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                                        {{ $application->status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                                          ($application->status === 'reviewing' ? 'bg-blue-100 text-blue-800' :
+                                                          ($application->status === 'accepted' ? 'bg-green-100 text-green-800' :
+                                                          'bg-red-100 text-red-800')) }}">
+                                                        {{ ucfirst($application->status) }}
+                                                    </span>
+                                                </td>
+                                                <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
+                                                    <a href="{{ route('employer.applications.show', $application->id) }}"
+                                                       class="text-indigo-600 hover:text-indigo-900">
+                                                        View
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        @endif
                     </div>
 
                     <!-- Sidebar -->
@@ -157,6 +226,48 @@
                                         <span class="font-medium">Note:</span> This job post will be automatically removed after 7 days from creation or last update.
                                     </p>
                                 </div>
+                            </div>
+
+                            <!-- Applications Stats -->
+                            <div class="bg-gray-50 rounded-lg p-6">
+                                <h3 class="text-lg font-medium text-gray-900 mb-4">Application Stats</h3>
+                                <dl class="space-y-3 text-sm">
+                                    <div class="flex justify-between">
+                                        <dt class="text-gray-500">Total Applications:</dt>
+                                        <dd class="text-gray-900 font-medium">{{ isset($totalApplications) ? $totalApplications : 0 }}</dd>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <dt class="text-gray-500">New Applications:</dt>
+                                        <dd class="text-gray-900">
+                                            {{ isset($newApplications) ? $newApplications : 0 }}
+                                        </dd>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <dt class="text-gray-500">Under Review:</dt>
+                                        <dd class="text-gray-900">
+                                            {{ isset($reviewingApplications) ? $reviewingApplications : 0 }}
+                                        </dd>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <dt class="text-gray-500">Accepted:</dt>
+                                        <dd class="text-gray-900 text-green-600">
+                                            {{ isset($acceptedApplications) ? $acceptedApplications : 0 }}
+                                        </dd>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <dt class="text-gray-500">Rejected:</dt>
+                                        <dd class="text-gray-900 text-red-600">
+                                            {{ isset($rejectedApplications) ? $rejectedApplications : 0 }}
+                                        </dd>
+                                    </div>
+                                    @if(isset($totalApplications) && $totalApplications > 0)
+                                    <div class="mt-4 pt-3 border-t border-gray-200">
+                                        <a href="{{ route('employer.applications.index', ['job_id' => $JobPost->id]) }}" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-blue-700 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                            View All Applications
+                                        </a>
+                                    </div>
+                                    @endif
+                                </dl>
                             </div>
                         </div>
                     </div>

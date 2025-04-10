@@ -99,12 +99,28 @@ class JobPostController extends Controller
     {
         $employer = Auth::user()->employer;
         $JobPost = JobPost::where('employer_id', $employer->id)
+                          ->with(['applications.applicant'])
                           ->findOrFail($id);
 
         // Get the employer profile completion percentage
         $completionPercentage = $this->profileCompletionService->calculateEmployerCompletion(Auth::user());
 
-        return view('JobPost.show', compact('JobPost', 'completionPercentage'));
+        // Calculate application statistics
+        $totalApplications = $JobPost->applications->count();
+        $newApplications = $JobPost->applications->where('viewed_at', null)->count();
+        $reviewingApplications = $JobPost->applications->where('status', 'reviewing')->count();
+        $acceptedApplications = $JobPost->applications->where('status', 'accepted')->count();
+        $rejectedApplications = $JobPost->applications->where('status', 'rejected')->count();
+
+        return view('JobPost.show', compact(
+            'JobPost',
+            'completionPercentage',
+            'totalApplications',
+            'newApplications',
+            'reviewingApplications',
+            'acceptedApplications',
+            'rejectedApplications'
+        ));
     }
 
     /**

@@ -6,6 +6,8 @@ use App\Http\Controllers\Employer\DashboardController;
 use App\Http\Controllers\Employer\ProfileController;
 use App\Http\Controllers\Employer\SetupController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Employer\ApplicationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,23 +19,38 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Guest routes for Employer
+Route::middleware('guest')->group(function () {
+    Route::controller(AuthController::class)->group(function () {
+        Route::get('/login', 'showEmployerLogin')->name('employer.login');
+        Route::post('/login', 'loginEmployer');
+        Route::get('/register', 'showEmployerRegister')->name('employer.register');
+        Route::post('/register', 'registerEmployer');
+    });
+});
+
 Route::middleware(['auth', 'employer'])->prefix('employer')->name('employer.')->group(function () {
     // Dashboard route
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Setup wizard routes
-    Route::get('/setup', [SetupController::class, 'index'])->name('setup');
-    Route::post('/setup/step-one', [SetupController::class, 'processStepOne'])->name('setup.step-one');
-    Route::post('/setup/step-two', [SetupController::class, 'processStepTwo'])->name('setup.step-two');
-    Route::post('/setup/step-three', [SetupController::class, 'processStepThree'])->name('setup.step-three');
-    Route::get('/setup/previous', [SetupController::class, 'previous'])->name('setup.previous');
-    Route::get('/setup/skip', [SetupController::class, 'skip'])->name('setup.skip');
+    Route::middleware('employer.setup')->group(function () {
+        Route::controller(SetupController::class)->prefix('setup')->name('setup')->group(function () {
+            Route::get('/', 'index');
+            Route::post('/step-1', 'processStepOne')->name('.step-1');
+            Route::post('/step-2', 'processStepTwo')->name('.step-2');
+            Route::post('/step-3', 'processStepThree')->name('.step-3');
+            Route::post('/complete', 'complete')->name('.complete');
+        });
+    });
 
     // Profile routes
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::get('/profile/logo/{user}', [ProfileController::class, 'showCompanyLogo'])->name('profile.logo');
+    Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', 'show')->name('show');
+        Route::get('/edit', 'edit')->name('edit');
+        Route::put('/', 'update')->name('update');
+        Route::get('/logo/{user}', [ProfileController::class, 'showCompanyLogo'])->name('logo');
+    });
 
     // Job Post routes
     Route::controller(JobPostController::class)->prefix('JobPost')->group(function () {
@@ -46,16 +63,33 @@ Route::middleware(['auth', 'employer'])->prefix('employer')->name('employer.')->
         Route::delete('{id}', 'destroy')->name('JobPost.destroy');
     });
 
+    // Application management
+    Route::controller(ApplicationController::class)->prefix('applications')->name('applications.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/{id}', 'show')->name('show');
+        Route::patch('/{id}/status', 'updateStatus')->name('update-status');
+    });
+
+    /**
+     * Job Posts Management Routes
+     */
+    Route::resource('job-posts', JobPostController::class);
+
+    /**
+     * Application Management Routes
+     */
+    Route::get('applications', [App\Http\Controllers\Employer\JobApplicationController::class, 'index'])->name('applications.index');
+    Route::get('applications/job/{jobId}', [App\Http\Controllers\Employer\JobApplicationController::class, 'showJobApplications'])->name('applications.job');
+    Route::get('applications/{id}', [App\Http\Controllers\Employer\JobApplicationController::class, 'show'])->name('applications.show');
+    Route::put('applications/{id}/status', [App\Http\Controllers\Employer\JobApplicationController::class, 'updateStatus'])->name('applications.update-status');
+    Route::get('applications/{id}/resume', [App\Http\Controllers\Employer\JobApplicationController::class, 'downloadResume'])->name('applications.download-resume');
+
     /*
      * Future routes to implement:
      */
 
     // Job management
     // Route::resource('/jobs', JobController::class);
-
-    // Application management
-    // Route::get('/applications', [ApplicationController::class, 'index'])->name('applications');
-    // Route::get('/applications/{id}', [ApplicationController::class, 'show'])->name('applications.show');
 
     // Candidate search
     // Route::get('/candidates', [CandidateController::class, 'index'])->name('candidates');

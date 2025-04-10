@@ -66,18 +66,19 @@ class ProfileController extends Controller
             $employer->company_logo_path = $path;
         }
 
-        // Update employer profile
-        $employer->fill([
+        // Update employer data
+        $employer->update([
+            'full_name' => $validated['full_name'],
             'company_name' => $validated['company_name'],
             'company_description' => $validated['company_description'],
             'industry' => $validated['industry'],
-            'website' => $validated['website'] ?? null,
+            'website' => $validated['website'],
             'phone_number' => $validated['phone_number'],
             'location' => $validated['location'],
-        ])->save();
+        ]);
 
-        return redirect()->route('employer.profile')
-            ->with('status', 'Company profile updated successfully!');
+        return redirect()->route('employer.profile.show')
+            ->with('success', 'Profile updated successfully.');
     }
 
     /**

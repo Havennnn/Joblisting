@@ -9,8 +9,8 @@
         <x-employer.sidebar />
 
         <!-- Main Content -->
-        <div class="flex-1 ml-4">
-            <div class="bg-white rounded-lg shadow-sm p-6">
+        <div class="flex-1 bg-gray-50">
+            <div class="rounded-lg shadow-sm p-6">
                 <div class="flex items-center justify-between mb-6">
                     <h1 class="text-2xl font-bold text-gray-900">Job Management</h1>
                     @if($completionPercentage >= 70)

@@ -13,8 +13,8 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="{{ request()->routeIs('employer.applicants*') ? 'text-gray-900 font-semibold' : 'text-gray-600' }} hover:text-gray-900">
-                    My Applicants
+                <a href="{{ route('employer.applications.index') }}" class="{{ request()->routeIs('employer.applications*') ? 'text-gray-900 font-semibold' : 'text-gray-600' }} hover:text-gray-900">
+                    Applications
                 </a>
             </li>
             <li>

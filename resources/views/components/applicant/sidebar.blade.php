@@ -8,7 +8,7 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('applicant.dashboard') }}" class="{{ request()->routeIs('applicant.applications') ? 'text-gray-900 font-semibold' : 'text-gray-600 hover:text-gray-900' }}">
+                <a href="{{ route('applicant.applications') }}" class="{{ request()->routeIs('applicant.applications') ? 'text-gray-900 font-semibold' : 'text-gray-600 hover:text-gray-900' }}">
                     My Applications
                 </a>
             </li>

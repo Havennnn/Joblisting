@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Applicant\DashboardController;
 use App\Http\Controllers\Applicant\ProfileController;
 use App\Http\Controllers\Applicant\SetupController;
+use App\Http\Controllers\Applicant\JobApplicationController;
+use App\Http\Controllers\Applicant\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +35,16 @@ Route::prefix('applicant')->name('applicant.')->middleware(['auth', 'applicant']
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/profile/picture/{user}', [ProfileController::class, 'showProfilePicture'])->name('profile.picture');
     Route::get('/profile/resume/{user}', [ProfileController::class, 'downloadResume'])->name('profile.resume');
+
+    // Job application routes
+    Route::post('/jobs/{job}/apply', [JobApplicationController::class, 'store'])->name('jobs.apply');
+    Route::get('/my-applications', [JobApplicationController::class, 'index'])->name('applications');
+
+    // Notification routes
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+    Route::delete('/notifications/{id}', [NotificationController::class, 'delete'])->name('notifications.delete');
 
     /*
      * Future routes to implement:

@@ -35,10 +35,10 @@
                         <h2 class="text-sm font-semibold uppercase">TOTAL APPLICANTS</h2>
                     </div>
                     <div class="px-4 pb-4 flex items-center">
-                        <div class="text-4xl font-bold ml-1 mr-5">156</div>
+                        <div class="text-4xl font-bold ml-1 mr-5">{{ $totalApplications ?? 0 }}</div>
                         <div>
                             <p class="text-sm mb-1">Total applications received</p>
-                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">View all applicants</a>
+                            <a href="{{ route('employer.applications.index') }}" class="text-blue-600 hover:text-blue-800 text-sm">View all applications</a>
                         </div>
                     </div>
                 </div>
@@ -62,7 +62,7 @@
             <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl font-bold">Recent Applications</h2>
-                    <a href="#" class="text-blue-600 hover:text-blue-800">View All</a>
+                    <a href="{{ route('employer.applications.index') }}" class="text-blue-600 hover:text-blue-800">View All</a>
                 </div>
 
                 <!-- Applications Table -->
@@ -77,84 +77,46 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="border-b">
-                                <td class="py-4 px-3">
-                                    <div class="flex items-center">
-                                        <div class="bg-red-600 text-white p-2 rounded-full mr-4">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                            </svg>
+                            @if(isset($recentApplications) && count($recentApplications) > 0)
+                                @foreach($recentApplications as $application)
+                                <tr class="border-b">
+                                    <td class="py-4 px-3">
+                                        <div class="flex items-center">
+                                            <div class="bg-red-600 text-white p-2 rounded-full mr-4">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <p class="font-medium">{{ $application->applicant->name }}</p>
+                                                <p class="text-sm text-gray-500">{{ $application->applicant->email }}</p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <p class="font-medium">John Doe</p>
-                                            <p class="text-sm text-gray-500">john.doe@example.com</p>
+                                    </td>
+                                    <td class="py-4 px-3">
+                                        <p class="font-medium">{{ $application->job->title }}</p>
+                                    </td>
+                                    <td class="py-4 px-3 text-center">
+                                        <p class="text-sm text-gray-500">{{ $application->applied_at->format('M d, Y') }}</p>
+                                    </td>
+                                    <td class="py-4 px-3 text-center">
+                                        <div class="px-3 py-1 rounded-full inline-block font-medium
+                                            {{ $application->status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                               ($application->status === 'reviewing' ? 'bg-blue-100 text-blue-800' :
+                                               ($application->status === 'accepted' ? 'bg-green-100 text-green-800' :
+                                               'bg-red-100 text-red-600')) }}">
+                                            {{ ucfirst($application->status) }}
                                         </div>
-                                    </div>
-                                </td>
-                                <td class="py-4 px-3">
-                                    <p class="font-medium">Software Engineer</p>
-                                </td>
-                                <td class="py-4 px-3 text-center">
-                                    <p class="text-sm text-gray-500">March 25, 2024</p>
-                                </td>
-                                <td class="py-4 px-3 text-center">
-                                    <div class="bg-green-100 text-green-800 px-3 py-1 rounded-full inline-block font-medium">
-                                        Hired
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="border-b">
-                                <td class="py-4 px-3">
-                                    <div class="flex items-center">
-                                        <div class="bg-red-600 text-white p-2 rounded-full mr-4">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <p class="font-medium">Jane Smith</p>
-                                            <p class="text-sm text-gray-500">jane.smith@example.com</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="py-4 px-3">
-                                    <p class="font-medium">Product Manager</p>
-                                </td>
-                                <td class="py-4 px-3 text-center">
-                                    <p class="text-sm text-gray-500">March 24, 2024</p>
-                                </td>
-                                <td class="py-4 px-3 text-center">
-                                    <div class="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full inline-block font-medium">
-                                        Interview Scheduled
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="border-b">
-                                <td class="py-4 px-3">
-                                    <div class="flex items-center">
-                                        <div class="bg-red-600 text-white p-2 rounded-full mr-4">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                            </svg>
-                                        </div>
-                                        <div>
-                                            <p class="font-medium">Mike Johnson</p>
-                                            <p class="text-sm text-gray-500">mike.johnson@example.com</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td class="py-4 px-3">
-                                    <p class="font-medium">UX Designer</p>
-                                </td>
-                                <td class="py-4 px-3 text-center">
-                                    <p class="text-sm text-gray-500">March 23, 2024</p>
-                                </td>
-                                <td class="py-4 px-3 text-center">
-                                    <div class="bg-red-100 text-red-600 px-3 py-1 rounded-full inline-block font-medium">
-                                        Rejected
-                                    </div>
-                                </td>
-                            </tr>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            @else
+                                <tr>
+                                    <td colspan="4" class="py-6 text-center text-gray-500">
+                                        No applications received yet.
+                                    </td>
+                                </tr>
+                            @endif
                         </tbody>
                     </table>
                 </div>
