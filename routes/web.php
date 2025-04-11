@@ -5,6 +5,7 @@ use App\Http\Controllers\LandingPage\LandingController;
 use App\Http\Controllers\LandingPage\JobController;
 use App\Http\Controllers\PublicJobController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\Settings\SettingsController as SettingsSettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +27,17 @@ Route::get('/job-details/{id}', [PublicJobController::class, 'show'])->name('job
 
 // Route for settings (accessible by both applicants and employers)
 Route::middleware(['auth'])->group(function () {
-    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+    Route::get('/settings', [SettingsSettingsController::class, 'index'])->name('settings.index');
+
+    // Email change with OTP verification
+    Route::get('/settings/email/change', [SettingsSettingsController::class, 'showEmailChangeForm'])
+        ->name('settings.email.change.form');
+    Route::post('/settings/email/change', [SettingsSettingsController::class, 'initiateEmailChange'])
+        ->name('settings.email.change');
+    Route::get('/settings/email/verify', [SettingsSettingsController::class, 'showEmailChangeVerification'])
+        ->name('settings.email.verify');
+    Route::post('/settings/email/verify', [SettingsSettingsController::class, 'verifyEmailChange'])
+        ->name('settings.email.verify.submit');
 });
 
 /*

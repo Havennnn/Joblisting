@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\FacebookController;
 use App\Http\Controllers\Auth\GoogleController;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -113,9 +114,17 @@ Route::middleware('guest')->group(function () {
 
 // Email verification routes
 Route::middleware('auth')->group(function () {
-    Volt::route('verify-email', 'pages.auth.verify-email')->name('verification.notice');
-    Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
+    Route::get('/email/verify', function () {
+        return view('auth.verify-email');
+    })->name('verification.notice');
+
+    Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
         ->middleware(['signed', 'throttle:6,1'])
         ->name('verification.verify');
-    Volt::route('confirm-password', 'pages.auth.confirm-password')->name('password.confirm');
+
+    Route::post('/email/verification-notification', function (Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+        return back()->with('message', 'Verification link sent!');
+    })->middleware(['throttle:6,1'])
+      ->name('verification.send');
 });

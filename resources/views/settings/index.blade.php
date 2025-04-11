@@ -1,4 +1,4 @@
-@extends('layouts.' . (auth()->user()->isEmployer() ? 'employer' : 'applicant'))
+@extends('layouts.app')
 
 @section('title', 'Account Settings')
 

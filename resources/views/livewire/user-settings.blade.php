@@ -41,24 +41,13 @@
 
                     @if(!$emailChangeRequested)
                         <div class="space-y-4">
-                            <div>
-                                <label for="newEmail" class="block text-sm font-medium text-gray-700">New Email Address</label>
-                                <input
-                                    type="email"
-                                    id="newEmail"
-                                    wire:model="newEmail"
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                                >
-                                @error('newEmail') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
-                            </div>
-
                             <div class="pt-3">
-                                <button
-                                    wire:click="requestEmailChange"
+                                <a
+                                    href="{{ route('settings.email.change.form') }}"
                                     class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                                 >
-                                    Request Email Change
-                                </button>
+                                    Change Email Address
+                                </a>
                             </div>
                         </div>
                     @else

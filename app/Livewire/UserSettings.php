@@ -8,25 +8,22 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Route;
 
 class UserSettings extends Component
 {
     public $user;
     public $currentEmail;
-    public $newEmail;
     public $currentPassword;
     public $newPassword;
     public $newPassword_confirmation;
     public $activeTab = 'email';
-    public $showEmailForm = true;
-    public $emailChangeToken;
     public $emailChangeRequested = false;
 
     // Define rules for validation
     public function rules()
     {
         return [
-            'newEmail' => 'required|email|unique:users,email,' . Auth::id(),
             'currentPassword' => 'required_with:newPassword',
             'newPassword' => 'required_with:currentPassword|min:8|confirmed',
             'newPassword_confirmation' => 'required_with:newPassword',
@@ -37,33 +34,15 @@ class UserSettings extends Component
     {
         $this->user = Auth::user();
         $this->currentEmail = $this->user->email;
+
+        // Check if there's a pending email change
+        $this->emailChangeRequested = session()->has('pending_email_change');
     }
 
     public function setTab($tab)
     {
         $this->activeTab = $tab;
         $this->resetValidation();
-    }
-
-    public function requestEmailChange()
-    {
-        $this->validate([
-            'newEmail' => 'required|email|unique:users,email,' . $this->user->id,
-        ]);
-
-        // Generate a unique token for email change
-        $this->emailChangeToken = Str::random(60);
-
-        // Store the new email and token in the user's record
-        $this->user->email_change_token = $this->emailChangeToken;
-        $this->user->pending_email = $this->newEmail;
-        $this->user->save();
-
-        // Send confirmation email
-        /* Mail::to($this->newEmail)->send(new \App\Mail\EmailChangeConfirmation($this->user, $this->emailChangeToken)); */
-
-        $this->emailChangeRequested = true;
-        session()->flash('emailChangeRequested', 'Please check your new email address for a confirmation link.');
     }
 
     public function updatePassword()
