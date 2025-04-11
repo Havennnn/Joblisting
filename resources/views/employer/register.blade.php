@@ -16,7 +16,7 @@
 
             <div>
                 <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
-                    Company Name
+                    Full Name
                 </label>
                 <input id="name" name="name" type="text" autocomplete="name" required
                     class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#e83e8c] focus:border-[#e83e8c] sm:text-sm"
