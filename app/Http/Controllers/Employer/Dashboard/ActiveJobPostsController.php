@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Employer\Dashboard;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Models\JobPost;
+use App\Models\Jobs\JobPost;
 
 class ActiveJobPostsController extends Controller
 {

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Employer\JobListing;
 
 use App\Http\Controllers\Controller;
-use App\Models\JobPost;
+use App\Models\Jobs\JobPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Dashboard\ProfileCompletionService;
@@ -34,9 +34,9 @@ class EditController extends Controller
         }
 
         $employer = Auth::user()->employer;
-        $JobPost = JobPost::where('employer_id', $employer->id)
+        $jobPost = JobPost::where('employer_id', $employer->id)
                           ->findOrFail($id);
 
-        return view('JobPost.edit', compact('JobPost', 'completionPercentage'));
+        return view('JobPost.edit', compact('jobPost', 'completionPercentage'));
     }
 }

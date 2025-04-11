@@ -9,7 +9,7 @@ use App\Http\Controllers\Employer\JobListing\ShowController;
 use App\Http\Controllers\Employer\JobListing\EditController;
 use App\Http\Controllers\Employer\JobListing\UpdateController;
 use App\Http\Controllers\Employer\JobListing\DestroyController;
-use App\Models\JobPost;
+use App\Models\Jobs\JobPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Dashboard\ProfileCompletionService;

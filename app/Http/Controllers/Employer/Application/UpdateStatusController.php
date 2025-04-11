@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Employer\Application;
 
 use App\Http\Controllers\Controller;
-use App\Models\JobApplication;
+use App\Models\Jobs\JobApplication;
 use App\Notifications\ApplicationStatusChanged;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

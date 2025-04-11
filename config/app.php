@@ -182,6 +182,7 @@ return [
         App\Providers\AppServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\VoltServiceProvider::class,
+        App\Providers\ModelServiceProvider::class,
     ],
 
 ];

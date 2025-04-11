@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth\Applicant;
 
 use App\Http\Controllers\Controller;
+use App\Models\Users\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -19,8 +20,11 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
-        if (Auth::check() && Auth::user()->isApplicant()) {
-            return redirect()->route('applicant.dashboard');
+        if (Auth::check()) {
+            $user = Auth::user();
+            if ($user->role === 'applicant') {
+                return redirect()->route('applicant.dashboard');
+            }
         }
 
         return view('applicant.login');
@@ -78,7 +82,7 @@ class LoginController extends Controller
             $request->session()->regenerate();
 
             // Check if user is an applicant
-            if (!$user->isApplicant()) {
+            if ($user->role !== 'applicant') {
                 Auth::logout();
                 return back()->withErrors(['email' => 'This account is not an applicant account.']);
             }

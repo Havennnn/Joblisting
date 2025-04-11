@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Applicant\Profile;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Users\User;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -13,7 +13,7 @@ class ShowProfilePictureController extends Controller
     /**
      * Securely serve profile picture from private storage
      *
-     * @param \App\Models\User $user
+     * @param \App\Models\Users\User $user
      * @return \Illuminate\Http\Response
      */
     public function __invoke(User $user)

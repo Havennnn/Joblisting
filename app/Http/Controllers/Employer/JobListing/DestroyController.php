@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Employer\JobListing;
 
 use App\Http\Controllers\Controller;
-use App\Models\JobPost;
+use App\Models\Jobs\JobPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,10 +15,10 @@ class DestroyController extends Controller
     public function __invoke(string $id)
     {
         $employer = Auth::user()->employer;
-        $JobPost = JobPost::where('employer_id', $employer->id)
+        $jobPost = JobPost::where('employer_id', $employer->id)
                           ->findOrFail($id);
 
-        $JobPost->delete();
+        $jobPost->delete();
 
         return redirect()->route('employer.JobPost')->with('success', 'Job deleted successfully');
     }

@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Mail\OtpMail;
-use App\Models\User;
+use App\Models\Users\User;
 use App\Jobs\SendOtpJob;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;

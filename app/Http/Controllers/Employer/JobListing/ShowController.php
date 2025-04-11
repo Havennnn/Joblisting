@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Employer\JobListing;
 
 use App\Http\Controllers\Controller;
-use App\Models\JobPost;
+use App\Models\Jobs\JobPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Dashboard\ProfileCompletionService;
@@ -33,9 +33,9 @@ class ShowController extends Controller
         // Get the employer profile completion percentage
         $completionPercentage = $this->profileCompletionService->calculateEmployerCompletion(Auth::user());
 
-        // Calculate application statistics
-        $totalApplications = $JobPost->applications->count();
-        $newApplications = $JobPost->applications->where('viewed_at', null)->count();
+        // Get application statistics directly from the model
+        $totalApplications = $JobPost->application_count;
+        $newApplications = $JobPost->unread_application_count;
         $reviewingApplications = $JobPost->applications->where('status', 'reviewing')->count();
         $acceptedApplications = $JobPost->applications->where('status', 'accepted')->count();
         $rejectedApplications = $JobPost->applications->where('status', 'rejected')->count();

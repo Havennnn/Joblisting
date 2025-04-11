@@ -2,7 +2,7 @@
 
 namespace App\Notifications;
 
-use App\Models\JobApplication;
+use App\Models\Jobs\JobApplication;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -15,14 +15,14 @@ class ApplicationStatusChanged extends Notification implements ShouldQueue
     /**
      * The job application instance.
      *
-     * @var \App\Models\JobApplication
+     * @var \App\Models\Jobs\JobApplication
      */
     protected $application;
 
     /**
      * Create a new notification instance.
      *
-     * @param  \App\Models\JobApplication  $application
+     * @param  \App\Models\Jobs\JobApplication  $application
      * @return void
      */
     public function __construct(JobApplication $application)

@@ -2,8 +2,8 @@
 
 namespace App\Livewire\Applicant;
 
-use App\Models\User;
-use App\Models\ApplicantProfile;
+use App\Models\Users\User;
+use App\Models\Users\ApplicantProfile;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
@@ -166,13 +166,9 @@ class ProfileSetup extends Component
         $user = Auth::user();
 
         // Update user basic data
-        $userData = [
-            'name' => $this->full_name,
-            'email' => $this->email,
-        ];
-
-        // Update user record
-        $user->update($userData);
+        $user->name = $this->full_name;
+        $user->email = $this->email;
+        $user->save();
 
         // Get or create applicant profile
         $profile = $user->applicantProfile;
@@ -243,13 +239,9 @@ class ProfileSetup extends Component
             $this->validateBasicInfo();
 
             // Update user data
-            $userData = [
-                'name' => $this->full_name,
-                'email' => $this->email,
-            ];
-
-            // Update user record
-            $user->update($userData);
+            $user->name = $this->full_name;
+            $user->email = $this->email;
+            $user->save();
 
             // Get or create applicant profile
             $profile = $user->applicantProfile;

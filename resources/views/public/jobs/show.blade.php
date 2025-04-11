@@ -149,7 +149,7 @@
                         $completionPercentage = $completionService->calculateApplicantCompletion($applicant);
 
                         // Check if the user has already applied for this job
-                        $hasApplied = \App\Models\JobApplication::where('job_id', $job->id)
+                        $hasApplied = \App\Models\Jobs\JobApplication::where('job_id', $job->id)
                             ->where('applicant_id', $applicant->id)
                             ->exists();
                     @endphp

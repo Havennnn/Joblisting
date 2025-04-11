@@ -50,11 +50,15 @@ Route::middleware(['auth', 'employer'])->prefix('employer')->name('employer.')->
 
     // Profile routes
     Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
-        Route::get('/', 'show')->name('show');
+        Route::get('/', 'show')->name('index');
         Route::get('/edit', 'edit')->name('edit');
         Route::put('/', 'update')->name('update');
         Route::get('/logo/{user}', [ProfileController::class, 'showCompanyLogo'])->name('logo');
     });
+
+    // Applicants routes
+    Route::get('/applicants', [ApplicationController::class, 'index'])->name('applicants');
+    Route::get('/applicants/{id}', [ApplicationController::class, 'show'])->name('applicants.view');
 
     // Job Post routes - UPDATED to use JobListingController as a facade
     Route::controller(JobListingController::class)->prefix('job-posts')->name('JobPost')->group(function () {

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Applicant\Profile;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Users\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -13,7 +13,7 @@ class DownloadResumeController extends Controller
     /**
      * Securely download resume from private storage
      *
-     * @param \App\Models\User $user
+     * @param \App\Models\Users\User $user
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function __invoke(User $user)

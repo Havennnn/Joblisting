@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Auth\Employer;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use App\Models\Employer;
+use App\Models\Users\User;
+use App\Models\Users\Employer;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -26,7 +26,7 @@ class RegisterController extends Controller
     {
         // Redirect authenticated users to their dashboard
         if (Auth::check()) {
-            if (Auth::user()->isEmployer()) {
+            if (Auth::user()->role === 'employer') {
                 return redirect()->route('employer.dashboard');
             }
             return redirect()->route('applicant.dashboard');

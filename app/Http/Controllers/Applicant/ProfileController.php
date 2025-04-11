@@ -8,7 +8,7 @@ use App\Http\Controllers\Applicant\Profile\EditController;
 use App\Http\Controllers\Applicant\Profile\ShowController;
 use App\Http\Controllers\Applicant\Profile\ShowProfilePictureController;
 use App\Http\Controllers\Applicant\Profile\UpdateController;
-use App\Models\User;
+use App\Models\Users\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -73,7 +73,7 @@ class ProfileController extends Controller
     /**
      * Securely serve profile picture from private storage
      *
-     * @param \App\Models\User $user
+     * @param \App\Models\Users\User $user
      * @return \Illuminate\Http\Response
      */
     public function showProfilePicture(User $user)
@@ -84,7 +84,7 @@ class ProfileController extends Controller
     /**
      * Securely download resume from private storage
      *
-     * @param \App\Models\User $user
+     * @param \App\Models\Users\User $user
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
     public function downloadResume(User $user)

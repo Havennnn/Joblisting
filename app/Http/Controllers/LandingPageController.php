@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\LandingPage\JobController;
-use App\Models\JobPost;
-use App\Models\Event;
-use App\Models\Blog;
-use App\Models\FeaturedItem;
+use App\Models\Jobs\JobPost;
+use App\Models\Content\Event;
+use App\Models\Content\Blog;
+use App\Models\Content\FeaturedItem;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 

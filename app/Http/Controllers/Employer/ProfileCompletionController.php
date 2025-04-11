@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Employer;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Users\User;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Dashboard\ProfileCompletionService;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -99,7 +99,7 @@ class ProfileCompletionController extends Controller
                 'percentage' => 0,
                 'color' => 'bg-red-500',
                 'message' => 'We could not calculate your profile completion. Please check your profile.',
-                'action_link' => route('employer.profile.show'),
+                'action_link' => route('employer.profile.index'),
                 'action_text' => 'Complete Your Profile'
             ];
         }
@@ -126,7 +126,7 @@ class ProfileCompletionController extends Controller
      * Get the completion message based on percentage.
      *
      * @param int $percentage
-     * @param \Illuminate\Contracts\Auth\Authenticatable|\App\Models\User $user
+     * @param \Illuminate\Contracts\Auth\Authenticatable|\App\Models\Users\User $user
      * @return string
      */
     private function getCompletionMessage(int $percentage, $user): string
@@ -144,15 +144,15 @@ class ProfileCompletionController extends Controller
      * Get the appropriate action link based on completion percentage and user profile data.
      *
      * @param int $completionPercentage
-     * @param \Illuminate\Contracts\Auth\Authenticatable|\App\Models\User $user
+     * @param \Illuminate\Contracts\Auth\Authenticatable|\App\Models\Users\User $user
      * @return string
      */
     private function getActionLink($completionPercentage, $user)
     {
         if ($completionPercentage < 100) {
-            return route('employer.profile.show');
+            return route('employer.profile.index');
         }
 
-        return route('employer.profile.show');
+        return route('employer.profile.index');
     }
 }

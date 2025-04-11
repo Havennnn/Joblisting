@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth\Otp;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Users\User;
 use App\Services\OtpService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -44,7 +44,7 @@ class LoginController extends Controller
     /**
      * Send OTP with cooldown period
      *
-     * @param \App\Models\User $user
+     * @param \App\Models\Users\Users\User $user
      * @return \Illuminate\Http\RedirectResponse
      */
     private function sendOtpWithCooldown($user): RedirectResponse

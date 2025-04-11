@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Applicant\Setup;
 
 use App\Http\Controllers\Controller;
-use App\Models\ApplicantProfile;
+use App\Models\Users\ApplicantProfile;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

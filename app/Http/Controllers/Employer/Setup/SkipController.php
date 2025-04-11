@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Employer\Setup;
 
 use App\Http\Controllers\Controller;
+use App\Models\Users\User;
+use App\Models\Users\Employer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,19 +21,22 @@ class SkipController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $user = Auth::user();
-        $employer = $user->employer;
+        $userId = Auth::id();
+        $user = User::find($userId);
+        $employer = Employer::where('user_id', $userId)->first();
 
         Log::info('Employer Setup Skip Requested', [
-            'user_id' => $user->id
+            'user_id' => $userId
         ]);
 
         try {
             if ($employer) {
-                $employer->update(['setup_completed' => true]);
+                $employer->setup_completed = true;
+                $employer->save();
             } else {
                 // Create a basic profile if it doesn't exist
-                $user->employer()->create([
+                Employer::create([
+                    'user_id' => $userId,
                     'company_name' => $user->name . "'s Company",
                     'setup_completed' => true
                 ]);
@@ -43,14 +48,14 @@ class SkipController extends Controller
             // Regenerate session to ensure the middleware picks up the setup_completed change
             $request->session()->regenerate();
 
-            // Reload the user with fresh relationship data to ensure middleware sees the changes
-            Auth::user()->refresh();
+            // Reload the user data to ensure middleware sees the changes
+            $user = User::find($userId); // Re-fetch user with fresh data
 
             // Store successful setup flag in session to bypass middleware check
             Session::put('employer_setup_completed', true);
 
             Log::info('Employer Setup Skipped Successfully', [
-                'user_id' => $user->id
+                'user_id' => $userId
             ]);
 
             // Use direct redirect with 'with' method for flash message
@@ -59,7 +64,7 @@ class SkipController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Error skipping employer setup', [
-                'user_id' => $user->id,
+                'user_id' => $userId,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);

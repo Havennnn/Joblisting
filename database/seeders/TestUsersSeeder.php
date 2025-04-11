@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\User;
+use App\Models\Users\User;
 use Illuminate\Support\Facades\Hash;
 
 class TestUsersSeeder extends Seeder

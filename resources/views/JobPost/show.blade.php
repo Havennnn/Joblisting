@@ -234,10 +234,16 @@
                                 <dl class="space-y-3 text-sm">
                                     <div class="flex justify-between">
                                         <dt class="text-gray-500">Total Applications:</dt>
-                                        <dd class="text-gray-900 font-medium">{{ isset($JobPost->applications) ? $JobPost->applications->count() : 0 }}</dd>
+                                        <dd class="text-gray-900 font-medium">{{ $JobPost->application_count }}</dd>
                                     </div>
                                     <div class="flex justify-between">
-                                        <dt class="text-gray-500">New Applications:</dt>
+                                        <dt class="text-gray-500">New/Unread Applications:</dt>
+                                        <dd class="text-gray-900 font-semibold">
+                                            {{ $JobPost->unread_application_count }}
+                                        </dd>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <dt class="text-gray-500">Pending Review:</dt>
                                         <dd class="text-gray-900">
                                             {{ isset($JobPost->applications) ? $JobPost->applications->where('status', 'pending')->count() : 0 }}
                                         </dd>
@@ -260,13 +266,6 @@
                                             {{ isset($JobPost->applications) ? $JobPost->applications->where('status', 'rejected')->count() : 0 }}
                                         </dd>
                                     </div>
-                                    @if(isset($JobPost->applications) && $JobPost->applications->count() > 0)
-                                    <div class="mt-4 pt-3 border-t border-gray-200">
-                                        <a href="{{ route('employer.applications.job', ['jobId' => $JobPost->id]) }}" class="inline-flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-blue-700 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                            View All Applications
-                                        </a>
-                                    </div>
-                                    @endif
                                 </dl>
                             </div>
                         </div>

@@ -118,10 +118,10 @@
                                         @endif
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ $JobPost->applicants_count ?? 0 }}
+                                        {{ $JobPost->application_count ?? 0 }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {{ $JobPost->unread_count ?? 0 }}
+                                        {{ $JobPost->unread_application_count ?? 0 }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                                         <a href="{{ route('employer.JobPost.show', $JobPost->id) }}" class="text-neksjob-blue hover:text-neksjob-blue-dark">View</a>

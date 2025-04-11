@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Employer\JobListing;
 
 use App\Http\Controllers\Controller;
-use App\Models\JobPost;
+use App\Models\Jobs\JobPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Dashboard\ProfileCompletionService;
@@ -34,7 +34,7 @@ class UpdateController extends Controller
         }
 
         $employer = Auth::user()->employer;
-        $JobPost = JobPost::where('employer_id', $employer->id)
+        $jobPost = JobPost::where('employer_id', $employer->id)
                           ->findOrFail($id);
 
         $validatedData = $request->validate([
@@ -60,7 +60,7 @@ class UpdateController extends Controller
         $validatedData['auto_delete_at'] = now()->addDays(7);
 
         // Update the job post
-        $JobPost->update($validatedData);
+        $jobPost->update($validatedData);
 
         return redirect()->route('employer.JobPost')->with('success', 'Job updated successfully');
     }

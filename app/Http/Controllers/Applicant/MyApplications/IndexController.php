@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Applicant\MyApplications;
 
 use App\Http\Controllers\Controller;
-use App\Models\JobApplication;
+use App\Models\Jobs\JobApplication;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 

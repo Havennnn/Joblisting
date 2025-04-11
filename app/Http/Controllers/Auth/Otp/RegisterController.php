@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth\Otp;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Users\User;
 use App\Services\OtpService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

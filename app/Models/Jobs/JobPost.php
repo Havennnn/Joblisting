@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Jobs;
 
+use App\Models\Users\Employer;
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class JobPost extends Model
+class JobPost extends BaseModel
 {
     use HasFactory;
 
@@ -32,6 +33,8 @@ class JobPost extends Model
         'tags',
         'auto_delete_at',
         'employer_id',
+        'application_count',
+        'unread_application_count',
     ];
 
     protected $dates = [

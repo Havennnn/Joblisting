@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\JobPost;
+use App\Models\Jobs\JobPost;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 

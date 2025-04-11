@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Jobs;
 
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class SavedJob extends Model
+class SavedJob extends BaseModel
 {
     use HasFactory;
 

@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Events\NewMessageSent;
-use App\Models\Conversation;
-use App\Models\Message;
-use App\Models\User;
+use App\Models\Messaging\Conversation;
+use App\Models\Messaging\Message;
+use App\Models\Users\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\ApplicantProfile;
+use App\Models\Users\ApplicantProfile;
 
 class MessengerController extends Controller
 {

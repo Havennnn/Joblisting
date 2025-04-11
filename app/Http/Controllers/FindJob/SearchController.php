@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\FindJob;
 
 use App\Http\Controllers\Controller;
-use App\Models\JobPost;
+use App\Models\Jobs\JobPost;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 

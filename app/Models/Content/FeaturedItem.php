@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Content;
 
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class FeaturedItem extends Model
+class FeaturedItem extends BaseModel
 {
     use HasFactory;
 
@@ -23,4 +23,4 @@ class FeaturedItem extends Model
         'is_active' => 'boolean',
         'order' => 'integer'
     ];
-} 
+}

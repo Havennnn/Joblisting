@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Applicant\Notification;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Notifications\DatabaseNotification;
 
 class DeleteController extends Controller
 {
@@ -17,9 +18,9 @@ class DeleteController extends Controller
     public function __invoke($id)
     {
         $user = Auth::user();
-        $notification = $user->notifications()->where('id', $id)->first();
+        $notification = DatabaseNotification::find($id);
 
-        if ($notification) {
+        if ($notification && $notification->notifiable_id == $user->id) {
             $notification->delete();
         }
 

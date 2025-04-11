@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\Applicant\MyApplications;
 
 use App\Http\Controllers\Controller;
-use App\Models\JobApplication;
-use App\Models\JobPost;
-use App\Models\User;
+use App\Models\Jobs\JobApplication;
+use App\Models\Jobs\JobPost;
+use App\Models\Users\User;
 use App\Notifications\NewJobApplication;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\DB;
 
 class StoreController extends Controller
 {
@@ -46,65 +47,72 @@ class StoreController extends Controller
             return redirect()->back()->with('error', 'You have already applied for this job.');
         }
 
-        // Create new application
-        $application = new JobApplication();
-        $application->job_id = $jobPost->id;
-        $application->applicant_id = $user->id;
-        $application->employer_id = $jobPost->employer_id;
-        $application->status = 'pending';
-        $application->applied_at = now();
+        // Begin transaction to ensure data consistency
+        DB::beginTransaction();
 
-        // Attach resume if available
-        if ($profile && $profile->resume_path) {
-            $application->resume_path = $profile->resume_path;
-        }
+        try {
+            // Create new application
+            $application = new JobApplication();
+            $application->job_id = $jobPost->id;
+            $application->applicant_id = $user->id;
+            $application->employer_id = $jobPost->employer_id;
+            $application->status = 'pending';
+            $application->applied_at = now();
 
-        $application->save();
-
-        // Load required relationships for the notification
-        $application->load(['job', 'applicant']);
-
-        // Find the employer's user account to send notification
-        if ($jobPost->employer) {
-            Log::info('Employer found', [
-                'employer_id' => $jobPost->employer->id,
-                'user_id' => $jobPost->employer->user_id ?? 'null'
-            ]);
-
-            try {
-                // Approach 1: Get the employer's user directly from the user_id field
-                $employerUser = User::find($jobPost->employer->user_id);
-
-                if ($employerUser) {
-                    Log::info('Sending notification to employer user', [
-                        'employer_user_id' => $employerUser->id,
-                        'employer_user_email' => $employerUser->email
-                    ]);
-
-                    // Send notification directly to the user model
-                    $employerUser->notify(new NewJobApplication($application));
-                    Log::info('Notification sent successfully to user');
-                } else {
-                    Log::warning('Employer user not found for employer ID: ' . $jobPost->employer->id);
-                }
-
-                // Approach 2: Use the Notification facade for direct send
-                if ($jobPost->employer->user_id) {
-                    Log::info('Sending notification via Notification facade');
-                    Notification::send(
-                        User::where('id', $jobPost->employer->user_id)->get(),
-                        new NewJobApplication($application)
-                    );
-                    Log::info('Notification sent successfully via facade');
-                }
-            } catch (\Exception $e) {
-                Log::error('Failed to send notification', [
-                    'error' => $e->getMessage(),
-                    'trace' => $e->getTraceAsString()
-                ]);
+            // Attach resume if available
+            if ($profile && $profile->resume_path) {
+                $application->resume_path = $profile->resume_path;
             }
-        } else {
-            Log::warning('Employer not found for job ID: ' . $jobPost->id);
+
+            $application->save();
+
+            // Increment application counters on the job post
+            $jobPost->increment('application_count');
+            $jobPost->increment('unread_application_count');
+
+            // Commit the transaction
+            DB::commit();
+
+            // Load required relationships for the notification
+            $application->load(['job', 'applicant']);
+
+            // Find the employer's user account to send notification
+            if ($jobPost->employer) {
+                Log::info('Employer found', [
+                    'employer_id' => $jobPost->employer->id,
+                    'user_id' => $jobPost->employer->user_id ?? 'null'
+                ]);
+
+                try {
+                    // Get the employer's user directly from the user_id field
+                    $employerUser = User::find($jobPost->employer->user_id);
+
+                    if ($employerUser) {
+                        Log::info('Sending notification to employer user', [
+                            'employer_user_id' => $employerUser->id,
+                            'employer_user_email' => $employerUser->email
+                        ]);
+
+                        // Send notification directly to the user model
+                        $employerUser->notify(new NewJobApplication($application));
+                        Log::info('Notification sent successfully to user');
+                    } else {
+                        Log::warning('Employer user not found for employer ID: ' . $jobPost->employer->id);
+                    }
+                } catch (\Exception $e) {
+                    Log::error('Failed to send notification', [
+                        'error' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString()
+                    ]);
+                }
+            } else {
+                Log::warning('Employer not found for job ID: ' . $jobPost->id);
+            }
+        } catch (\Exception $e) {
+            // If there's an error, rollback the transaction
+            DB::rollBack();
+            Log::error('Error saving application: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Error submitting application. Please try again.');
         }
 
         return redirect()->route('applicant.applications')->with('success', 'Your application has been submitted successfully!');

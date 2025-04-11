@@ -64,7 +64,7 @@ class UpdateController extends Controller
             'location' => $validated['location'],
         ]);
 
-        return redirect()->route('employer.profile.show')
+        return redirect()->route('employer.profile.index')
             ->with('success', 'Profile updated successfully.');
     }
 }

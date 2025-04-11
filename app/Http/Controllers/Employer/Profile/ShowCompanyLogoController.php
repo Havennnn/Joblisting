@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Employer\Profile;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Users\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,7 +12,7 @@ class ShowCompanyLogoController extends Controller
     /**
      * Securely serve company logo from private storage
      *
-     * @param \App\Models\User $user
+     * @param \App\Models\Users\Users\User $user
      * @return \Illuminate\Http\Response
      */
     public function __invoke(User $user)

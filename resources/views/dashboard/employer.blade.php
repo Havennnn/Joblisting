@@ -5,19 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employer Dashboard</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: white;
+        }
+        .status-shortlisted { background-color: #059669; } /* green-600 equivalent */
+        .status-failed { background-color: #dc2626; } /* red-600 equivalent */
+        .status-pending_review { background-color: #d97706; } /* amber-600 equivalent */
+        .status-hired { background-color: #2563eb; } /* blue-600 equivalent */
+        .status-unknown { background-color: #4b5563; } /* gray-600 equivalent */
+    </style>
 </head>
 <body class="bg-gray-100 font-sans">
-    
+
     <!-- Navbar -->
     <nav class="bg-blue-600 p-4 text-white flex justify-between items-center shadow-md fixed top-0 w-full z-50">
         <h1 class="text-2xl font-bold">
             {{ Auth::guard('employer')->check() ? Auth::guard('employer')->user()->name : 'Dashboard' }}
         </h1>
-    
+
           <!-- Logout Form -->
           <div>
-        <a href="{{ route('employer.logout') }}" 
-        onclick="event.preventDefault(); confirmLogout();" 
+        <a href="{{ route('employer.logout') }}"
+        onclick="event.preventDefault(); confirmLogout();"
         class="bg-red-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-700 transition">Logout
     </a>
     <form id="logout-form" action="{{ route('employer.logout') }}" method="POST" class="hidden">
@@ -34,7 +48,7 @@
         </div>
     </nav>
 
-    
+
     <div class="flex">
         <!-- Sidebar -->
         <aside class="w-64 bg-gray-900 text-white min-h-screen p-5 pt-20 fixed shadow-lg">
@@ -99,13 +113,7 @@
                     <td class="py-4 px-6">{{ $applicant->first_name ?? 'N/A' }}</td>
                     <td class="py-4 px-6">{{ $applicant->last_name ?? 'N/A' }}</td>
                     <td class="py-4 px-6">
-                        <span class="px-3 py-1 text-sm font-semibold rounded-lg text-white
-                            @if($applicant->status == 'shortlisted') bg-green-500 
-                            @elseif($applicant->status == 'failed') bg-red-500 
-                            @elseif($applicant->status == 'pending_review') bg-yellow-500 
-                            @elseif($applicant->status == 'hired') bg-blue-500 
-                            @else bg-gray-500 
-                            @endif">
+                        <span class="status-badge {{ 'status-' . ($applicant->status ?? 'unknown') }}">
                             {{ ucfirst(str_replace('_', ' ', $applicant->status ?? 'Unknown')) }}
                         </span>
                     </td>

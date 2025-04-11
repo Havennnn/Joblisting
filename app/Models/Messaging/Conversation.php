@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Messaging;
 
+use App\Models\Users\User;
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Conversation extends Model
+class Conversation extends BaseModel
 {
     use HasFactory;
 

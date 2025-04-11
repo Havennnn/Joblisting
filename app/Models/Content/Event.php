@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Content;
 
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Event extends Model
+class Event extends BaseModel
 {
     use HasFactory;
 

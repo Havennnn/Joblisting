@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\User;
-use App\Models\Employer;
+use App\Models\Users\User;
+use App\Models\Users\Employer;
 
 class FixEmployerRecords extends Command
 {
