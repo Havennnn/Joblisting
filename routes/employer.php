@@ -1,14 +1,20 @@
 <?php
 
 use App\Http\Model\JobPost;
-use App\Http\Controllers\JobPostController;
+use App\Http\Controllers\Employer\JobListingController;
+use App\Http\Controllers\Employer\JobListing\CreateController;
+use App\Http\Controllers\Employer\JobListing\StoreController;
+use App\Http\Controllers\Employer\JobListing\ShowController;
+use App\Http\Controllers\Employer\JobListing\EditController;
+use App\Http\Controllers\Employer\JobListing\UpdateController;
+use App\Http\Controllers\Employer\JobListing\DestroyController;
 use App\Http\Controllers\Employer\DashboardController;
 use App\Http\Controllers\Employer\ProfileController;
 use App\Http\Controllers\Employer\SetupController;
 use App\Http\Controllers\Employer\NotificationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Employer\JobApplicationController;
+use App\Http\Controllers\Employer\ApplicationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,26 +56,21 @@ Route::middleware(['auth', 'employer'])->prefix('employer')->name('employer.')->
         Route::get('/logo/{user}', [ProfileController::class, 'showCompanyLogo'])->name('logo');
     });
 
-    // Job Post routes
-    Route::controller(JobPostController::class)->prefix('JobPost')->group(function () {
-        Route::get('', 'index')->name('JobPost');
-        Route::get('create', 'create')->name('JobPost.create');
-        Route::post('store', 'store')->name('JobPost.store');
-        Route::get('{id}', 'show')->name('JobPost.show');
-        Route::get('{id}/edit', 'edit')->name('JobPost.edit');
-        Route::put('{id}', 'update')->name('JobPost.update');
-        Route::delete('{id}', 'destroy')->name('JobPost.destroy');
+    // Job Post routes - UPDATED to use JobListingController as a facade
+    Route::controller(JobListingController::class)->prefix('job-posts')->name('JobPost')->group(function () {
+        Route::get('/', 'index');
+        Route::get('/create', 'create')->name('.create');
+        Route::post('/', 'store')->name('.store');
+        Route::get('/{id}', 'show')->name('.show');
+        Route::get('/{id}/edit', 'edit')->name('.edit');
+        Route::put('/{id}', 'update')->name('.update');
+        Route::delete('/{id}', 'destroy')->name('.destroy');
     });
-
-    /**
-     * Job Posts Management Routes
-     */
-    Route::resource('job-posts', JobPostController::class);
 
     /**
      * Application Management Routes
      */
-    Route::controller(JobApplicationController::class)->prefix('applications')->name('applications.')->group(function () {
+    Route::controller(ApplicationController::class)->prefix('applications')->name('applications.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/job/{jobId}', 'showJobApplications')->name('job');
         Route::get('/{id}', 'show')->name('show');

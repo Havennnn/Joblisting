@@ -112,7 +112,7 @@ class SettingsController extends Controller
     /**
      * Generate OTP for email change verification
      */
-    protected function generateOtpForEmailChange(User $user, $newEmail)
+    protected function generateOtpForEmailChange($user, $newEmail)
     {
         $otp = rand(100000, 999999);
 
@@ -136,7 +136,7 @@ class SettingsController extends Controller
     /**
      * Verify OTP for email change
      */
-    protected function verifyOtpForEmailChange(User $user, $newEmail, $otp)
+    protected function verifyOtpForEmailChange($user, $newEmail, $otp)
     {
         $storedOtp = session('email_change_otp_' . $user->id);
         $expiresAt = session('email_change_otp_expires_at_' . $user->id);

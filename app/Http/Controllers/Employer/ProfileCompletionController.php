@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Employer\Dashboard;
+namespace App\Http\Controllers\Employer;
 
 use App\Http\Controllers\Controller;
-use App\Services\Dashboard\ProfileCompletionService;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use App\Services\Dashboard\ProfileCompletionService;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class ProfileCompletionController extends Controller
 {
@@ -21,6 +23,19 @@ class ProfileCompletionController extends Controller
     public function __construct(ProfileCompletionService $profileCompletionService)
     {
         $this->profileCompletionService = $profileCompletionService;
+    }
+
+    /**
+     * Get profile completion percentage for the dashboard
+     *
+     * @return int
+     */
+    public function __invoke()
+    {
+        $user = Auth::user();
+
+        // Calculate profile completion percentage
+        return $this->profileCompletionService->calculateEmployerCompletion($user);
     }
 
     /**
@@ -111,7 +126,7 @@ class ProfileCompletionController extends Controller
      * Get the completion message based on percentage.
      *
      * @param int $percentage
-     * @param mixed $user
+     * @param \Illuminate\Contracts\Auth\Authenticatable|\App\Models\User $user
      * @return string
      */
     private function getCompletionMessage(int $percentage, $user): string
@@ -129,7 +144,7 @@ class ProfileCompletionController extends Controller
      * Get the appropriate action link based on completion percentage and user profile data.
      *
      * @param int $completionPercentage
-     * @param User $user
+     * @param \Illuminate\Contracts\Auth\Authenticatable|\App\Models\User $user
      * @return string
      */
     private function getActionLink($completionPercentage, $user)

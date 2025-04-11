@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\JobPost;
+use Illuminate\Http\Request;
 
 class PublicJobController extends Controller
 {
@@ -12,43 +12,57 @@ class PublicJobController extends Controller
      */
     public function index()
     {
-        $jobs = JobPost::with('employer')
-            ->orderBy('created_at', 'DESC')
-            ->paginate(10);
+        $jobs = JobPost::with('employer.user')
+                        ->where('auto_delete_at', '>', now())
+                        ->orderBy('created_at', 'DESC')
+                        ->paginate(10);
 
         return view('public.jobs.index', compact('jobs'));
     }
 
     /**
-     * Search for jobs based on title, location, or industry
+     * Search job posts
      */
     public function search(Request $request)
     {
-        $query = JobPost::with('employer');
+        $query = $request->input('query');
+        $type = $request->input('type');
+        $location = $request->input('location');
 
-        if ($request->has('title') && !empty($request->title)) {
-            $query->where('title', 'like', '%' . $request->title . '%');
+        $jobsQuery = JobPost::query();
+
+        // Apply search filters
+        if ($query) {
+            $jobsQuery->where(function($q) use ($query) {
+                $q->where('title', 'like', "%$query%")
+                  ->orWhere('job_description', 'like', "%$query%")
+                  ->orWhere('tags', 'like', "%$query%");
+            });
         }
 
-        if ($request->has('location') && !empty($request->location)) {
-            $query->where('location', 'like', '%' . $request->location . '%');
+        if ($type) {
+            $jobsQuery->where('type', $type);
         }
 
-        if ($request->has('industry') && !empty($request->industry)) {
-            $query->where('industry', 'like', '%' . $request->industry . '%');
+        if ($location) {
+            $jobsQuery->where('location', 'like', "%$location%");
         }
 
-        $jobs = $query->orderBy('created_at', 'DESC')->paginate(10);
+        $jobs = $jobsQuery->with('employer.user')
+                          ->where('auto_delete_at', '>', now())
+                          ->orderBy('created_at', 'DESC')
+                          ->paginate(10);
 
-        return view('public.jobs.index', compact('jobs'));
+        return view('public.jobs.index', compact('jobs', 'query', 'type', 'location'));
     }
 
     /**
-     * Display details of a job post
+     * Display the specified job post
      */
     public function show($id)
     {
-        $job = JobPost::with('employer')->findOrFail($id);
+        $job = JobPost::with('employer.user')
+                      ->findOrFail($id);
 
         return view('public.jobs.show', compact('job'));
     }

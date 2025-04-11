@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Employer;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Dashboard\ProfileCompletionService;
@@ -19,7 +21,7 @@ class NotificationController extends Controller
     /**
      * Display a listing of the employer's notifications
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -36,7 +38,7 @@ class NotificationController extends Controller
      * Mark a notification as read
      *
      * @param  string  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function markAsRead($id)
     {
@@ -53,7 +55,7 @@ class NotificationController extends Controller
     /**
      * Mark all notifications as read
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function markAllAsRead()
     {
@@ -67,7 +69,7 @@ class NotificationController extends Controller
      * Delete a notification
      *
      * @param  string  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function delete($id)
     {
