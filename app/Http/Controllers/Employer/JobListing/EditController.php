@@ -37,6 +37,6 @@ class EditController extends Controller
         $jobPost = JobPost::where('employer_id', $employer->id)
                           ->findOrFail($id);
 
-        return view('JobPost.edit', compact('jobPost', 'completionPercentage'));
+        return view('employer.job-posts.edit', compact('jobPost', 'completionPercentage'));
     }
 }

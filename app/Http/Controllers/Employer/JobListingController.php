@@ -58,7 +58,7 @@ class JobListingController extends Controller
         // Get the employer profile completion percentage
         $completionPercentage = $this->profileCompletionService->calculateEmployerCompletion(Auth::user());
 
-        return view('JobPost.index', compact('JobPosts', 'completionPercentage'));
+        return view('employer.job-posts.index', compact('JobPosts', 'completionPercentage'));
     }
 
     /**

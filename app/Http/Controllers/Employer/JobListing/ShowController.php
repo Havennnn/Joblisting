@@ -40,7 +40,7 @@ class ShowController extends Controller
         $acceptedApplications = $JobPost->applications->where('status', 'accepted')->count();
         $rejectedApplications = $JobPost->applications->where('status', 'rejected')->count();
 
-        return view('JobPost.show', compact(
+        return view('employer.job-posts.show', compact(
             'JobPost',
             'completionPercentage',
             'totalApplications',

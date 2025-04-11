@@ -17,6 +17,8 @@
     <!-- Navigation Component -->
     <x-navigation />
 
+    <x-flash-message />
+
     <!-- Main Content -->
     <main class="main">
         @yield('content')

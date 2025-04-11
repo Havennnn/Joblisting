@@ -38,6 +38,8 @@
             </div>
         </nav>
 
+        <x-flash-message />
+
         <!-- Page Content -->
         <main class="flex-grow">
             @yield('content')

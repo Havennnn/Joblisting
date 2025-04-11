@@ -33,6 +33,6 @@ class CreateController extends Controller
                 ->with('warning', 'Please complete your employer profile before posting a job. Your profile is ' . $completionPercentage . '% complete.');
         }
 
-        return view('JobPost.create', compact('completionPercentage'));
+        return view('employer.job-posts.create', compact('completionPercentage'));
     }
 }
