@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\FeaturedItem;
+use App\Models\Content\FeaturedItem;
 use Illuminate\Database\Seeder;
 
 class FeaturedItemSeeder extends Seeder
@@ -46,4 +46,4 @@ class FeaturedItemSeeder extends Seeder
             FeaturedItem::create($item);
         }
     }
-} 
+}

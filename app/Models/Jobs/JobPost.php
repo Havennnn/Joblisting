@@ -5,6 +5,7 @@ namespace App\Models\Jobs;
 use App\Models\Users\Employer;
 use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Jobs\JobApplication;
 
 class JobPost extends BaseModel
 {
