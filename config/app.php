@@ -123,4 +123,15 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | OTP Settings
+    |--------------------------------------------------------------------------
+    |
+    | Settings related to OTP verification functionality.
+    |
+    */
+
+    'enable_sms_otp' => env('ENABLE_SMS_OTP', false),
+
 ];

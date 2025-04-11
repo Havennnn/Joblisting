@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Auth\OtpAuthController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -62,6 +63,31 @@ Route::prefix('employer')->name('employer.')->middleware('guest')->group(functio
     Route::post('/login', [AuthController::class, 'loginEmployer'])->name('login.post');
     Route::get('/register', [AuthController::class, 'showEmployerRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'registerEmployer'])->name('register.post');
+});
+
+// OTP verification routes
+Route::middleware('guest')->group(function () {
+    // OTP Login
+    Route::get('/otp-login', [OtpAuthController::class, 'showLoginForm'])->name('otp.login');
+    Route::post('/otp-login', [OtpAuthController::class, 'login'])->name('otp.login.post');
+
+    // OTP Registration
+    Route::get('/otp-register', [OtpAuthController::class, 'showRegisterForm'])->name('otp.register');
+    Route::post('/otp-register', [OtpAuthController::class, 'register'])->name('otp.register.post');
+
+    // SMS OTP - API endpoint
+    Route::post('/otp-sms', [OtpAuthController::class, 'sendOtpSms'])->name('otp.sms');
+});
+
+// OTP verification routes - accessible to both guests and auth users who need verification
+Route::middleware('web')->withoutMiddleware([\App\Http\Middleware\EnsureOtpVerified::class])->group(function () {
+    // OTP Verification
+    Route::get('/otp-verify', [OtpAuthController::class, 'showOtpVerificationPage'])->name('otp.verify.page');
+    Route::post('/otp-verify', [OtpAuthController::class, 'verifyOtp'])->name('otp.verify');
+    Route::post('/otp-resend', [OtpAuthController::class, 'resendOtp'])->name('otp.resend');
+
+    // Make logout accessible during OTP verification
+    Route::post('/logout-during-otp', [AuthController::class, 'logout'])->name('logout');
 });
 
 // Shared logout route

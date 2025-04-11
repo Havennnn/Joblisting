@@ -8,6 +8,7 @@ use App\Http\Middleware\EnsureUserIsApplicant;
 use App\Http\Middleware\EnsureUserIsEmployer;
 use App\Http\Middleware\SetUserLayout;
 use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Http\Middleware\EnsureOtpVerified;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -22,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Add SetUserLayout to the web middleware group
         $middleware->web(append: [
             SetUserLayout::class,
+            EnsureOtpVerified::class,
         ]);
 
         // Register middleware aliases
@@ -30,6 +32,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'employer' => EnsureUserIsEmployer::class,
             'set.layout' => SetUserLayout::class,
             'guest' => RedirectIfAuthenticated::class,
+            'otp.verified' => EnsureOtpVerified::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

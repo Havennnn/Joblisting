@@ -1,0 +1,72 @@
+<?php
+
+namespace App\Mail;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
+
+class OtpMail extends Mailable
+{
+    use Queueable, SerializesModels;
+
+    public $email;
+    public $otp;
+    public $verificationLink;
+
+    public function __construct($email, $otp, $verificationLink)
+    {
+        $this->email = $email;
+        $this->otp = $otp;
+        $this->verificationLink = $verificationLink;
+    }
+
+    public function build()
+    {
+        return $this->subject('Your OTP Code')
+                    ->view('emails.otp')
+                    ->with([
+                        'otp' => $this->otp,
+                        'email'=> $this->email,
+                        'verificationLink' => $this->verificationLink,
+                    ]);
+    }
+
+    /**
+     * Get the message envelope.
+     */
+    public function envelope(): Envelope
+    {
+        return new Envelope(
+            subject: 'Your One-Time Password (OTP)',
+        );
+    }
+
+    /**
+     * Get the message content definition.
+     */
+    public function content(): Content
+    {
+        return new Content(
+            view: 'emails.otp',
+            with: [
+                'otp' => $this->otp,
+                'email' => $this->email,
+                'verificationLink' => $this->verificationLink,
+            ]
+        );
+    }
+
+    /**
+     * Get the attachments for the message.
+     *
+     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     */
+    public function attachments(): array
+    {
+        return [];
+    }
+}
