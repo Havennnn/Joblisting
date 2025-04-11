@@ -3,19 +3,35 @@
 namespace App\Http\Controllers\Employer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Employer\Notification\DeleteController;
+use App\Http\Controllers\Employer\Notification\IndexController;
+use App\Http\Controllers\Employer\Notification\MarkAllAsReadController;
+use App\Http\Controllers\Employer\Notification\MarkAsReadController;
+use App\Services\Dashboard\ProfileCompletionService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Services\Dashboard\ProfileCompletionService;
 
 class NotificationController extends Controller
 {
     protected $profileCompletionService;
+    protected $indexController;
+    protected $markAsReadController;
+    protected $markAllAsReadController;
+    protected $deleteController;
 
-    public function __construct(ProfileCompletionService $profileCompletionService)
-    {
+    public function __construct(
+        ProfileCompletionService $profileCompletionService,
+        IndexController $indexController,
+        MarkAsReadController $markAsReadController,
+        MarkAllAsReadController $markAllAsReadController,
+        DeleteController $deleteController
+    ) {
         $this->profileCompletionService = $profileCompletionService;
+        $this->indexController = $indexController;
+        $this->markAsReadController = $markAsReadController;
+        $this->markAllAsReadController = $markAllAsReadController;
+        $this->deleteController = $deleteController;
     }
 
     /**
@@ -25,13 +41,7 @@ class NotificationController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-        $completionPercentage = $this->profileCompletionService->calculateEmployerCompletion($user);
-
-        // Get all notifications
-        $notifications = $user->notifications()->paginate(10);
-
-        return view('employer.notifications.index', compact('notifications', 'completionPercentage'));
+        return $this->indexController->__invoke();
     }
 
     /**
@@ -42,14 +52,7 @@ class NotificationController extends Controller
      */
     public function markAsRead($id)
     {
-        $user = Auth::user();
-        $notification = $user->notifications()->where('id', $id)->first();
-
-        if ($notification) {
-            $notification->markAsRead();
-        }
-
-        return redirect()->back()->with('success', 'Notification marked as read');
+        return $this->markAsReadController->__invoke($id);
     }
 
     /**
@@ -59,10 +62,7 @@ class NotificationController extends Controller
      */
     public function markAllAsRead()
     {
-        $user = Auth::user();
-        $user->unreadNotifications->markAsRead();
-
-        return redirect()->back()->with('success', 'All notifications marked as read');
+        return $this->markAllAsReadController->__invoke();
     }
 
     /**
@@ -73,13 +73,6 @@ class NotificationController extends Controller
      */
     public function delete($id)
     {
-        $user = Auth::user();
-        $notification = $user->notifications()->where('id', $id)->first();
-
-        if ($notification) {
-            $notification->delete();
-        }
-
-        return redirect()->back()->with('success', 'Notification deleted');
+        return $this->deleteController->__invoke($id);
     }
 }

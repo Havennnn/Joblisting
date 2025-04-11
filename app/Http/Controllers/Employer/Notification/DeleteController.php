@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
-class MarkAsReadController extends Controller
+class DeleteController extends Controller
 {
     /**
-     * Mark a specific notification as read
+     * Delete a notification
      *
      * @param string $id
      * @return \Illuminate\Http\RedirectResponse
@@ -20,9 +20,9 @@ class MarkAsReadController extends Controller
         $notification = $user->notifications()->where('id', $id)->first();
 
         if ($notification) {
-            $notification->markAsRead();
+            $notification->delete();
         }
 
-        return redirect()->back()->with('success', 'Notification marked as read');
+        return redirect()->back()->with('success', 'Notification deleted');
     }
 }
