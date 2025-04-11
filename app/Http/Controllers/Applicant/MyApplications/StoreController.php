@@ -1,44 +1,28 @@
 <?php
 
-namespace App\Http\Controllers\Applicant;
+namespace App\Http\Controllers\Applicant\MyApplications;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\JobPost;
 use App\Models\JobApplication;
+use App\Models\JobPost;
 use App\Models\User;
 use App\Notifications\NewJobApplication;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
-class JobApplicationController extends Controller
+class StoreController extends Controller
 {
-    /**
-     * Display a listing of the user's job applications
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $user = Auth::user();
-        $applications = JobApplication::where('applicant_id', $user->id)
-            ->with('job.employer')
-            ->latest()
-            ->paginate(10);
-
-        return view('applicant.applications.index', compact('applications'));
-    }
-
     /**
      * Store a new job application
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $job
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request, $job)
+    public function __invoke(Request $request, $job)
     {
         $user = Auth::user();
         $profile = $user->applicantProfile;

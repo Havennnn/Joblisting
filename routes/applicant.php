@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Applicant\DashboardController;
 use App\Http\Controllers\Applicant\ProfileController;
 use App\Http\Controllers\Applicant\SetupController;
-use App\Http\Controllers\Applicant\JobApplicationController;
+use App\Http\Controllers\Applicant\MyApplicationsController;
 use App\Http\Controllers\Applicant\NotificationController;
 
 /*
@@ -37,8 +37,8 @@ Route::prefix('applicant')->name('applicant.')->middleware(['auth', 'applicant']
     Route::get('/profile/resume/{user}', [ProfileController::class, 'downloadResume'])->name('profile.resume');
 
     // Job application routes
-    Route::post('/jobs/{job}/apply', [JobApplicationController::class, 'store'])->name('jobs.apply');
-    Route::get('/my-applications', [JobApplicationController::class, 'index'])->name('applications');
+    Route::post('/jobs/{job}/apply', [MyApplicationsController::class, 'store'])->name('jobs.apply');
+    Route::get('/my-applications', [MyApplicationsController::class, 'index'])->name('applications');
 
     // Notification routes
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
