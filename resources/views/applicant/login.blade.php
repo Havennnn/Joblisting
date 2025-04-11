@@ -56,13 +56,13 @@
 
             <div>
                 <button type="submit"
-                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#dc3545] hover:bg-[#c82333] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#dc3545]">
+                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#2271b1] hover:bg-[#135e96] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2271b1]">
                     Sign In
                 </button>
             </div>
 
             <div>
-                <a href="{{ route('password.request') }}" class="text-sm text-[#2271b1] hover:underline">
+                <a href="{{ route('applicant.password.request') }}" class="text-sm text-[#2271b1] hover:underline">
                     Forgot Password?
                 </a>
             </div>

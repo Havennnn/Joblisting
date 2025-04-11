@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\OtpAuthController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -56,6 +57,10 @@ Route::prefix('applicant')->name('applicant.')->middleware('guest')->group(funct
     Route::post('/login', [AuthController::class, 'loginApplicant'])->name('login.post');
     Route::get('/register', [AuthController::class, 'showApplicantRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'registerApplicant'])->name('register.post');
+
+    // Forgot Password Routes
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'showApplicantForm'])->name('password.request');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendApplicantResetLink'])->name('password.email');
 });
 
 // Employer authentication routes (guest only)
@@ -64,6 +69,16 @@ Route::prefix('employer')->name('employer.')->middleware('guest')->group(functio
     Route::post('/login', [AuthController::class, 'loginEmployer'])->name('login.post');
     Route::get('/register', [AuthController::class, 'showEmployerRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'registerEmployer'])->name('register.post');
+
+    // Forgot Password Routes
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'showEmployerForm'])->name('password.request');
+    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendEmployerResetLink'])->name('password.email');
+});
+
+// Shared password reset routes
+Route::middleware('guest')->group(function () {
+    Route::get('/reset-password', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset.otp');
+    Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update.otp');
 });
 
 // OTP verification routes
@@ -99,12 +114,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/employer/logout', [AuthController::class, 'logout'])->name('employer.logout');
 });
 
-// Password reset routes
+// Social Authentication Routes
 Route::middleware('guest')->group(function () {
-    Volt::route('forgot-password', 'pages.auth.forgot-password')->name('password.request');
-    Volt::route('reset-password/{token}', 'pages.auth.reset-password')->name('password.reset');
-
-    // Social Authentication Routes
     Route::get('auth/facebook', [FacebookController::class, 'redirectToFacebook'])->name('facebook.login');
     Route::get('auth/facebook/callback', [FacebookController::class, 'handleFacebookCallback'])->name('facebook.callback');
 
