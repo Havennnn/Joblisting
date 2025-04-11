@@ -13,7 +13,7 @@ use App\Http\Controllers\Employer\ProfileController;
 use App\Http\Controllers\Employer\SetupController;
 use App\Http\Controllers\Employer\NotificationController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Employer\ApplicationController;
 
 /*

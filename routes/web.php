@@ -1,11 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LandingPage\LandingController;
+use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\LandingPage\JobController;
-use App\Http\Controllers\PublicJobController;
+use App\Http\Controllers\FindJobController;
 use App\Http\Controllers\SettingsController;
-use App\Http\Controllers\Settings\SettingsController as SettingsSettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,26 +17,36 @@ use App\Http\Controllers\Settings\SettingsController as SettingsSettingsControll
 */
 
 // Landing page routes
-Route::get('/', [LandingController::class, 'index'])->name('landing');
+Route::get('/', [LandingPageController::class, 'index'])->name('landing');
 
-// Public job listing routes
-Route::get('/jobs', [PublicJobController::class, 'index'])->name('jobs.index');
-Route::get('/jobs/search', [PublicJobController::class, 'search'])->name('jobs.search');
-Route::get('/job-details/{id}', [PublicJobController::class, 'show'])->name('jobs.show');
+// Job routes delegated to the LandingPageController
+Route::get('/landing/jobs', [LandingPageController::class, 'jobs'])->name('landing.jobs');
+Route::get('/landing/job-details/{id}', [LandingPageController::class, 'jobDetails'])->name('landing.job.details');
+
+// Public job finding routes
+Route::get('/jobs', [FindJobController::class, 'index'])->name('jobs.index');
+Route::get('/jobs/search', [FindJobController::class, 'search'])->name('jobs.search');
+Route::get('/job-details/{id}', [FindJobController::class, 'show'])->name('jobs.show');
 
 // Route for settings (accessible by both applicants and employers)
 Route::middleware(['auth'])->group(function () {
-    Route::get('/settings', [SettingsSettingsController::class, 'index'])->name('settings.index');
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
 
     // Email change with OTP verification
-    Route::get('/settings/email/change', [SettingsSettingsController::class, 'showEmailChangeForm'])
+    Route::get('/settings/email/change', [SettingsController::class, 'showEmailChangeForm'])
         ->name('settings.email.change.form');
-    Route::post('/settings/email/change', [SettingsSettingsController::class, 'initiateEmailChange'])
+    Route::post('/settings/email/change', [SettingsController::class, 'initiateEmailChange'])
         ->name('settings.email.change');
-    Route::get('/settings/email/verify', [SettingsSettingsController::class, 'showEmailChangeVerification'])
+    Route::get('/settings/email/verify', [SettingsController::class, 'showEmailChangeVerification'])
         ->name('settings.email.verify');
-    Route::post('/settings/email/verify', [SettingsSettingsController::class, 'verifyEmailChange'])
+    Route::post('/settings/email/verify', [SettingsController::class, 'verifyEmailChange'])
         ->name('settings.email.verify.submit');
+
+    // Password change routes
+    Route::get('/settings/password/change', [SettingsController::class, 'showPasswordChangeForm'])
+        ->name('settings.password.change.form');
+    Route::post('/settings/password/change', [SettingsController::class, 'updatePassword'])
+        ->name('settings.password.change');
 });
 
 /*

@@ -1,29 +1,21 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\FindJob;
 
+use App\Http\Controllers\Controller;
 use App\Models\JobPost;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
-class PublicJobController extends Controller
+class SearchController extends Controller
 {
     /**
-     * Display a listing of all job posts
-     */
-    public function index()
-    {
-        $jobs = JobPost::with('employer.user')
-                        ->where('auto_delete_at', '>', now())
-                        ->orderBy('created_at', 'DESC')
-                        ->paginate(10);
-
-        return view('public.jobs.index', compact('jobs'));
-    }
-
-    /**
      * Search job posts
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\View
      */
-    public function search(Request $request)
+    public function __invoke(Request $request): View
     {
         $query = $request->input('query');
         $type = $request->input('type');
@@ -54,16 +46,5 @@ class PublicJobController extends Controller
                           ->paginate(10);
 
         return view('public.jobs.index', compact('jobs', 'query', 'type', 'location'));
-    }
-
-    /**
-     * Display the specified job post
-     */
-    public function show($id)
-    {
-        $job = JobPost::with('employer.user')
-                      ->findOrFail($id);
-
-        return view('public.jobs.show', compact('job'));
     }
 }

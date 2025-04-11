@@ -4,18 +4,30 @@ namespace App\Http\Controllers\LandingPage;
 
 use App\Http\Controllers\Controller;
 use App\Models\JobPost;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class JobController extends Controller
 {
-    public function index()
+    /**
+     * Display a listing of jobs for the landing page area
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function index(): View
     {
         $jobs = JobPost::orderBy('created_at', 'DESC')->get();
 
         return view('landing.jobs', compact('jobs'));
     }
 
-    public function show($id)
+    /**
+     * Display the specified job details
+     *
+     * @param int $id
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function show($id): View
     {
         $job = JobPost::findOrFail($id);
 
