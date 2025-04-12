@@ -18,7 +18,7 @@ class BlogSeeder extends Seeder
             [
                 'title' => 'Top 10 Interview Tips for 2024',
                 'description' => 'Learn the most effective interview strategies to land your dream job in the current market.',
-                'image' => 'blogs/interview-tips.jpg',
+                'image' => 'images/seeder/resume-review.jpg',
                 'is_published' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -26,7 +26,7 @@ class BlogSeeder extends Seeder
             [
                 'title' => 'Remote Work: The Future of Employment',
                 'description' => 'Explore how remote work is reshaping the job market and what it means for job seekers.',
-                'image' => 'blogs/remote-work.jpg',
+                'image' => 'images/seeder/resume-review.jpg',
                 'is_published' => true,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -34,7 +34,7 @@ class BlogSeeder extends Seeder
             [
                 'title' => 'Building a Strong Professional Network',
                 'description' => 'Discover proven strategies to build and maintain valuable professional connections.',
-                'image' => 'blogs/networking.jpg',
+                'image' => 'images/seeder/resume-review.jpg',
                 'is_published' => true,
                 'created_at' => now(),
                 'updated_at' => now(),

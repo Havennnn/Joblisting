@@ -16,7 +16,7 @@ class FeaturedItemSeeder extends Seeder
             [
                 'title' => 'Find Your Dream Job Today',
                 'subtitle' => 'Join thousands of successful professionals',
-                'imagePath' => 'images/featured/job-search.jpg',
+                'imagePath' => 'images/seeder/banner1.png',
                 'button_text' => 'Browse Jobs',
                 'button_link' => '/jobs',
                 'is_active' => true,
@@ -25,7 +25,7 @@ class FeaturedItemSeeder extends Seeder
             [
                 'title' => 'Virtual Job Fair',
                 'subtitle' => 'Connect with top employers online',
-                'imagePath' => 'images/featured/virtual-fair.jpg',
+                'imagePath' => 'images/seeder/banner2.png',
                 'button_text' => 'Learn More',
                 'button_link' => '/events',
                 'is_active' => true,
@@ -34,7 +34,7 @@ class FeaturedItemSeeder extends Seeder
             [
                 'title' => 'Career Development',
                 'subtitle' => 'Enhance your skills and grow',
-                'imagePath' => 'images/featured/career-growth.jpg',
+                'imagePath' => 'images/seeder/banner3.png',
                 'button_text' => 'Get Started',
                 'button_link' => '/resources',
                 'is_active' => true,
