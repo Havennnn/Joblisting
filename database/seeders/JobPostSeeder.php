@@ -88,19 +88,6 @@ class JobPostSeeder extends Seeder
             ];
         }
 
-        // Check if application_count and unread_application_count columns exist
-        if (DB::getSchemaBuilder()->hasColumn('jobposts', 'application_count')) {
-            foreach ($jobPosts as &$job) {
-                $job['application_count'] = rand(0, 20);
-            }
-        }
-
-        if (DB::getSchemaBuilder()->hasColumn('jobposts', 'unread_application_count')) {
-            foreach ($jobPosts as &$job) {
-                $job['unread_application_count'] = rand(0, 10);
-            }
-        }
-
         DB::table('jobposts')->insert($jobPosts);
 
         $this->command->info('20 job posts created successfully for employer ID: ' . $employer_id);
