@@ -44,7 +44,7 @@ class LoginController extends Controller
     /**
      * Send OTP with cooldown period
      *
-     * @param \App\Models\Users\Users\User $user
+     * @param \App\Models\Users\User $user
      * @return \Illuminate\Http\RedirectResponse
      */
     private function sendOtpWithCooldown($user): RedirectResponse

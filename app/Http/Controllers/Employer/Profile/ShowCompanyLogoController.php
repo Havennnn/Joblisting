@@ -12,7 +12,7 @@ class ShowCompanyLogoController extends Controller
     /**
      * Securely serve company logo from private storage
      *
-     * @param \App\Models\Users\Users\User $user
+     * @param \App\Models\Users\User $user
      * @return \Illuminate\Http\Response
      */
     public function __invoke(User $user)
