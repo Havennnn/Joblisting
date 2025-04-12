@@ -9,6 +9,7 @@ use Illuminate\Notifications\DatabaseNotification;
 
 class IndexController extends Controller
 {
+
     /**
      * Display a listing of the user's notifications
      *
