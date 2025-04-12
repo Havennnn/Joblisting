@@ -13,8 +13,8 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('applicant.dashboard') }}" class="{{ request()->routeIs('applicant.interested-jobs') ? 'text-gray-900 font-semibold' : 'text-gray-600 hover:text-gray-900' }}">
-                    Interested Jobs
+                <a href="{{ route('applicant.saved-jobs') }}" class="{{ request()->routeIs('applicant.saved-jobs') ? 'text-gray-900 font-semibold' : 'text-gray-600 hover:text-gray-900' }}">
+                    Saved Jobs
                 </a>
             </li>
             <li>

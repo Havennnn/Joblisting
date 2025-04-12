@@ -6,6 +6,7 @@ use App\Http\Controllers\Applicant\ProfileController;
 use App\Http\Controllers\Applicant\SetupController;
 use App\Http\Controllers\Applicant\MyApplicationsController;
 use App\Http\Controllers\Applicant\NotificationController;
+use App\Http\Controllers\Applicant\SavedJobController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,12 @@ Route::prefix('applicant')->name('applicant.')->middleware(['auth', 'applicant']
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
     Route::delete('/notifications/{id}', [NotificationController::class, 'delete'])->name('notifications.delete');
 
+    // Saved Jobs routes
+    Route::get('/saved-jobs', [SavedJobController::class, 'index'])->name('saved-jobs');
+    Route::post('/saved-jobs/{jobId}/save', [SavedJobController::class, 'save'])->name('saved-jobs.save');
+    Route::post('/saved-jobs/{jobId}/unsave', [SavedJobController::class, 'unsave'])->name('saved-jobs.unsave');
+    Route::get('/saved-jobs/{jobId}/check', [SavedJobController::class, 'isSaved'])->name('saved-jobs.check');
+
     /*
      * Future routes to implement:
      */
@@ -58,9 +65,4 @@ Route::prefix('applicant')->name('applicant.')->middleware(['auth', 'applicant']
 
     // Interview preparation
     // Route::get('/interview-preparation', [InterviewPreparationController::class, 'index'])->name('interview-preparation');
-
-    // Application management
-    // Route::get('/applications', [ApplicationController::class, 'index'])->name('applications');
-    // Route::get('/applied-jobs', [AppliedJobController::class, 'index'])->name('applied-jobs');
-    // Route::get('/saved-jobs', [SavedJobController::class, 'index'])->name('saved-jobs');
 });

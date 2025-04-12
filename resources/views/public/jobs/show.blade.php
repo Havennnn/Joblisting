@@ -8,16 +8,61 @@
         <!-- Job Header -->
         <div class="p-6 border-b border-gray-200">
             <div class="flex flex-col md:flex-row md:justify-between md:items-center">
-                <div>
+                <div class="flex items-center">
                     <h1 class="text-2xl font-bold text-gray-900">{{ $job->title }}</h1>
-                    <p class="mt-1 text-lg text-gray-600">{{ $job->employer->company_name ?? 'Company' }}</p>
+                    @auth
+                        @if(auth()->user()->isApplicant())
+                            <div
+                                id="saveJobToggle"
+                                x-data="{
+                                    saved: false,
+                                    jobId: '{{ $job->id }}',
+                                    toggleSave() {
+                                        const url = this.saved
+                                            ? `/applicant/saved-jobs/${this.jobId}/unsave`
+                                            : `/applicant/saved-jobs/${this.jobId}/save`;
+
+                                        fetch(url, {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                            }
+                                        })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            this.saved = data.saved;
+                                        })
+                                        .catch(error => {
+                                            console.error('Error:', error);
+                                        });
+                                    },
+                                    init() {
+                                        // Check if the job is already saved
+                                        fetch(`/applicant/saved-jobs/${this.jobId}/check`)
+                                            .then(response => response.json())
+                                            .then(data => {
+                                                this.saved = data.saved;
+                                            });
+                                    }
+                                }"
+                                @click="toggleSave()"
+                                class="ml-3 cursor-pointer transition-colors duration-200"
+                                :class="saved ? 'text-yellow-500' : 'text-gray-400 hover:text-yellow-500'"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                                </svg>
+                            </div>
+                        @endif
+                    @endauth
                 </div>
                 <div class="mt-4 md:mt-0">
                     <a href="javascript:history.back()" class="inline-flex items-center px-4 py-2 border border-gray-300 text-base font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neksjob-blue">
                         <svg class="h-5 w-5 mr-2 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
                         </svg>
-                        Back to Jobs asda
+                        Back to Jobs
                     </a>
                 </div>
             </div>

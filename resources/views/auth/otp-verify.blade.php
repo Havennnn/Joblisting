@@ -1,7 +1,7 @@
 @extends('layouts.otp')
 
 @section('content')
-<div class="flex justify-center items-center min-h-[70vh] px-4 py-10">
+<div class="flex justify-center items-center min-h-screen px-4 py-10">
     <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
         <h1 class="text-2xl font-bold text-gray-800 text-center mb-6">Verify Your Email</h1>
         <p class="text-gray-600 text-center mb-6">Enter the OTP code sent to <strong class="font-medium">{{ $email }}</strong></p>
@@ -62,10 +62,10 @@
                 <form id="resend-form" method="POST" action="{{ route('otp.resend') }}" class="inline">
                     @csrf
                     <input type="hidden" name="email" value="{{ $email }}">
-                    <button 
-                        type="submit" 
-                        id="resend-otp-btn" 
-                        class="text-indigo-600 hover:underline disabled:text-gray-400 disabled:cursor-not-allowed" 
+                    <button
+                        type="submit"
+                        id="resend-otp-btn"
+                        class="text-indigo-600 hover:underline disabled:text-gray-400 disabled:cursor-not-allowed"
                         disabled
                     >
                         Resend OTP
