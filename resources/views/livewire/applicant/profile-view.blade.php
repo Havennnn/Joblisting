@@ -8,7 +8,7 @@
                     alt="Profile Photo"
                     class="w-full h-full object-cover" />
             </div>
-            <h1 class="text-3xl font-bold ml-10">{{ $user->name ?? 'Meryl Bennett Castro' }}</h1>
+            <h1 class="text-3xl font-bold ml-10">{{ $user->name }}</h1>
         </div>
     </div>
  
@@ -21,27 +21,27 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 text-sm">
                 <div>
                     <p class="text-gray-500">Full Name</p>
-                    <p class="text-gray-900">{{ $user->name ?? 'Meryl Bennett Castro' }}</p>
+                    <p class="text-gray-900">{{ $user->name }}</p>
                 </div>
                 <div>
                     <p class="text-gray-500">Email address</p>
-                    <p class="text-gray-900">{{ $user->email ?? 'meryl.neksjob@gmail.com' }}</p>
+                    <p class="text-gray-900">{{ $user->email }}</p>
                 </div>
                 <div>
                     <p class="text-gray-500">Phone Number</p>
-                    <p class="text-gray-900">{{ $profile->phone_number ?? '09381234567' }}</p>
+                    <p class="text-gray-900">{{ $profile->phone_number }}</p>
                 </div>
                 <div>
                     <p class="text-gray-500">Location</p>
-                    <p class="text-gray-900">{{ $profile->location ?? 'Binangonan, Rizal' }}</p>
+                    <p class="text-gray-900">{{ $profile->location }}</p>
                 </div>
                 <div>
                     <p class="text-gray-500">Gender</p>
-                    <p class="text-gray-900">{{ ucfirst($profile->gender ?? 'Male') }}</p>
+                    <p class="text-gray-900">{{ ucfirst($profile->gender) }}</p>
                 </div>
                 <div>
                     <p class="text-gray-500">Age</p>
-                    <p class="text-gray-900">{{ $profile->age ?? '23' }}</p>
+                    <p class="text-gray-900">{{ $profile->age }}</p>
                 </div>
             </div>
         </div>
@@ -52,15 +52,15 @@
             <div class="grid grid-cols-1 gap-6 text-sm">
                 <div>
                     <p class="text-gray-500">Field of Expertise</p>
-                    <p class="text-gray-900">{{ $profile->field ?? 'Computer Science' }}</p>
+                    <p class="text-gray-900">{{ $profile->field }}</p>
                 </div>
                 <div>
                     <p class="text-gray-500">Skills</p>
-                    <p class="text-gray-900">{{ $profile->skills ?? 'Javascript, PHP, CSS' }}</p>
+                    <p class="text-gray-900">{{ $profile->skills }}</p>
                 </div>
                 <div>
                     <p class="text-gray-500">Years of Experience</p>
-                    <p class="text-gray-900">{{ $profile->years_experience ?? '7' }}</p>
+                    <p class="text-gray-900">{{ $profile->years_experience }}</p>
                 </div>
             </div>
         </div>
