@@ -3,7 +3,7 @@
 <div class="bg-white shadow rounded-lg p-6 mb-6">
     <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-bold text-gray-800">My Applications</h2>
-        <a href="{{ route('applicant.applications.index') }}" class="text-blue-600 hover:text-blue-800 text-sm">View all applications</a>
+        <a href="{{ route('applicant.applications') }}" class="text-blue-600 hover:text-blue-800 text-sm">View all applications</a>
     </div>
 
     @if(count($applications) > 0)
@@ -65,7 +65,7 @@
             <h3 class="mt-2 text-sm font-medium text-gray-900">No applications yet</h3>
             <p class="mt-1 text-sm text-gray-500">Start applying for jobs to see them here.</p>
             <div class="mt-6">
-                <a href="{{ route('applicant.jobs.index') }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                <a href="{{ route('jobs.index') }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                     View Jobs
                 </a>
             </div>
