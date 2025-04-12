@@ -27,8 +27,10 @@ class ShowController extends Controller
     {
         $employer = Auth::user()->employer;
         $JobPost = JobPost::where('employer_id', $employer->id)
-                          ->with(['applications.applicant'])
                           ->findOrFail($id);
+
+        // Get applications and paginate them
+        $applications = $JobPost->applications()->with('applicant')->paginate(10);
 
         // Get the employer profile completion percentage
         $completionPercentage = $this->profileCompletionService->calculateEmployerCompletion(Auth::user());
@@ -36,12 +38,13 @@ class ShowController extends Controller
         // Get application statistics directly from the model
         $totalApplications = $JobPost->application_count;
         $newApplications = $JobPost->unread_application_count;
-        $reviewingApplications = $JobPost->applications->where('status', 'reviewing')->count();
-        $acceptedApplications = $JobPost->applications->where('status', 'accepted')->count();
-        $rejectedApplications = $JobPost->applications->where('status', 'rejected')->count();
+        $reviewingApplications = $JobPost->applications()->where('status', 'reviewing')->count();
+        $acceptedApplications = $JobPost->applications()->where('status', 'accepted')->count();
+        $rejectedApplications = $JobPost->applications()->where('status', 'rejected')->count();
 
         return view('employer.job-posts.show', compact(
             'JobPost',
+            'applications',
             'completionPercentage',
             'totalApplications',
             'newApplications',

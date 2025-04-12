@@ -48,15 +48,20 @@ class JobListingController extends Controller
     /**
      * Display a listing of the job posts for the employer.
      */
-    public function index()
+    public function index(Request $request)
     {
         $employer = Auth::user()->employer;
         $JobPosts = JobPost::where('employer_id', $employer->id)
                            ->orderBy('created_at', 'DESC')
-                           ->get();
+                           ->paginate(10);
 
         // Get the employer profile completion percentage
         $completionPercentage = $this->profileCompletionService->calculateEmployerCompletion(Auth::user());
+
+        // Check if this is an AJAX request
+        if ($request->ajax()) {
+            return view('employer.job-posts.partials.job-list', compact('JobPosts', 'completionPercentage'))->render();
+        }
 
         return view('employer.job-posts.index', compact('JobPosts', 'completionPercentage'));
     }

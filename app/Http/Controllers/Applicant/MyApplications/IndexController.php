@@ -27,11 +27,19 @@ class IndexController extends Controller
         $user = Auth::user();
         $applications = JobApplication::where('applicant_id', $user->id)
             ->with(['job.employer'])
-            ->orderBy('created_at', 'desc')
+            ->latest()
             ->paginate(10);
 
-        // Get profile completion percentage
+        // Calculate profile completion percentage
         $profileCompletionPercentage = $this->profileCompletionService->calculateApplicantCompletion($user);
+
+        // Check if request is AJAX
+        if (request()->ajax()) {
+            return view('applicant.applications.partials.application-list', [
+                'applications' => $applications,
+                'profileCompletionPercentage' => $profileCompletionPercentage
+            ]);
+        }
 
         return view('applicant.applications.index', [
             'applications' => $applications,

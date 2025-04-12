@@ -85,10 +85,56 @@
             </div>
 
             <!-- My Applications Section -->
-            <x-applicant.recent-applications :applications="$applications" />
+            <div id="recent-applications-container">
+                <x-applicant.recent-applications :applications="$applications" />
+            </div>
 
             <!-- Recommended Jobs Section -->
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Function to handle pagination links for recent applications
+        function setupRecentApplicationsPagination() {
+            const paginationLinks = document.querySelectorAll('#recent-applications-container .pagination a');
+
+            paginationLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const url = this.getAttribute('href');
+
+                    // Show loading state
+                    const container = document.getElementById('recent-applications-container');
+                    container.innerHTML = '<div class="text-center py-4"><svg class="animate-spin h-8 w-8 mx-auto text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><p class="mt-2 text-gray-600">Loading...</p></div>';
+
+                    // Fetch new content
+                    fetch(url, {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.text())
+                    .then(html => {
+                        container.innerHTML = html;
+                        setupRecentApplicationsPagination(); // Re-attach event listeners
+
+                        // Update URL without reloading page
+                        window.history.pushState({}, '', url);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching applications:', error);
+                        container.innerHTML = '<div class="p-8 text-center text-red-600">Error loading data. Please try again.</div>';
+                    });
+                });
+            });
+        }
+
+        // Initialize pagination for recent applications
+        setupRecentApplicationsPagination();
+    });
+</script>
+@endpush
 @endsection

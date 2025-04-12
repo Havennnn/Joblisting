@@ -86,7 +86,7 @@
                         </div>
 
                         <!-- Applications Received -->
-                        @if(isset($JobPost->applications) && count($JobPost->applications) > 0)
+                        @if(isset($applications) && count($applications) > 0)
                         <div class="mt-8 bg-gray-50 rounded-lg p-6">
                             <div class="flex justify-between items-center mb-4">
                                 <h3 class="text-lg font-medium text-gray-900">Applications Received</h3>
@@ -113,7 +113,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
-                                        @foreach($JobPost->applications as $application)
+                                        @foreach($applications as $application)
                                             <tr>
                                                 <td class="px-4 py-3 whitespace-nowrap">
                                                     <div class="flex items-center">
@@ -150,6 +150,9 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+                                <div class="mt-4">
+                                    <x-employer.pagination :paginator="$applications" />
+                                </div>
                             </div>
                         </div>
                         @endif

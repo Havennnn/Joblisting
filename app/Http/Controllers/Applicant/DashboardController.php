@@ -32,7 +32,7 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
 
@@ -60,12 +60,18 @@ class DashboardController extends Controller
             ];
         }
 
-        // Fetch the user's recent applications
+        // Fetch the user's recent applications with pagination
         $applications = JobApplication::where('applicant_id', $user->id)
             ->with('job.employer')
             ->latest()
-            ->take(5)
-            ->get();
+            ->paginate(5);
+
+        // If AJAX request, return only the applications component
+        if ($request->ajax()) {
+            return view('components.applicant.recent-applications', [
+                'applications' => $applications
+            ]);
+        }
 
         return view('applicant.dashboard', [
             'user' => $user,
