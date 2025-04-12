@@ -3,7 +3,6 @@
 @section('title', 'Job Management')
 
 @section('content')
-<div class="container">
     <div class="flex">
         <!-- Sidebar -->
         <x-employer.sidebar />
@@ -140,6 +139,7 @@
                             </tbody>
                         </table>
                     </div>
+
                     @else
                     <div class="text-center py-10">
                         <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -170,6 +170,6 @@
             </div>
         </div>
     </div>
-</div>
+
 @endsection
 
