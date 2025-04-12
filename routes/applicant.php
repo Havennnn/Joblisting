@@ -37,7 +37,7 @@ Route::prefix('applicant')->name('applicant.')->middleware(['auth', 'applicant']
     Route::get('/profile/resume/{user}', [ProfileController::class, 'downloadResume'])->name('profile.resume');
 
     // Job application routes
-    Route::post('/jobs/{job}/apply', [MyApplicationsController::class, 'store'])->name('jobs.apply');
+    Route::post('/jobs/{job}/apply', [MyApplicationsController::class, 'store'])->name('apply.job');
     Route::get('/my-applications', [MyApplicationsController::class, 'index'])->name('applications');
 
     // Notification routes

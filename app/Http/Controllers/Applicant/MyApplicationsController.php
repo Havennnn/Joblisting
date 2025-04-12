@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Applicant;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Applicant\MyApplications\IndexController;
-use App\Http\Controllers\Applicant\MyApplications\StoreController;
+use App\Http\Controllers\Applicant\MyApplications\ApplyController;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -12,14 +12,14 @@ use Illuminate\Http\Request;
 class MyApplicationsController extends Controller
 {
     protected $indexController;
-    protected $storeController;
+    protected $applyController;
 
     public function __construct(
         IndexController $indexController,
-        StoreController $storeController
+        ApplyController $applyController
     ) {
         $this->indexController = $indexController;
-        $this->storeController = $storeController;
+        $this->applyController = $applyController;
     }
 
     /**
@@ -33,7 +33,7 @@ class MyApplicationsController extends Controller
     }
 
     /**
-     * Store a new job application
+     * Apply for a job
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $job
@@ -41,6 +41,6 @@ class MyApplicationsController extends Controller
      */
     public function store(Request $request, $job)
     {
-        return $this->storeController->__invoke($request, $job);
+        return $this->applyController->__invoke($request, $job);
     }
 }

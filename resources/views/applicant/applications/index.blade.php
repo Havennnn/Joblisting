@@ -1,110 +1,119 @@
 @extends('layouts.applicant')
 
+@section('title', 'My Applications')
+
 @section('content')
-<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    <div class="flex flex-col md:flex-row">
+<div class="flex">
         <!-- Sidebar -->
-        <div class="w-full md:w-64 mb-6 md:mb-0 md:mr-8">
-            <x-applicant.sidebar />
-        </div>
-
+        <x-applicant.sidebar />
         <!-- Main Content -->
-        <div class="flex-1">
-            @if(isset($profileCompletionPercentage) && $profileCompletionPercentage < 100)
-            <div class="mb-6 bg-blue-50 border-l-4 border-blue-400 p-4">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+        <div class="flex-1 bg-gray-50">
+            <div class="py-8 px-12">
+                <div class="flex items-center justify-between mb-6">
+                    <h1 class="text-2xl font-bold text-gray-900">My Applications</h1>
+                    <a href="{{ route('jobs.index') }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-neksjob-blue hover:bg-neksjob-blue-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neksjob-blue">
+                        <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
                         </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm text-blue-700">
-                            Your profile is {{ $profileCompletionPercentage }}% complete.
-                            <a href="{{ route('applicant.profile') }}" class="font-medium underline text-blue-700 hover:text-blue-600">
-                                Complete your profile
-                            </a> to increase your chances of getting hired.
-                        </p>
-                    </div>
+                        Find More Jobs
+                    </a>
                 </div>
-            </div>
-            @endif
 
-            @if (session('success'))
-            <div class="mb-6 bg-green-50 border-l-4 border-green-400 p-4">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm text-green-700">{{ session('success') }}</p>
-                    </div>
+                <!-- Profile Completion Alert -->
+                <x-profile-completion-alert :percentage="$profileCompletionPercentage" userType="applicant" />
+
+                <!-- Success Message -->
+                @if (session('success'))
+                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
+                    <p>{{ session('success') }}</p>
                 </div>
-            </div>
-            @endif
+                @endif
 
-            @if (session('error'))
-            <div class="mb-6 bg-red-50 border-l-4 border-red-400 p-4">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm text-red-700">{{ session('error') }}</p>
-                    </div>
+                <!-- Error Message -->
+                @if (session('error'))
+                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+                    <p>{{ session('error') }}</p>
                 </div>
-            </div>
-            @endif
+                @endif
 
-            <div class="flex justify-between items-center mb-6">
-                <h1 class="text-2xl font-bold text-gray-900">My Applications</h1>
-            </div>
-
-            <div id="applications-container">
-                @include('applicant.applications.partials.application-list')
+                @if(count($applications) > 0)
+                    <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+                        <div class="divide-y divide-gray-200">
+                            @foreach($applications as $application)
+                            <div class="p-6 hover:bg-gray-50">
+                                <div class="flex flex-col md:flex-row justify-between">
+                                    <div class="mb-4 md:mb-0">
+                                        <h2 class="text-lg font-medium text-gray-900">{{ $application->job->title }}</h2>
+                                        <p class="text-sm text-gray-600">{{ $application->job->employer->company_name }}</p>
+                                        <div class="mt-2 flex items-center text-sm text-gray-500">
+                                            <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                                            </svg>
+                                            {{ $application->job->location }}
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col items-end">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{
+                                            $application->status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                            ($application->status === 'reviewing' ? 'bg-blue-100 text-blue-800' :
+                                            ($application->status === 'accepted' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'))
+                                        }}">
+                                            {{ ucfirst($application->status) }}
+                                        </span>
+                                        <time datetime="{{ $application->applied_at }}" class="text-sm text-gray-500 mt-2">
+                                            Applied {{ $application->applied_at->diffForHumans() }}
+                                        </time>
+                                    </div>
+                                </div>
+                                <div class="mt-4 flex justify-between items-center">
+                                    <div class="flex space-x-4">
+                                        <a href="{{ route('jobs.show', $application->job->id) }}" class="text-sm text-neksjob-blue hover:text-neksjob-blue-dark font-medium">
+                                            View Job Details
+                                        </a>
+                                        @if($application->resume_path)
+                                        <span class="text-sm text-gray-500">
+                                            Resume included
+                                        </span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        {{ $applications->links() }}
+                    </div>
+                @else
+                    <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+                        <div class="p-8 text-center">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                            </svg>
+                            <h3 class="mt-2 text-sm font-medium text-gray-900">No applications yet</h3>
+                            <p class="mt-1 text-sm text-gray-500">Get started by applying to your first job.</p>
+                            <div class="mt-6">
+                                @if(isset($profileCompletionPercentage) && $profileCompletionPercentage >= 100)
+                                <a href="{{ route('jobs.index') }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-neksjob-blue hover:bg-neksjob-blue-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neksjob-blue">
+                                    <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                                    </svg>
+                                    Browse Jobs
+                                </a>
+                                @else
+                                <a href="{{ route('applicant.profile') }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-neksjob-blue hover:bg-neksjob-blue-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neksjob-blue">
+                                    <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                    </svg>
+                                    Complete Your Profile
+                                </a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
-</div>
 @endsection
-
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Function to handle pagination links
-        function setupPaginationLinks() {
-            const paginationLinks = document.querySelectorAll('#applications-container .pagination a');
-
-            paginationLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-
-                    const url = this.getAttribute('href');
-
-                    // Fetch the new page
-                    fetch(url, {
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    })
-                    .then(response => response.text())
-                    .then(html => {
-                        document.getElementById('applications-container').innerHTML = html;
-                        setupPaginationLinks(); // Re-setup links for new content
-                    })
-                    .catch(error => {
-                        console.error('Error fetching applications:', error);
-                    });
-                });
-            });
-        }
-
-        // Initial setup
-        setupPaginationLinks();
-    });
-</script>
-@endpush
