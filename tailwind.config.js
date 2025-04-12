@@ -17,6 +17,7 @@ export default {
             colors: {
                 'neksjob-blue': '#3674B5',
                 'neksjob-pink': '#D91656',
+                
             }
         },
     },
