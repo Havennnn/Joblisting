@@ -23,6 +23,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             TestUsersSeeder::class,
             FeaturedItemSeeder::class,
+            EventSeeder::class,
+            BlogSeeder::class,
+            JobPostSeeder::class,
         ]);
     }
 }
