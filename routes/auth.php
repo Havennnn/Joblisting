@@ -107,7 +107,7 @@ Route::middleware(['web', 'ensure.otp.eligibility'])->withoutMiddleware([\App\Ht
 });
 
 // Shared logout route
-Route::middleware('auth.custom')->group(function () {
+Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Employer-specific logout route
@@ -124,7 +124,7 @@ Route::middleware('guest')->group(function () {
 });
 
 // Email verification routes
-Route::middleware('auth.custom')->group(function () {
+Route::middleware('auth')->group(function () {
     Route::get('/email/verify', function () {
         return view('auth.verify-email');
     })->name('verification.notice');

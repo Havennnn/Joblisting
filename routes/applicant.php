@@ -18,7 +18,7 @@ use App\Http\Controllers\Applicant\SavedJobController;
 |
 */
 
-Route::prefix('applicant')->name('applicant.')->middleware(['auth.custom', 'applicant'])->group(function () {
+Route::prefix('applicant')->name('applicant.')->middleware(['auth', 'applicant'])->group(function () {
     // Dashboard route
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 

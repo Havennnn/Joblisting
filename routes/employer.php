@@ -36,7 +36,7 @@ Route::middleware('guest')->group(function () {
     });
 });
 
-Route::prefix('employer')->name('employer.')->middleware(['auth.custom', 'employer'])->group(function () {
+Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->group(function () {
     // Dashboard route
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
