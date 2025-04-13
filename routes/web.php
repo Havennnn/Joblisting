@@ -5,6 +5,7 @@ use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\LandingPage\JobController;
 use App\Http\Controllers\FindJobController;
 use App\Http\Controllers\SettingsController;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +49,15 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/settings/password/change', [SettingsController::class, 'updatePassword'])
         ->name('settings.password.change');
 });
+
+// Content unavailable page route
+Route::get('/content-unavailable', function(Request $request) {
+    // Store the intended URL in the session for potential redirect after login
+    if ($request->has('intended')) {
+        session(['url.intended' => $request->intended]);
+    }
+    return view('errors.content-unavailable');
+})->name('content.unavailable');
 
 /*
 |--------------------------------------------------------------------------

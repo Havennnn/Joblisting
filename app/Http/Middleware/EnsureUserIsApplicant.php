@@ -70,11 +70,8 @@ class EnsureUserIsApplicant
             return $next($request);
         }
 
-        // Redirect to login if not logged in, or to employer dashboard if user is an employer
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
-
-        return redirect()->route('employer.dashboard');
+        // If user is not an applicant, redirect to unauthorized page
+        return redirect()->route('content.unavailable', ['intended' => $request->path()])
+            ->with('error', 'Access denied: This area is for job seekers only.');
     }
 }

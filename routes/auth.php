@@ -81,7 +81,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update.otp');
 });
 
-// OTP verification routes
+// OTP login and registration routes
 Route::middleware('guest')->group(function () {
     // OTP Login
     Route::get('/otp-login', [OtpAuthController::class, 'showLoginForm'])->name('otp.login');
@@ -96,7 +96,7 @@ Route::middleware('guest')->group(function () {
 });
 
 // OTP verification routes - accessible to both guests and auth users who need verification
-Route::middleware('web')->withoutMiddleware([\App\Http\Middleware\EnsureOtpVerified::class])->group(function () {
+Route::middleware(['web', 'ensure.otp.eligibility'])->withoutMiddleware([\App\Http\Middleware\EnsureOtpVerified::class])->group(function () {
     // OTP Verification
     Route::get('/otp-verify', [OtpAuthController::class, 'showOtpVerificationPage'])->name('otp.verify.page');
     Route::post('/otp-verify', [OtpAuthController::class, 'verifyOtp'])->name('otp.verify');
@@ -107,7 +107,7 @@ Route::middleware('web')->withoutMiddleware([\App\Http\Middleware\EnsureOtpVerif
 });
 
 // Shared logout route
-Route::middleware('auth')->group(function () {
+Route::middleware('auth.custom')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Employer-specific logout route
@@ -124,7 +124,7 @@ Route::middleware('guest')->group(function () {
 });
 
 // Email verification routes
-Route::middleware('auth')->group(function () {
+Route::middleware('auth.custom')->group(function () {
     Route::get('/email/verify', function () {
         return view('auth.verify-email');
     })->name('verification.notice');

@@ -9,6 +9,8 @@ use App\Http\Middleware\EnsureUserIsEmployer;
 use App\Http\Middleware\SetUserLayout;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\EnsureOtpVerified;
+use App\Http\Middleware\EnsureOtpEligibility;
+use App\Http\Middleware\EnsureAuthenticated;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -33,6 +35,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'set.layout' => SetUserLayout::class,
             'guest' => RedirectIfAuthenticated::class,
             'otp.verified' => EnsureOtpVerified::class,
+            'ensure.otp.eligibility' => EnsureOtpEligibility::class,
+            'auth.custom' => EnsureAuthenticated::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
