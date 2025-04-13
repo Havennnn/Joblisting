@@ -23,33 +23,43 @@ Route::prefix('applicant')->name('applicant.')->middleware(['auth', 'applicant']
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Setup wizard routes
-    Route::get('/setup', [SetupController::class, 'index'])->name('setup');
-    Route::post('/setup/step-one', [SetupController::class, 'processStepOne'])->name('setup.step-one');
-    Route::post('/setup/step-two', [SetupController::class, 'processStepTwo'])->name('setup.step-two');
-    Route::post('/setup/step-three', [SetupController::class, 'processStepThree'])->name('setup.step-three');
-    Route::get('/setup/previous', [SetupController::class, 'previous'])->name('setup.previous');
-    Route::get('/setup/skip', [SetupController::class, 'skip'])->name('setup.skip');
+    Route::controller(SetupController::class)->prefix('setup')->name('setup')->group(function () {
+        Route::get('/', 'index');
+        Route::post('/step-one', 'processStepOne')->name('.step-one');
+        Route::post('/step-two', 'processStepTwo')->name('.step-two');
+        Route::post('/step-three', 'processStepThree')->name('.step-three');
+        Route::get('/previous', 'previous')->name('.previous');
+        Route::get('/skip', 'skip')->name('.skip');
+    });
 
     // Profile routes
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::get('/profile/picture/{user}', [ProfileController::class, 'showProfilePicture'])->name('profile.picture');
-    Route::get('/profile/resume/{user}', [ProfileController::class, 'downloadResume'])->name('profile.resume');
+    Route::controller(ProfileController::class)->prefix('profile')->name('profile')->group(function () {
+        Route::get('/', 'show');
+        Route::get('/edit', 'edit')->name('.edit');
+        Route::put('/', 'update')->name('.update');
+        Route::get('/picture/{user}', 'showProfilePicture')->name('.picture');
+        Route::get('/resume/{user}', 'downloadResume')->name('.resume');
+    });
 
     // Job application routes
-    Route::post('/jobs/{job}/apply', [MyApplicationsController::class, 'store'])->name('apply.job');
-    Route::get('/my-applications', [MyApplicationsController::class, 'index'])->name('applications');
+    Route::controller(MyApplicationsController::class)->group(function () {
+        Route::post('/jobs/{job}/apply', 'store')->name('apply.job');
+        Route::get('/my-applications', 'index')->name('applications');
+    });
 
     // Notification routes
-    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
-    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
-    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
-    Route::delete('/notifications/{id}', [NotificationController::class, 'delete'])->name('notifications.delete');
+    Route::controller(NotificationController::class)->prefix('notifications')->name('notifications')->group(function () {
+        Route::get('/', 'index');
+        Route::post('/{id}/read', 'markAsRead')->name('.read');
+        Route::post('/read-all', 'markAllAsRead')->name('.read-all');
+        Route::delete('/{id}', 'delete')->name('.delete');
+    });
 
     // Saved Jobs routes
-    Route::get('/saved-jobs', [SavedJobController::class, 'index'])->name('saved-jobs');
-    Route::post('/saved-jobs/{jobId}/save', [SavedJobController::class, 'save'])->name('saved-jobs.save');
-    Route::post('/saved-jobs/{jobId}/unsave', [SavedJobController::class, 'unsave'])->name('saved-jobs.unsave');
-    Route::get('/saved-jobs/{jobId}/check', [SavedJobController::class, 'isSaved'])->name('saved-jobs.check');
+    Route::controller(SavedJobController::class)->prefix('saved-jobs')->name('saved-jobs')->group(function () {
+        Route::get('/', 'index');
+        Route::post('/{jobId}/save', 'save')->name('.save');
+        Route::post('/{jobId}/unsave', 'unsave')->name('.unsave');
+        Route::get('/{jobId}/check', 'isSaved')->name('.check');
+    });
 });

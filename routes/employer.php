@@ -30,12 +30,14 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Setup wizard routes
-    Route::get('/setup', [SetupController::class, 'index'])->name('setup');
-    Route::post('/setup/step-one', [SetupController::class, 'processStepOne'])->name('setup.step-one');
-    Route::post('/setup/step-two', [SetupController::class, 'processStepTwo'])->name('setup.step-two');
-    Route::post('/setup/step-three', [SetupController::class, 'processStepThree'])->name('setup.step-three');
-    Route::get('/setup/previous', [SetupController::class, 'previous'])->name('setup.previous');
-    Route::get('/setup/skip', [SetupController::class, 'skip'])->name('setup.skip');
+    Route::controller(SetupController::class)->prefix('setup')->name('setup')->group(function () {
+        Route::get('/', 'index');
+        Route::post('/step-one', 'processStepOne')->name('.step-one');
+        Route::post('/step-two', 'processStepTwo')->name('.step-two');
+        Route::post('/step-three', 'processStepThree')->name('.step-three');
+        Route::get('/previous', 'previous')->name('.previous');
+        Route::get('/skip', 'skip')->name('.skip');
+    });
 
     // Profile routes
     Route::controller(ProfileController::class)->prefix('profile')->name('profile.')->group(function () {
@@ -46,8 +48,10 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
     });
 
     // Applicants routes
-    Route::get('/applicants', [ApplicationController::class, 'index'])->name('applicants');
-    Route::get('/applicants/{id}', [ApplicationController::class, 'show'])->name('applicants.view');
+    Route::controller(ApplicationController::class)->prefix('applicants')->name('applicants')->group(function () {
+        Route::get('/', 'index');
+        Route::get('/{id}', 'show')->name('.view');
+    });
 
     // Job Post routes - UPDATED to use JobListingController as a facade
     Route::controller(JobListingController::class)->prefix('job-posts')->name('JobPost')->group(function () {
@@ -60,9 +64,7 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
         Route::delete('/{id}', 'destroy')->name('.destroy');
     });
 
-    /**
-     * Application Management Routes
-     */
+    //Application Management Routes
     Route::controller(ApplicationController::class)->prefix('applications')->name('applications.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/job/{jobId}', 'showJobApplications')->name('job');
@@ -71,9 +73,7 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
         Route::get('/{id}/resume', 'downloadResume')->name('download-resume');
     });
 
-    /**
-     * Notification Routes
-     */
+    //Notification Routes
     Route::controller(NotificationController::class)->prefix('notifications')->name('notifications.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/{id}/read', 'markAsRead')->name('read');
