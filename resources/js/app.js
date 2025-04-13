@@ -1,16 +1,9 @@
 import './bootstrap';
-import { initApplicantRegistration } from './pages/applicantRegister.js';
-import { initEmployerRegistration } from './pages/employerRegister.js';
 
-// Initialize the scripts based on the current page
+// We're now using direct imports in the blade templates for specific pages
+// This file is mainly used for global functionality that applies to all pages
+
+// Add global event listeners or functionality here if needed
 document.addEventListener('DOMContentLoaded', () => {
-    // Check if we're on the applicant registration page
-    if (document.getElementById('applicant-registration-form')) {
-        initApplicantRegistration();
-    }
-
-    // Check if we're on the employer registration page
-    if (document.getElementById('employer-registration-form')) {
-        initEmployerRegistration();
-    }
+    console.log('JobFair application initialized');
 });

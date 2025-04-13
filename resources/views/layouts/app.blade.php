@@ -28,7 +28,7 @@
     <!-- Footer Component -->
     <x-footer />
 
-    <!-- Page-specific scripts -->
-    @yield('scripts')
+    <!-- Scripts -->
+    @stack('scripts')
 </body>
 </html>
