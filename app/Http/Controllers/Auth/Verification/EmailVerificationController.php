@@ -21,11 +21,18 @@ class EmailVerificationController extends Controller
         $user = $request->user();
 
         if (!$user) {
-            return redirect()->route('login');
+            return redirect()->route('applicant.login');
         }
 
         if ($user->hasVerifiedEmail()) {
             return redirect()->intended(RouteServiceProvider::HOME);
+        }
+
+        // Handle invalid signature
+        if (! hash_equals((string) $request->route('id'), (string) $user->getKey()) ||
+            ! hash_equals((string) $request->route('hash'), sha1($user->getEmailForVerification()))) {
+            return redirect()->route('applicant.login')
+                ->with('error', 'Invalid verification link.');
         }
 
         if ($user->markEmailAsVerified()) {

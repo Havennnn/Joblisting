@@ -52,7 +52,6 @@ Route::middleware(['auth'])->group(function () {
 
 // Content unavailable page route
 Route::get('/content-unavailable', function(Request $request) {
-    // Store the intended URL in the session for potential redirect after login
     if ($request->has('intended')) {
         session(['url.intended' => $request->intended]);
     }

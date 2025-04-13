@@ -190,12 +190,13 @@ class FacebookCallbackController extends Controller
                 ] : null
             ]);
 
+            // Handle database and other exceptions
             if ($e instanceof \Illuminate\Database\QueryException) {
-                return redirect()->route('login')
+                return redirect()->route('applicant.login')
                     ->with('error', 'Database error during Facebook authentication. Please try again.');
             }
 
-            return redirect()->route('login')
+            return redirect()->route('applicant.login')
                 ->with('error', 'Facebook authentication failed. Please try again.');
         }
     }

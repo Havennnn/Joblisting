@@ -5,15 +5,6 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\OtpAuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use Illuminate\Support\Facades\Route;
-use Livewire\Volt\Volt;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Auth\ConfirmablePasswordController;
-use App\Http\Controllers\Auth\EmailVerificationNotificationController;
-use App\Http\Controllers\Auth\EmailVerificationPromptController;
-use App\Http\Controllers\Auth\NewPasswordController;
-use App\Http\Controllers\Auth\PasswordController;
-use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\FacebookController;
 use App\Http\Controllers\Auth\GoogleController;
 use Illuminate\Http\Request;
@@ -29,27 +20,6 @@ use Illuminate\Http\Request;
 | - Password reset and email verification routes
 |
 */
-
-// General register route for backward compatibility
-Route::get('/register', function() {
-    // Check if type=employer is in the query string, otherwise default to applicant
-    return request()->has('type') && request()->type === 'employer'
-        ? redirect()->route('employer.register')
-        : redirect()->route('applicant.register');
-})->name('register')->middleware('guest');
-
-// General login route for backward compatibility
-Route::get('/login', function() {
-    // Check if type=employer is in the query string, otherwise default to applicant
-    return request()->has('type') && request()->type === 'employer'
-        ? redirect()->route('employer.login')
-        : redirect()->route('applicant.login');
-})->name('login')->middleware('guest');
-
-// Register multi-step routes
-Route::get('/register-next-page', [AuthController::class, 'showRegisterNextPage'])
-    ->name('register-next-page')
-    ->middleware('guest');
 
 // Applicant authentication routes (guest only)
 Route::prefix('applicant')->name('applicant.')->middleware('guest')->group(function () {
@@ -106,12 +76,9 @@ Route::middleware(['web', 'ensure.otp.eligibility'])->withoutMiddleware([\App\Ht
     Route::post('/logout-during-otp', [AuthController::class, 'logout'])->name('logout');
 });
 
-// Shared logout route
+// Logout route
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-    // Employer-specific logout route
-    Route::post('/employer/logout', [AuthController::class, 'logout'])->name('employer.logout');
 });
 
 // Social Authentication Routes

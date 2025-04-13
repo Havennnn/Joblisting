@@ -12,9 +12,8 @@ use App\Http\Controllers\Employer\DashboardController;
 use App\Http\Controllers\Employer\ProfileController;
 use App\Http\Controllers\Employer\SetupController;
 use App\Http\Controllers\Employer\NotificationController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Employer\ApplicationController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,16 +24,6 @@ use App\Http\Controllers\Employer\ApplicationController;
 | All routes are prefixed with 'employer' and have the name prefix 'employer.'
 |
 */
-
-// Guest routes for Employer
-Route::middleware('guest')->group(function () {
-    Route::controller(AuthController::class)->group(function () {
-        Route::get('/login', 'showEmployerLogin')->name('employer.login');
-        Route::post('/login', 'loginEmployer');
-        Route::get('/register', 'showEmployerRegister')->name('employer.register');
-        Route::post('/register', 'registerEmployer');
-    });
-});
 
 Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->group(function () {
     // Dashboard route
@@ -91,19 +80,4 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
         Route::post('/read-all', 'markAllAsRead')->name('read-all');
         Route::delete('/{id}', 'delete')->name('delete');
     });
-
-    /*
-     * Future routes to implement:
-     */
-
-    // Job management
-    // Route::resource('/jobs', JobController::class);
-
-    // Candidate search
-    // Route::get('/candidates', [CandidateController::class, 'index'])->name('candidates');
-    // Route::get('/candidates/{id}', [CandidateController::class, 'show'])->name('candidates.show');
-
-    // Company profile management
-    // Route::get('/company-profile', [CompanyProfileController::class, 'show'])->name('company-profile');
-    // Route::put('/company-profile', [CompanyProfileController::class, 'update'])->name('company-profile.update');
 });

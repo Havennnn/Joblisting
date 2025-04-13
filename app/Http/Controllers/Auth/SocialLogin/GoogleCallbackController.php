@@ -153,11 +153,11 @@ class GoogleCallbackController extends Controller
             ]);
 
             if ($e instanceof \Illuminate\Database\QueryException) {
-                return redirect()->route('login')
+                return redirect()->route('applicant.login')
                     ->with('error', 'Database error during Google authentication. Please try again.');
             }
 
-            return redirect()->route('login')
+            return redirect()->route('applicant.login')
                 ->with('error', 'Google authentication failed. Please try again.');
         }
     }

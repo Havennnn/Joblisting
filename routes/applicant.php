@@ -52,17 +52,4 @@ Route::prefix('applicant')->name('applicant.')->middleware(['auth', 'applicant']
     Route::post('/saved-jobs/{jobId}/save', [SavedJobController::class, 'save'])->name('saved-jobs.save');
     Route::post('/saved-jobs/{jobId}/unsave', [SavedJobController::class, 'unsave'])->name('saved-jobs.unsave');
     Route::get('/saved-jobs/{jobId}/check', [SavedJobController::class, 'isSaved'])->name('saved-jobs.check');
-
-    /*
-     * Future routes to implement:
-     */
-
-    // Job Search routes
-    // Route::get('/job-search', [JobSearchController::class, 'index'])->name('job-search');
-
-    // Job recommendations
-    // Route::get('/job-recommendations', [JobRecommendationController::class, 'index'])->name('job-recommendations');
-
-    // Interview preparation
-    // Route::get('/interview-preparation', [InterviewPreparationController::class, 'index'])->name('interview-preparation');
 });
