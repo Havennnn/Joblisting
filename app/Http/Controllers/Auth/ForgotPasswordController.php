@@ -57,8 +57,18 @@ class ForgotPasswordController extends Controller
      */
     public function showResetForm(Request $request)
     {
+        // Check if there's a valid reset session
+        $email = session('reset_email');
+        $resetType = session('reset_type');
+
+        if (!$email || !$resetType) {
+            // Redirect to content unavailable if someone tries to access this page directly
+            return redirect()->route('content.unavailable', ['intended' => $request->path()])
+                ->with('error', 'Password reset session not found. Please start the password reset process from the login page.');
+        }
+
         // Check if the request is for an employer or applicant
-        if ($request->has('type') && $request->type === 'employer') {
+        if ($resetType === 'employer') {
             return $this->employerForgotPasswordController->showResetForm($request);
         }
 
@@ -70,8 +80,18 @@ class ForgotPasswordController extends Controller
      */
     public function resetPassword(Request $request)
     {
+        // Check if there's a valid reset session
+        $email = session('reset_email');
+        $resetType = session('reset_type');
+
+        if (!$email || !$resetType) {
+            // Redirect to content unavailable if someone tries to access this endpoint directly
+            return redirect()->route('content.unavailable', ['intended' => $request->path()])
+                ->with('error', 'Password reset session not found. Please start the password reset process from the login page.');
+        }
+
         // Check if the request is for an employer or applicant
-        if ($request->has('type') && $request->type === 'employer') {
+        if ($resetType === 'employer') {
             return $this->employerForgotPasswordController->resetPassword($request);
         }
 

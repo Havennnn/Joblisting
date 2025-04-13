@@ -64,10 +64,11 @@ class ForgotPasswordController extends Controller
     public function showResetForm(Request $request)
     {
         $email = Session::get('reset_email');
+        $resetType = Session::get('reset_type');
 
-        if (!$email) {
-            return redirect()->route('employer.password.request')
-                ->withErrors(['email' => 'Your password reset session has expired. Please try again.']);
+        if (!$email || $resetType !== 'employer') {
+            return redirect()->route('content.unavailable', ['intended' => $request->path()])
+                ->with('error', 'Invalid password reset session. Please start the password reset process again.');
         }
 
         return view('auth.employer.reset-password', [
