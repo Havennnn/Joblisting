@@ -47,7 +47,7 @@ class RegisterController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,NULL,id,email_verified_at,NULL',
-            'password' => 'required|string|confirmed|min:8',
+            'password' => 'required|string|confirmed|min:8|regex:/[A-Z]/|regex:/[0-9]/',
         ]);
 
         // Check if user exists but is unverified
