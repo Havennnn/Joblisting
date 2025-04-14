@@ -1,12 +1,12 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\OtpAuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\FacebookController;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\SettingsController;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
 /*
@@ -17,92 +17,108 @@ use Illuminate\Http\Request;
 | This file contains all authentication-related routes including:
 | - Login/logout for both applicants and employers
 | - Registration routes for applicants and employers
-| - Password reset and email verification routes
+| - Password reset routes
+| - Routes for authenticated users to manage their account settings
 |
 */
 
-// Applicant authentication routes (guest only)
+// Applicant authentication routes
 Route::prefix('applicant')->name('applicant.')->middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showApplicantLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'loginApplicant'])->name('login.post');
-    Route::get('/register', [AuthController::class, 'showApplicantRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'registerApplicant'])->name('register.post');
+    Route::controller(AuthController::class)->group(function () {
+        Route::get('/login', 'showApplicantLogin')->name('login');
+        Route::post('/login', 'loginApplicant')->name('login.post');
+        Route::get('/register', 'showApplicantRegister')->name('register');
+        Route::post('/register', 'registerApplicant')->name('register.post');
+    });
 
-    // Forgot Password Routes
-    Route::get('/forgot-password', [ForgotPasswordController::class, 'showApplicantForm'])->name('password.request');
-    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendApplicantResetLink'])->name('password.email');
+    Route::controller(ForgotPasswordController::class)->group(function () {
+        Route::get('/forgot-password', 'showApplicantForm')->name('password.request');
+        Route::post('/forgot-password', 'sendApplicantResetLink')->name('password.email');
+    });
 });
 
-// Employer authentication routes (guest only)
+// Employer authentication routes
 Route::prefix('employer')->name('employer.')->middleware('guest')->group(function () {
-    Route::get('/login', [AuthController::class, 'showEmployerLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'loginEmployer'])->name('login.post');
-    Route::get('/register', [AuthController::class, 'showEmployerRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'registerEmployer'])->name('register.post');
+    Route::controller(AuthController::class)->group(function () {
+        Route::get('/login', 'showEmployerLogin')->name('login');
+        Route::post('/login', 'loginEmployer')->name('login.post');
+        Route::get('/register', 'showEmployerRegister')->name('register');
+        Route::post('/register', 'registerEmployer')->name('register.post');
+    });
 
-    // Forgot Password Routes
-    Route::get('/forgot-password', [ForgotPasswordController::class, 'showEmployerForm'])->name('password.request');
-    Route::post('/forgot-password', [ForgotPasswordController::class, 'sendEmployerResetLink'])->name('password.email');
+    Route::controller(ForgotPasswordController::class)->group(function () {
+        Route::get('/forgot-password', 'showEmployerForm')->name('password.request');
+        Route::post('/forgot-password', 'sendEmployerResetLink')->name('password.email');
+    });
 });
 
-// Shared password reset routes
+// Password reset routes
 Route::middleware('guest')->group(function () {
-    Route::get('/reset-password', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset.otp');
-    Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'])->name('password.update.otp');
+    Route::controller(ForgotPasswordController::class)->group(function () {
+        Route::get('/reset-password', 'showResetForm')->name('password.reset.otp');
+        Route::post('/reset-password', 'resetPassword')->name('password.update.otp');
+    });
 });
 
-// OTP login and registration routes
+// OTP authentication routes
 Route::middleware('guest')->group(function () {
-    // OTP Login
-    Route::get('/otp-login', [OtpAuthController::class, 'showLoginForm'])->name('otp.login');
-    Route::post('/otp-login', [OtpAuthController::class, 'login'])->name('otp.login.post');
-
-    // OTP Registration
-    Route::get('/otp-register', [OtpAuthController::class, 'showRegisterForm'])->name('otp.register');
-    Route::post('/otp-register', [OtpAuthController::class, 'register'])->name('otp.register.post');
-
-    // SMS OTP - API endpoint
-    Route::post('/otp-sms', [OtpAuthController::class, 'sendOtpSms'])->name('otp.sms');
+    Route::controller(OtpAuthController::class)->group(function () {
+        // Login and registration
+        Route::get('/otp-login', 'showLoginForm')->name('otp.login');
+        Route::post('/otp-login', 'login')->name('otp.login.post');
+        Route::get('/otp-register', 'showRegisterForm')->name('otp.register');
+        Route::post('/otp-register', 'register')->name('otp.register.post');
+    });
 });
 
-// OTP verification routes - accessible to both guests and auth users who need verification
-Route::middleware(['web', 'ensure.otp.eligibility'])->withoutMiddleware([\App\Http\Middleware\EnsureOtpVerified::class])->group(function () {
-    // OTP Verification
-    Route::get('/otp-verify', [OtpAuthController::class, 'showOtpVerificationPage'])->name('otp.verify.page');
-    Route::post('/otp-verify', [OtpAuthController::class, 'verifyOtp'])->name('otp.verify');
-    Route::post('/otp-resend', [OtpAuthController::class, 'resendOtp'])->name('otp.resend');
+// OTP verification routes
+Route::middleware(['web', 'ensure.otp.eligibility'])
+    ->withoutMiddleware([\App\Http\Middleware\EnsureOtpVerified::class])
+    ->group(function () {
+        Route::controller(OtpAuthController::class)->group(function () {
+            Route::get('/otp-verify', 'showOtpVerificationPage')->name('otp.verify.page');
+            Route::post('/otp-verify', 'verifyOtp')->name('otp.verify');
+            Route::post('/otp-resend', 'resendOtp')->name('otp.resend');
+        });
 
-    // Make logout accessible during OTP verification
-    Route::post('/logout-during-otp', [AuthController::class, 'logout'])->name('logout');
+        // Logout during OTP verification
+        Route::post('/logout-during-otp', [AuthController::class, 'logout'])->name('logout');
+    });
+
+// Social authentication routes
+Route::middleware('guest')->group(function () {
+    Route::controller(FacebookController::class)->group(function () {
+        Route::get('auth/facebook', 'redirectToFacebook')->name('facebook.login');
+        Route::get('auth/facebook/callback', 'handleFacebookCallback')->name('facebook.callback');
+    });
+
+    Route::controller(GoogleController::class)->group(function () {
+        Route::get('auth/google', 'redirectToGoogle')->name('google.login');
+        Route::get('auth/google/callback', 'handleGoogleCallback')->name('google.callback');
+    });
 });
 
-// Logout route
+// Authenticated user routes
 Route::middleware('auth')->group(function () {
+    // Logout route
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-});
 
-// Social Authentication Routes
-Route::middleware('guest')->group(function () {
-    Route::get('auth/facebook', [FacebookController::class, 'redirectToFacebook'])->name('facebook.login');
-    Route::get('auth/facebook/callback', [FacebookController::class, 'handleFacebookCallback'])->name('facebook.callback');
+    // User settings routes
+    Route::controller(SettingsController::class)->prefix('settings')->name('settings.')->group(function () {
+        Route::get('/', 'index')->name('index');
 
-    Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
-    Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback');
-});
+        // Email settings
+        Route::prefix('email')->name('email.')->group(function () {
+            Route::get('/change', 'showEmailChangeForm')->name('change.form');
+            Route::post('/change', 'initiateEmailChange')->name('change');
+            Route::get('/verify', 'showEmailChangeVerification')->name('verify');
+            Route::post('/verify', 'verifyEmailChange')->name('verify.submit');
+        });
 
-// Email verification routes
-Route::middleware('auth')->group(function () {
-    Route::get('/email/verify', function () {
-        return view('auth.verify-email');
-    })->name('verification.notice');
-
-    Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
-        ->middleware(['signed', 'throttle:6,1'])
-        ->name('verification.verify');
-
-    Route::post('/email/verification-notification', function (Request $request) {
-        $request->user()->sendEmailVerificationNotification();
-        return back()->with('message', 'Verification link sent!');
-    })->middleware(['throttle:6,1'])
-      ->name('verification.send');
+        // Password settings
+        Route::prefix('password')->name('password.')->group(function () {
+            Route::get('/change', 'showPasswordChangeForm')->name('change.form');
+            Route::post('/change', 'updatePassword')->name('change');
+        });
+    });
 });

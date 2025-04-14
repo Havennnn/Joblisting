@@ -3,7 +3,54 @@
 @section('title', $job->title . ' - NeksJob')
 
 @push('scripts')
-<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        window.toggleBookmark = function(jobId) {
+            const bookmark = document.getElementById('bookmark-' + jobId);
+            const isSaved = bookmark.classList.contains('text-yellow-500');
+
+            const url = isSaved
+                ? `/applicant/saved-jobs/${jobId}/unsave`
+                : `/applicant/saved-jobs/${jobId}/save`;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.saved) {
+                    bookmark.classList.remove('text-gray-500');
+                    bookmark.classList.add('text-yellow-500', 'fill-yellow-500');
+                } else {
+                    bookmark.classList.remove('text-yellow-500', 'fill-yellow-500');
+                    bookmark.classList.add('text-gray-500');
+                }
+                console.log('Bookmark toggled:', data.saved);
+            })
+            .catch(error => {
+                console.error('Error toggling bookmark:', error);
+            });
+        }
+
+        // Check initial bookmark status
+        const jobId = '{{ $job->id }}';
+        fetch(`/applicant/saved-jobs/${jobId}/check`)
+            .then(response => response.json())
+            .then(data => {
+                const bookmark = document.getElementById('bookmark-' + jobId);
+                if (bookmark && data.saved) {
+                    bookmark.classList.remove('text-gray-500');
+                    bookmark.classList.add('text-yellow-500', 'fill-yellow-500');
+                }
+                console.log('Initial bookmark state:', data.saved);
+            });
+    });
+</script>
 @endpush
 
 @section('content')
@@ -16,50 +63,9 @@
                     <h1 class="text-2xl font-bold text-gray-900">{{ $job->title }}</h1>
                     @auth
                         @if(auth()->user()->isApplicant())
-                            <div
-                                id="saveJobToggle"
-                                x-data="{
-                                    saved: false,
-                                    jobId: '{{ $job->id }}',
-                                    toggleSave() {
-                                        const url = this.saved
-                                            ? `/applicant/saved-jobs/${this.jobId}/unsave`
-                                            : `/applicant/saved-jobs/${this.jobId}/save`;
-
-                                        fetch(url, {
-                                            method: 'POST',
-                                            headers: {
-                                                'Content-Type': 'application/json',
-                                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                                            }
-                                        })
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            this.saved = data.saved;
-                                            console.log('Toggle state:', this.saved);
-                                        })
-                                        .catch(error => {
-                                            console.error('Error:', error);
-                                        });
-                                    },
-                                    init() {
-                                        // Check if the job is already saved
-                                        fetch(`/applicant/saved-jobs/${this.jobId}/check`)
-                                            .then(response => response.json())
-                                            .then(data => {
-                                                this.saved = data.saved;
-                                                console.log('Initial state:', this.saved);
-                                            });
-                                    }
-                                }"
-                                class="ml-3 cursor-pointer"
-                            >
-                                <button @click.prevent="toggleSave()" type="button" class="focus:outline-none">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
-                                         :class="saved ? 'text-yellow-500 fill-yellow-500' : 'text-gray-500 hover:text-yellow-500'"
-                                         fill="none"
-                                         viewBox="0 0 24 24"
-                                         stroke="currentColor">
+                            <div class="ml-3 cursor-pointer">
+                                <button onclick="toggleBookmark('{{ $job->id }}')" type="button" class="focus:outline-none">
+                                    <svg id="bookmark-{{ $job->id }}" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 hover:text-yellow-500" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
                                     </svg>
                                 </button>
