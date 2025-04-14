@@ -5,7 +5,7 @@
 @section('content')
 <div class="flex flex-col items-center justify-center min-h-screen bg-white py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full">
-        <h2 class="text-center text-3xl font-semibold text-[#e83e8c] mb-6">
+        <h2 class="text-center text-3xl font-semibold text-neksjob-blue mb-6">
             Employers Sign in
         </h2>
 
@@ -30,7 +30,7 @@
                 </label>
                 <div class="relative">
                     <input id="password" name="password" type="password" autocomplete="current-password" required
-                        class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#e83e8c] focus:border-[#e83e8c] sm:text-sm"
+                        class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#DC2626] focus:border-[#DC2626] sm:text-sm"
                         placeholder="*************">
                     <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
                         <button type="button" id="togglePassword" class="text-gray-400 focus:outline-none">
@@ -48,7 +48,7 @@
 
             <div class="flex items-center">
                 <input id="remember_me" name="remember" type="checkbox"
-                    class="h-4 w-4 text-[#e83e8c] focus:ring-[#e83e8c] border-gray-300 rounded">
+                    class="h-4 w-4 text-[#DC2626] focus:ring-[#DC2626] border-gray-300 rounded">
                 <label for="remember_me" class="ml-2 block text-sm text-gray-900">
                     Remember me
                 </label>
@@ -56,13 +56,13 @@
 
             <div>
                 <button type="submit"
-                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#e83e8c] hover:bg-[#d6246f] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#e83e8c]">
+                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#DC2626] hover:bg-[#B91F1F] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#DC2626]">
                     Sign In
                 </button>
             </div>
 
             <div>
-                <a href="{{ route('employer.password.request') }}" class="text-sm text-[#e83e8c] hover:underline">
+                <a href="{{ route('employer.password.request') }}" class="text-sm text-[#DC2626] hover:underline">
                     Forgot Password?
                 </a>
             </div>
@@ -101,7 +101,7 @@
         </form>
 
         <div class="my-6 text-center">
-            <p class="text-sm text-gray-600">Don't have an account? <a href="{{ route('employer.register') }}" class="font-medium text-[#e83e8c] hover:underline">Register</a></p>
+            <p class="text-sm text-gray-600">Don't have an account? <a href="{{ route('employer.register') }}" class="font-medium text-[#DC2626] hover:underline">Register</a></p>
         </div>
     </div>
 </div>
