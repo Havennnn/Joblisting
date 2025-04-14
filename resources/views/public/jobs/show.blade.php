@@ -1,6 +1,10 @@
-@extends('layouts.jobs')
+@extends('layouts.app')
 
 @section('title', $job->title . ' - NeksJob')
+
+@push('scripts')
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+@endpush
 
 @section('content')
 <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -32,6 +36,7 @@
                                         .then(response => response.json())
                                         .then(data => {
                                             this.saved = data.saved;
+                                            console.log('Toggle state:', this.saved);
                                         })
                                         .catch(error => {
                                             console.error('Error:', error);
@@ -43,16 +48,21 @@
                                             .then(response => response.json())
                                             .then(data => {
                                                 this.saved = data.saved;
+                                                console.log('Initial state:', this.saved);
                                             });
                                     }
                                 }"
-                                @click="toggleSave()"
                                 class="ml-3 cursor-pointer"
-                                :class="saved ? 'text-yellow-500' : 'text-gray-400 hover:text-yellow-500'"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
-                                </svg>
+                                <button @click.prevent="toggleSave()" type="button" class="focus:outline-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6"
+                                         :class="saved ? 'text-yellow-500 fill-yellow-500' : 'text-gray-500 hover:text-yellow-500'"
+                                         fill="none"
+                                         viewBox="0 0 24 24"
+                                         stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                                    </svg>
+                                </button>
                             </div>
                         @endif
                     @endauth

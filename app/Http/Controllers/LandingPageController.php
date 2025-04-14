@@ -46,7 +46,7 @@ class LandingPageController extends Controller
             ->take(3)
             ->get();
 
-        return view('landing.landing', compact('featured', 'events', 'jobs', 'blogs'));
+        return view('auth.landing.landing', compact('featured', 'events', 'jobs', 'blogs'));
     }
 
     /**
