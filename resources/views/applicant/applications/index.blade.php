@@ -21,6 +21,9 @@
                     </a>
                 </div>
 
+                <!-- Profile Completion Alert -->
+                <x-profile-completion-alert :percentage="$profileCompletionPercentage" userType="applicant" />
+
                 <!-- Success Message -->
                 @if (session('success'))
                 <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
@@ -92,6 +95,7 @@
                             <h3 class="mt-2 text-sm font-medium text-gray-900">No applications yet</h3>
                             <p class="mt-1 text-sm text-gray-500">Get started by applying to your first job.</p>
                             <div class="mt-6">
+                                @if(isset($profileCompletionPercentage) && $profileCompletionPercentage >= 100)
                                 <a href="{{ route('jobs.index') }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-neksjob-blue hover:bg-neksjob-blue-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neksjob-blue">
                                     <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                         <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -99,6 +103,14 @@
                                     </svg>
                                     Browse Jobs
                                 </a>
+                                @else
+                                <a href="{{ route('applicant.profile') }}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-neksjob-blue hover:bg-neksjob-blue-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neksjob-blue">
+                                    <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                    </svg>
+                                    Complete Your Profile
+                                </a>
+                                @endif
                             </div>
                         </div>
                     </div>

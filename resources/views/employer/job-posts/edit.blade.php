@@ -9,7 +9,7 @@
         <x-employer.sidebar />
 
         <!-- Main Content -->
-        <div class="flex-1 ml-4">
+        <div class="flex-1 py-8 px-12">
             <div class="bg-white rounded-lg shadow-sm p-6">
                 <div class="flex items-center justify-between mb-6">
                     <h1 class="text-2xl font-bold text-gray-900">Edit Job Posting</h1>

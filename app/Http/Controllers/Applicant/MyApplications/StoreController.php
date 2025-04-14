@@ -7,6 +7,7 @@ use App\Models\Jobs\JobApplication;
 use App\Models\Jobs\JobPost;
 use App\Models\Users\User;
 use App\Notifications\NewJobApplication;
+use App\Services\Dashboard\ProfileCompletionService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +17,13 @@ use Illuminate\Support\Facades\DB;
 
 class StoreController extends Controller
 {
+    protected $profileCompletionService;
+
+    public function __construct(ProfileCompletionService $profileCompletionService)
+    {
+        $this->profileCompletionService = $profileCompletionService;
+    }
+
     /**
      * Store a new job application
      *
@@ -28,6 +36,13 @@ class StoreController extends Controller
         $user = Auth::user();
         $profile = $user->applicantProfile;
         $jobPost = JobPost::with('employer.user')->findOrFail($job);
+
+        // Check if profile is complete enough to apply
+        $profileCompletionPercentage = $this->profileCompletionService->calculateApplicantCompletion($user);
+        if ($profileCompletionPercentage < 100) {
+            return redirect()->route('applicant.profile')->with('error',
+                'Your profile needs to be completed before you can apply to jobs. Current completion: ' . $profileCompletionPercentage . '%');
+        }
 
         // Debug info
         Log::info('Job Application Submitted', [

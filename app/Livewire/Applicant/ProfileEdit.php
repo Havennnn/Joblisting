@@ -158,6 +158,14 @@ class ProfileEdit extends Component
     }
 
     /**
+     * Cancel editing and return to profile view.
+     */
+    public function cancel()
+    {
+        return redirect()->route('applicant.profile');
+    }
+
+    /**
      * Render the component.
      */
     public function render()

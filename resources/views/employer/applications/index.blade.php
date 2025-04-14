@@ -19,24 +19,7 @@
             @endif
 
             <!-- Profile Completion Alert -->
-            @if(isset($completionPercentage) && $completionPercentage < 100)
-                <div class="mb-6 bg-white rounded-lg shadow-sm p-4 border-l-4 border-yellow-400">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h3 class="text-sm font-medium text-yellow-800">Complete your profile</h3>
-                            <div class="mt-1 text-sm text-yellow-700">
-                                Your company profile is {{ $completionPercentage }}% complete. Completing your profile helps attract more applicants.
-                            </div>
-                        </div>
-                        <a href="{{ route('employer.profile.edit') }}" class="rounded-md bg-yellow-100 px-3 py-1.5 text-sm font-semibold text-yellow-800 hover:bg-yellow-200">
-                            Complete Now
-                        </a>
-                    </div>
-                    <div class="mt-3 w-full bg-gray-200 rounded-full h-2">
-                        <div class="bg-yellow-400 h-2 rounded-full" style="width: {{ $completionPercentage }}%"></div>
-                    </div>
-                </div>
-            @endif
+            <x-profile-completion-alert :percentage="$completionPercentage" userType="employer" />
 
             <div class="bg-white rounded-lg shadow-sm">
                 <div class="p-6">

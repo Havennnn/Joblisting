@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Applicant;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Applicant\Dashboard\ProfileCompletionController;
+use App\Models\Jobs\JobApplication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -59,18 +60,15 @@ class DashboardController extends Controller
             ];
         }
 
-        // Sample data - in a real application, you'd retrieve this from your database
-        $recentJobs = [
-            // Sample jobs
-        ];
-
-        $applications = [
-            // Sample applications
-        ];
+        // Fetch the user's recent applications
+        $applications = JobApplication::where('applicant_id', $user->id)
+            ->with('job.employer')
+            ->latest()
+            ->take(5)
+            ->get();
 
         return view('applicant.dashboard', [
             'user' => $user,
-            'recentJobs' => $recentJobs,
             'applications' => $applications,
             'profileCompletionPercentage' => $profileCompletionData['percentage'],
             'profileCompletionColor' => $profileCompletionData['color'],

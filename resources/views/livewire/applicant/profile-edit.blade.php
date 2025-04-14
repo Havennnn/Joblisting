@@ -1,11 +1,4 @@
 <div class="bg-gray-100 min-h-screen">
-    <!-- Page Header -->
-    <header class="bg-white shadow">
-        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <h1 class="text-3xl font-bold text-gray-900">Edit Profile</h1>
-        </div>
-    </header>
-
     <main>
         <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
             @if (session('status'))
@@ -20,20 +13,20 @@
                 <div class="bg-white shadow sm:rounded-lg">
                     <div class="px-4 py-5 sm:p-6">
                         <h3 class="text-md font-semibold text-gray-800 mb-4 underline underline-offset-4">Basic Information</h3>
-            
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label for="full_name" class="block text-sm font-medium text-gray-700">Full Name</label>
                                 <input type="text" wire:model="full_name" id="full_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm focus:ring-blue-500 focus:border-blue-500">
                                 @error('full_name') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
-            
+
                             <div>
                                 <label for="age" class="block text-sm font-medium text-gray-700">Age</label>
                                 <input type="number" wire:model="age" id="age" min="18" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm focus:ring-blue-500 focus:border-blue-500">
                                 @error('age') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
-            
+
                             <div>
                                 <label for="gender" class="block text-sm font-medium text-gray-700">Gender</label>
                                 <select wire:model="gender" id="gender" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm focus:ring-blue-500 focus:border-blue-500">
@@ -44,61 +37,41 @@
                                 </select>
                                 @error('gender') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
-            
+
                             <div>
                                 <label for="phone_number" class="block text-sm font-medium text-gray-700">Phone Number</label>
                                 <input type="tel" wire:model="phone_number" id="phone_number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm focus:ring-blue-500 focus:border-blue-500">
                                 @error('phone_number') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
-            
+
                             <div class="md:col-span-2">
                                 <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
                                 <input type="text" wire:model="location" id="location" placeholder="City, State, Country" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm focus:ring-blue-500 focus:border-blue-500">
                                 @error('location') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
-            
-                            <div class="md:col-span-1">
-                                <label for="email" class="block text-sm font-medium text-gray-700">Email address</label>
-                                <div class="mt-1 flex items-center gap-4">
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        value="{{ $user->email }}"
-                                        disabled
-                                        class="flex-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm focus:ring-blue-500 focus:border-blue-500"
-                                    >
-                                    <button
-                                        type="button"
-                                        class="text-sm text-blue-600 hover:underline"
-                                    >
-                                        Edit
-                                    </button>
-                                </div>
-                            </div>
-                            
                         </div>
                     </div>
                 </div>
-            
+
                 <!-- Professional Details Section -->
                 <div class="bg-white shadow sm:rounded-lg">
                     <div class="px-4 py-5 sm:p-6">
                         <h3 class="text-md font-semibold text-gray-800 mb-4 underline underline-offset-4">Professional Details</h3>
-            
+
                         <div class="grid grid-cols-1 gap-4">
                             <div>
                                 <label for="field" class="block text-sm font-medium text-gray-700">Field of Expertise</label>
                                 <input type="text" wire:model="field" id="field" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm focus:ring-blue-500 focus:border-blue-500">
                                 @error('field') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
-            
+
                             <div>
                                 <label for="skills" class="block text-sm font-medium text-gray-700">Skills</label>
                                 <textarea wire:model="skills" id="skills" rows="3" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
                                 <p class="mt-2 text-sm text-gray-500">Separate skills with commas</p>
                                 @error('skills') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
-            
+
                             <div class="md:w-1/3">
                                 <label for="years_experience" class="block text-sm font-medium text-gray-700">Years of Experience</label>
                                 <input type="number" wire:model="years_experience" id="years_experience" min="0" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm sm:text-sm focus:ring-blue-500 focus:border-blue-500">
@@ -107,12 +80,12 @@
                         </div>
                     </div>
                 </div>
-            
+
                 <!-- Documents Section -->
                 <div class="bg-white shadow sm:rounded-lg">
                     <div class="px-4 py-5 sm:p-6">
                         <h3 class="text-md font-semibold text-gray-800 mb-4 underline underline-offset-4">Documents</h3>
-            
+
                         <div class="grid grid-cols-1 gap-6">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Profile Picture</label>
@@ -140,7 +113,7 @@
                                 </div>
                                 @error('profile_picture') <p class="mt-1 text-sm text-red-600">{{ $message }}</p> @enderror
                             </div>
-            
+
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Resume</label>
                                 <div class="mt-2 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed border-gray-300 rounded-md">
@@ -178,14 +151,14 @@
                         </div>
                     </div>
                 </div>
-            
+
                 <!-- Submit Buttons -->
                 <div class="flex justify-end gap-2">
-                    <button type="button" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50">Cancel</button>
+                    <button type="button" wire:click="cancel" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50">Cancel</button>
                     <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Save Profile</button>
                 </div>
             </form>
-            
+
         </div>
     </main>
 </div>

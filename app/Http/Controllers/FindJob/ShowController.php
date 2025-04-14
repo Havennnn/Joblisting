@@ -4,10 +4,19 @@ namespace App\Http\Controllers\FindJob;
 
 use App\Http\Controllers\Controller;
 use App\Models\Jobs\JobPost;
+use App\Services\Dashboard\ProfileCompletionService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class ShowController extends Controller
 {
+    protected $profileCompletionService;
+
+    public function __construct(ProfileCompletionService $profileCompletionService)
+    {
+        $this->profileCompletionService = $profileCompletionService;
+    }
+
     /**
      * Display the specified job post
      *
@@ -19,6 +28,13 @@ class ShowController extends Controller
         $job = JobPost::with('employer.user')
                       ->findOrFail($id);
 
-        return view('public.jobs.show', compact('job'));
+        $profileCompletionPercentage = 0;
+
+        // Only check profile completion for authenticated applicants
+        if (Auth::check() && Auth::user()->role === 'applicant') {
+            $profileCompletionPercentage = $this->profileCompletionService->calculateApplicantCompletion(Auth::user());
+        }
+
+        return view('public.jobs.show', compact('job', 'profileCompletionPercentage'));
     }
 }
