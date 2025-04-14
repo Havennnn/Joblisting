@@ -15,7 +15,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
-<body class="font-sans antialiased">
+<body class="flex flex-col min-h-screen w-full mx-auto">
     <div class="min-h-screen bg-white-100 flex flex-col">
         <!-- Navigation using component -->
         <nav class="w-full bg-white border-b border-gray-200 py-3">
@@ -41,7 +41,7 @@
         <x-flash-message />
 
         <!-- Page Content -->
-        <main class="flex-grow">
+        <main class="flex-grow w-full">
             @yield('content')
         </main>
 

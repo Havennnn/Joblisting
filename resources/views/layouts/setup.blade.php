@@ -41,7 +41,7 @@
         <x-flash-message />
 
         <!-- Page Content -->
-        <main class="flex-grow">
+        <main class="flex-grow w-full">
             @yield('content')
         </main>
 

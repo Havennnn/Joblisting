@@ -12,7 +12,7 @@
     <!-- Include both your custom CSS and Tailwind CSS -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
+<body class="flex flex-col min-h-screen w-full mx-auto">
 
     <!-- Navigation Component -->
     <x-navigation />
@@ -20,7 +20,7 @@
     <x-flash-message />
 
     <!-- Main Content -->
-    <main class="main">
+    <main class="flex-grow w-full">
         @yield('content')
     </main>
 

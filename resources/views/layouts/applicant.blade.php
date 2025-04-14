@@ -14,7 +14,7 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased">
+<body cclass="flex flex-col min-h-screen w-full mx-auto">
     <div class="min-h-screen bg-gray-100">
         <x-navigation />
 
@@ -28,7 +28,7 @@
         @endif
 
         <!-- Page Content -->
-        <main>
+        <main class="flex-grow w-full">
             @yield('content')
         </main>
 

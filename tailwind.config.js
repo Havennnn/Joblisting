@@ -19,7 +19,17 @@ export default {
             colors: {
                 'neksjob-blue': '#3674B5',
                 'neksjob-pink': '#D91656',
-
+                'nextjob-black': '#1A1A1A',
+                'nextjob-white': '#FFFFFF',
+                'nextjob-cream': '#F4F4F4',
+                'nextjob-light-gray': '#CCCCCC',
+                'nextjob-dark-gray': '#333333',
+                'nextjob-red': '#FF6B6B',
+                'nextjob-blue': '#1E90FF',
+                'nextjob-green': '#32CD32',
+                'nextjob-orange': '#FFA500',
+                'nextjob-purple': '#800080',
+                'nextjob-yellow': '#FFC107'
             }
         },
     },
