@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'NeksJob PH')
+@section('title', 'NextJob')
 
 @section('content')
 <!-- Main Banner Carousel -->

@@ -1,4 +1,4 @@
-@extends('layouts.otp')
+@extends('layouts.setup')
 
 @section('content')
 <div class="flex justify-center items-center min-h-screen px-4 py-10">

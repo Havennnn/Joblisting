@@ -7,12 +7,16 @@
 
     <title>@yield('title', config('app.name', 'Laravel') . ' - Setup')</title>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Scripts -->
+    <!-- Include both your custom CSS and Tailwind CSS -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- Tailwind CSS CDN for quick development -->
+    <script src="https://cdn.tailwindcss.com"></script>
     @livewireStyles
 </head>
 <body class="font-sans antialiased">

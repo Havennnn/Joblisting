@@ -1,4 +1,4 @@
-@extends('layouts.jobs')
+@extends('layouts.app')
 
 @section('title', 'Find Jobs - NeksJob')
 

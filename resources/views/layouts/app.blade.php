@@ -16,7 +16,7 @@
 
     <!-- Tailwind CSS CDN for quick development -->
     <script src="https://cdn.tailwindcss.com"></script>
-
+    @livewireStyles
 </head>
 <body class="flex flex-col min-h-screen w-full mx-auto font-poppins">
     <!-- Navigation Component -->
