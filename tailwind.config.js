@@ -13,11 +13,13 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                poppins: ['Poppins', ...defaultTheme.fontFamily.sans],
+                montserrat: ['Montserrat', ...defaultTheme.fontFamily.sans],
             },
             colors: {
                 'neksjob-blue': '#3674B5',
                 'neksjob-pink': '#D91656',
-                
+
             }
         },
     },
