@@ -13,23 +13,18 @@
     <!-- Include both your custom CSS and Tailwind CSS -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <!-- Tailwind CSS CDN for quick development -->
-    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="flex flex-col min-h-screen w-full mx-auto font-poppins">
-
-    <!-- Navigation Component -->
     <x-navigation />
 
     <x-flash-message />
 
-    <!-- Main Content -->
     <main class="flex-grow w-full">
         @yield('content')
     </main>
 
-    <!-- Footer Component -->
     <x-footer />
 
+    @stack('scripts')
 </body>
 </html>
