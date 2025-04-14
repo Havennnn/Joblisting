@@ -3,7 +3,7 @@
 namespace App\Models\Users;
 
 use App\Models\BaseModel;
-use App\Models\Job;
+use App\Models\Jobs\JobPost;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -43,6 +43,6 @@ class Employer extends BaseModel
      */
     public function jobs(): HasMany
     {
-        return $this->hasMany(Job::class);
+        return $this->hasMany(JobPost::class);
     }
 }
