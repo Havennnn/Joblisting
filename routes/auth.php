@@ -72,18 +72,16 @@ Route::middleware('guest')->group(function () {
 });
 
 // OTP verification routes
-Route::middleware(['web', 'ensure.otp.eligibility'])
-    ->withoutMiddleware([\App\Http\Middleware\EnsureOtpVerified::class])
-    ->group(function () {
-        Route::controller(OtpAuthController::class)->group(function () {
-            Route::get('/otp-verify', 'showOtpVerificationPage')->name('otp.verify.page');
-            Route::post('/otp-verify', 'verifyOtp')->name('otp.verify');
-            Route::post('/otp-resend', 'resendOtp')->name('otp.resend');
-        });
+Route::middleware(['web', 'ensure.otp.eligibility'])->withoutMiddleware([\App\Http\Middleware\EnsureOtpVerified::class])->group(function () {
+    Route::controller(OtpAuthController::class)->group(function () {
+        Route::get('/otp-verify', 'showOtpVerificationPage')->name('otp.verify.page');
+        Route::post('/otp-verify', 'verifyOtp')->name('otp.verify');
+        Route::post('/otp-resend', 'resendOtp')->name('otp.resend');
+    });
 
         // Logout during OTP verification
-        Route::post('/logout-during-otp', [AuthController::class, 'logout'])->name('logout');
-    });
+    Route::post('/logout-during-otp', [AuthController::class, 'logout'])->name('logout');
+});
 
 // Social authentication routes
 Route::middleware('guest')->group(function () {
@@ -103,22 +101,23 @@ Route::middleware('auth')->group(function () {
     // Logout route
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // User settings routes
-    Route::controller(SettingsController::class)->prefix('settings')->name('settings.')->group(function () {
-        Route::get('/', 'index')->name('index');
+    // User settings routes - using Livewire for all settings functionality
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
 
-        // Email settings
+    // Keep these routes for backward compatibility and future expansion
+    Route::controller(SettingsController::class)->prefix('settings')->name('settings.')->group(function () {
+        // Email settings (now handled by Livewire)
         Route::prefix('email')->name('email.')->group(function () {
-            Route::get('/change', 'showEmailChangeForm')->name('change.form');
-            Route::post('/change', 'initiateEmailChange')->name('change');
-            Route::get('/verify', 'showEmailChangeVerification')->name('verify');
-            Route::post('/verify', 'verifyEmailChange')->name('verify.submit');
+            Route::get('/change', 'index')->name('change.form');
+            Route::post('/change', 'index')->name('change');
+            Route::get('/verify', 'index')->name('verify');
+            Route::post('/verify', 'index')->name('verify.submit');
         });
 
-        // Password settings
+        // Password settings (now handled by Livewire)
         Route::prefix('password')->name('password.')->group(function () {
-            Route::get('/change', 'showPasswordChangeForm')->name('change.form');
-            Route::post('/change', 'updatePassword')->name('change');
+            Route::get('/change', 'index')->name('change.form');
+            Route::post('/change', 'index')->name('change.submit');
         });
     });
 });

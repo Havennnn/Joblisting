@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LandingPageController;
-use App\Http\Controllers\LandingPage\JobController;
 use App\Http\Controllers\FindJobController;
-use App\Http\Controllers\SettingsController;
 use Illuminate\Http\Request;
 
 /*
