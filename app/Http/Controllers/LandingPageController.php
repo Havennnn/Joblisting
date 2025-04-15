@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\LandingPage\JobController;
+use App\Http\Controllers\LandingPage\LandingController;
 use App\Models\Jobs\JobPost;
 use App\Models\Content\Event;
 use App\Models\Content\Blog;
@@ -14,10 +15,12 @@ use Illuminate\Http\Request;
 class LandingPageController extends Controller
 {
     protected $jobController;
+    protected $landingController;
 
-    public function __construct(JobController $jobController)
+    public function __construct(JobController $jobController, LandingController $landingController)
     {
         $this->jobController = $jobController;
+        $this->landingController = $landingController;
     }
 
     /**
@@ -27,26 +30,7 @@ class LandingPageController extends Controller
      */
     public function index(): View
     {
-        $featured = FeaturedItem::where('is_active', true)
-            ->orderBy('order', 'asc')
-            ->get();
-
-        $events = Event::where('date', '>=', now())
-            ->orderBy('date', 'asc')
-            ->take(4)
-            ->get();
-
-        $jobs = JobPost::with('employer')
-            ->orderBy('created_at', 'DESC')
-            ->take(4)
-            ->get();
-
-        $blogs = Blog::where('is_published', true)
-            ->orderBy('created_at', 'DESC')
-            ->take(3)
-            ->get();
-
-        return view('auth.landing.landing', compact('featured', 'events', 'jobs', 'blogs'));
+        return $this->landingController->index();
     }
 
     /**

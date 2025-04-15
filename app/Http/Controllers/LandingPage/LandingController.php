@@ -7,11 +7,17 @@ use App\Models\Jobs\JobPost;
 use App\Models\Content\Event;
 use App\Models\Content\Blog;
 use App\Models\Content\FeaturedItem;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class LandingController extends Controller
 {
-    public function index()
+    /**
+     * Display the main landing page
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function index(): View
     {
         $featured = FeaturedItem::where('is_active', true)
             ->orderBy('order', 'asc')
@@ -32,6 +38,6 @@ class LandingController extends Controller
             ->take(3)
             ->get();
 
-        return view('auth.landing.landing', compact('featured', 'events', 'jobs', 'blogs'));
+        return view('web.landing.landing', compact('featured', 'events', 'jobs', 'blogs'));
     }
 }
