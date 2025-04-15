@@ -2,12 +2,6 @@
 
 use App\Http\Model\JobPost;
 use App\Http\Controllers\Employer\JobListingController;
-use App\Http\Controllers\Employer\JobListing\CreateController;
-use App\Http\Controllers\Employer\JobListing\StoreController;
-use App\Http\Controllers\Employer\JobListing\ShowController;
-use App\Http\Controllers\Employer\JobListing\EditController;
-use App\Http\Controllers\Employer\JobListing\UpdateController;
-use App\Http\Controllers\Employer\JobListing\DestroyController;
 use App\Http\Controllers\Employer\DashboardController;
 use App\Http\Controllers\Employer\ProfileController;
 use App\Http\Controllers\Employer\SetupController;

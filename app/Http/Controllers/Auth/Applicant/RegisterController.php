@@ -32,7 +32,7 @@ class RegisterController extends Controller
             return redirect()->route('applicant.dashboard');
         }
 
-        return view('applicant.register');
+        return view('auth.applicant.register');
     }
 
     /**

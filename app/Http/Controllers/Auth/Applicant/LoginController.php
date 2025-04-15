@@ -27,7 +27,7 @@ class LoginController extends Controller
             }
         }
 
-        return view('applicant.login');
+        return view('auth.applicant.login');
     }
 
     /**

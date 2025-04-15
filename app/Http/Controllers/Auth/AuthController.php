@@ -29,7 +29,7 @@ class AuthController extends Controller
             return redirect()->route('applicant.dashboard');
         }
 
-        return view('applicant.login');
+        return view('auth.applicant.login');
     }
 
     /**
@@ -86,7 +86,7 @@ class AuthController extends Controller
             return redirect()->route('applicant.dashboard');
         }
 
-        return view('employer.login');
+        return view('auth.employer.login');
     }
 
     /**

@@ -15,24 +15,31 @@ class OtpMail extends Mailable
 
     public $email;
     public $otp;
-    public $verificationLink;
+    public $url;
 
-    public function __construct($email, $otp, $verificationLink)
+    /**
+     * Create a new message instance.
+     *
+     * @param string $email The recipient's email
+     * @param string $otp The one-time password
+     * @param string $url The verification URL
+     */
+    public function __construct($email, $otp, $url)
     {
         $this->email = $email;
         $this->otp = $otp;
-        $this->verificationLink = $verificationLink;
+        $this->url = $url;
     }
 
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
     public function build()
     {
-        return $this->subject('Your OTP Code')
-                    ->view('emails.otp')
-                    ->with([
-                        'otp' => $this->otp,
-                        'email'=> $this->email,
-                        'verificationLink' => $this->verificationLink,
-                    ]);
+        return $this->subject('Your One-Time Password (OTP)')
+                    ->view('auth.otp.emails.otp');
     }
 
     /**
@@ -51,12 +58,7 @@ class OtpMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.otp',
-            with: [
-                'otp' => $this->otp,
-                'email' => $this->email,
-                'verificationLink' => $this->verificationLink,
-            ]
+            view: 'auth.otp.emails.otp',
         );
     }
 

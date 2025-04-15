@@ -61,6 +61,6 @@ class ShowVerificationController extends Controller
                 ->with('error', 'Unauthorized access. Please log in first.');
         }
 
-        return view('auth.otp-verify', ['email' => $email]);
+        return view('auth.otp.otp-verify', ['email' => $email]);
     }
 }
