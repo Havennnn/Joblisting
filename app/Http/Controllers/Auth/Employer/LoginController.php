@@ -27,7 +27,7 @@ class LoginController extends Controller
             return redirect()->route('applicant.dashboard');
         }
 
-        return view('employer.login');
+        return view('auth.employer.login');
     }
 
     /**
