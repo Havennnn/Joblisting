@@ -4,68 +4,79 @@
 
 @section('content')
 <div class="flex">
-    <!-- Sidebar -->
     <x-employer.sidebar />
 
-    <!-- Main Content -->
     <div class="flex-1 bg-gray-50">
-        <div class="py-8 px-12">
-            <h1 class="text-3xl font-bold text-gray-900 mb-4">Dashboard</h1>
-            <p class="text-xl mb-8">Welcome {{ Auth::user()->name ?? 'User' }}</p>
+        <x-employer.dashboard.header
+            :company-name="$companyName ?? Auth::user()->name"
+            :current-date-range="$dateRange ?? [date('M d'), date('M d', strtotime('+7 days'))]"
+        />
 
-            <!-- Dashboard Stats Cards -->
+        <div class="px-12 py-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <!-- Active Job Posts Card -->
-                <div class="bg-white rounded-lg shadow-sm">
-                    <div class="p-4">
-                        <h2 class="text-sm font-semibold uppercase">ACTIVE JOB POSTS</h2>
-                    </div>
-                    <div class="px-4 pb-4 flex items-center">
-                        <div class="text-4xl font-bold ml-1 mr-5">{{ $activeJobPosts }}</div>
-                        <div>
-                            <p class="text-sm mb-1">Currently active job listings</p>
-                            <a href="{{ route('employer.JobPost') }}" class="text-blue-600 hover:text-blue-800 text-sm">View all job posts</a>
-                        </div>
-                    </div>
+                <x-employer.dashboard.stat-card
+                    type="jobs"
+                    :count="$activeJobs ?? 0"
+                    label="Active job listings"
+                    color="bg-emerald-500"
+                />
+
+                <x-employer.dashboard.stat-card
+                    type="applications"
+                    :count="$applicationStats['totalApplications'] ?? 0"
+                    label="Total applications"
+                    color="bg-indigo-600"
+                />
+
+                <x-employer.dashboard.stat-card
+                    type="new"
+                    :count="$applicationStats['newApplications'] ?? 0"
+                    label="New applications today"
+                    color="bg-blue-500"
+                />
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <div class="lg:col-span-2">
+                    <x-employer.dashboard.job-statistics
+                        :date-range="$dateRange ?? [date('M d'), date('M d', strtotime('+7 days'))]"
+                        :job-stats="$jobStats ?? [
+                            'jobViews' => ['total' => 0, 'percentageChange' => 0, 'trend' => 'up'],
+                            'applications' => ['total' => 0, 'percentageChange' => 0, 'trend' => 'up']
+                        ]"
+                    />
                 </div>
 
-                <!-- Total Applicants Card -->
-                <div class="bg-white rounded-lg shadow-sm">
-                    <div class="p-4">
-                        <h2 class="text-sm font-semibold uppercase">TOTAL APPLICANTS</h2>
-                    </div>
-                    <div class="px-4 pb-4 flex items-center">
-                        <div class="text-4xl font-bold ml-1 mr-5">{{ $totalApplications ?? 0 }}</div>
-                        <div>
-                            <p class="text-sm mb-1">Total applications received</p>
-                            <a href="{{ route('employer.applications.index') }}" class="text-blue-600 hover:text-blue-800 text-sm">View all applications</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Scheduled Interviews Card -->
-                <div class="bg-white rounded-lg shadow-sm">
-                    <div class="p-4">
-                        <h2 class="text-sm font-semibold uppercase">SCHEDULED INTERVIEWS</h2>
-                    </div>
-                    <div class="px-4 pb-4 flex items-center">
-                        <div class="text-4xl font-bold ml-1 mr-5">24</div>
-                        <div>
-                            <p class="text-sm mb-1">Upcoming interviews</p>
-                            <a href="#" class="text-blue-600 hover:text-blue-800 text-sm">View scheduled interviews</a>
-                        </div>
-                    </div>
+                <div class="lg:col-span-1">
+                    <x-employer.dashboard.application-summary
+                        :application-stats="$applicationStats ?? [
+                            'activeJobs' => 0,
+                            'totalApplications' => 0,
+                            'pendingApplications' => 0,
+                            'reviewingApplications' => 0,
+                            'acceptedApplications' => 0,
+                            'rejectedApplications' => 0,
+                            'newApplications' => 0,
+                            'pendingPercentage' => 0,
+                            'reviewingPercentage' => 0,
+                            'acceptedPercentage' => 0,
+                            'rejectedPercentage' => 0
+                        ]"
+                    />
                 </div>
             </div>
 
-            <!-- Recent Applications Section -->
-            <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
+            <div class="bg-white shadow-sm p-6 mb-8">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl font-bold">Recent Applications</h2>
-                    <a href="{{ route('employer.applications.index') }}" class="text-blue-600 hover:text-blue-800">View All</a>
+                    <a href="{{ route('employer.applications.index') }}" class="text-indigo-600 hover:text-indigo-800 flex items-center text-sm font-medium">
+                        <span>View All</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4 ml-1">
+                            <path fill-rule="evenodd" d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
                 </div>
 
-                <!-- Applications Table -->
                 <div class="overflow-x-auto">
                     <table class="min-w-full">
                         <thead>
@@ -82,7 +93,7 @@
                                 <tr class="border-b">
                                     <td class="py-4 px-3">
                                         <div class="flex items-center">
-                                            <div class="bg-red-600 text-white p-2 rounded-full mr-4">
+                                            <div class="bg-indigo-600 text-white p-2 rounded-full mr-4">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                                 </svg>
@@ -97,14 +108,14 @@
                                         <p class="font-medium">{{ $application->job->title }}</p>
                                     </td>
                                     <td class="py-4 px-3 text-center">
-                                        <p class="text-sm text-gray-500">{{ $application->applied_at->format('M d, Y') }}</p>
+                                        <p class="text-sm text-gray-500">{{ $application->created_at->format('M d, Y') }}</p>
                                     </td>
                                     <td class="py-4 px-3 text-center">
                                         <div class="px-3 py-1 rounded-full inline-block font-medium
                                             {{ $application->status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                               ($application->status === 'reviewing' ? 'bg-blue-100 text-blue-800' :
-                                               ($application->status === 'accepted' ? 'bg-green-100 text-green-800' :
-                                               'bg-red-100 text-red-600')) }}">
+                                            ($application->status === 'reviewing' ? 'bg-indigo-100 text-indigo-800' :
+                                            ($application->status === 'accepted' ? 'bg-green-100 text-green-800' :
+                                            'bg-red-100 text-red-600')) }}">
                                             {{ ucfirst($application->status) }}
                                         </div>
                                     </td>
