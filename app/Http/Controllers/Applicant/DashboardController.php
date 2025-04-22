@@ -73,7 +73,7 @@ class DashboardController extends Controller
             ]);
         }
 
-        return view('applicant.dashboard', [
+        return $this->view('applicant.dashboard', [
             'user' => $user,
             'applications' => $applications,
             'profileCompletionPercentage' => $profileCompletionData['percentage'],
@@ -81,5 +81,79 @@ class DashboardController extends Controller
             'profileCompletionMessage' => $profileCompletionData['message'],
             'profileActionLink' => $profileCompletionData['action_link'],
         ]);
+    }
+
+    /**
+     * Send a success response.
+     *
+     * @param mixed $data
+     * @param string $message
+     * @param int $statusCode
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function sendSuccessResponse($data = [], string $message = 'Operation successful', int $statusCode = 200)
+    {
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'data' => $data
+        ], $statusCode);
+    }
+
+    /**
+     * Send an error response.
+     *
+     * @param string $message
+     * @param int $statusCode
+     * @param array $errors
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function sendErrorResponse(string $message = 'An error occurred', int $statusCode = 400, array $errors = [])
+    {
+        return response()->json([
+            'success' => false,
+            'message' => $message,
+            'errors' => $errors
+        ], $statusCode);
+    }
+
+    /**
+     * Log an error and send error response.
+     *
+     * @param \Exception $exception
+     * @param string $customMessage
+     * @param int $statusCode
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function handleException(\Exception $exception, string $customMessage = null, int $statusCode = 500)
+    {
+        $message = $customMessage ?? 'An unexpected error occurred';
+
+        Log::error($message, [
+            'exception' => get_class($exception),
+            'message' => $exception->getMessage(),
+            'file' => $exception->getFile(),
+            'line' => $exception->getLine(),
+            'trace' => $exception->getTraceAsString()
+        ]);
+
+        return $this->sendErrorResponse($message, $statusCode);
+    }
+
+    /**
+     * Standard response for views with common data.
+     *
+     * @param string $view
+     * @param array $data
+     * @return \Illuminate\View\View
+     */
+    protected function view(string $view, array $data = [])
+    {
+        // Add any common data here that should be available to all views
+        $commonData = [
+            'appName' => config('app.name')
+        ];
+
+        return view($view, array_merge($commonData, $data));
     }
 }
