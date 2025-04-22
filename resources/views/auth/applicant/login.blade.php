@@ -4,7 +4,6 @@
 
 @section('content')
 <div class="flex min-h-screen bg-[#EBF5FF] relative">
-    <!-- Background Pattern Lines -->
     <div class="absolute top-0 right-0 bottom-0 left-0 overflow-hidden z-0 pointer-events-none">
         <svg class="absolute top-0 right-0 h-full w-full text-[#C7E1FF] opacity-80" xmlns="http://www.w3.org/2000/svg">
             <line x1="30%" y1="0" x2="10%" y2="100%" stroke="currentColor" stroke-width="2" />
@@ -14,10 +13,9 @@
         </svg>
     </div>
 
-    <div class="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="flex-1 flex flex-col justify-center py-2 px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="sm:mx-auto sm:w-full sm:max-w-md">
             <div class="text-center">
-                <img src="{{ asset('images/NextJob.svg') }}" alt="NextJob Logo" class="mx-auto h-16">
                 <h2 class="mt-6 text-center text-3xl font-extrabold text-[#2563EB]">
                     Jobseekers Sign In
                 </h2>

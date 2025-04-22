@@ -20,6 +20,6 @@ class IndexController extends Controller
                         ->orderBy('created_at', 'DESC')
                         ->paginate(10);
 
-        return view('public.jobs.index', compact('jobs'));
+        return view('web.jobs.index', compact('jobs'));
     }
 }

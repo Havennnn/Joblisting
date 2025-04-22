@@ -4,7 +4,6 @@
 
 @section('content')
 <div class="min-h-screen bg-[#EBF5FF] py-12 px-4 sm:px-6 lg:px-8 relative">
-    <!-- Background Pattern Lines -->
     <div class="absolute top-0 right-0 bottom-0 left-0 overflow-hidden z-0 pointer-events-none">
         <svg class="absolute top-0 right-0 h-full w-full text-[#C7E1FF] opacity-80" xmlns="http://www.w3.org/2000/svg">
             <line x1="30%" y1="0" x2="10%" y2="100%" stroke="currentColor" stroke-width="2" />
@@ -15,13 +14,9 @@
     </div>
 
     <div class="flex flex-col items-center justify-center relative z-10">
-        <div class="text-center mb-8">
-            <img src="{{ asset('images/NextJob.svg') }}" alt="NextJob Logo" class="mx-auto h-16 mb-4">
-            <h1 class="text-3xl font-bold text-[#2563EB]">Create an account to post jobs</h1>
-        </div>
-
         <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
             <h2 class="text-2xl font-semibold text-center text-gray-900 mb-6">
+                <img src="{{ asset('images/NextJob.svg') }}" alt="NextJob Logo" class="mx-auto h-10 mb-4">
                 Employer Registration
             </h2>
 

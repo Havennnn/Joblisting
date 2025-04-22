@@ -37,7 +37,7 @@ Route::get('/content-unavailable', function(Request $request) {
     if ($request->has('intended')) {
         session(['url.intended' => $request->intended]);
     }
-    return view('errors.content-unavailable');
+    return view('web.errors.content-unavailable');
 })->name('content.unavailable');
 
 /*

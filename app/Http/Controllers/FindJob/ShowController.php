@@ -35,6 +35,6 @@ class ShowController extends Controller
             $profileCompletionPercentage = $this->profileCompletionService->calculateApplicantCompletion(Auth::user());
         }
 
-        return view('public.jobs.show', compact('job', 'profileCompletionPercentage'));
+        return view('web.jobs.show', compact('job', 'profileCompletionPercentage'));
     }
 }

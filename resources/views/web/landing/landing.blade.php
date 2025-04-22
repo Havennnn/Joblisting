@@ -2,10 +2,8 @@
 
 @section('content')
 <div>
-    <!-- Hero Section -->
     <div class="bg-[#EBF5FF]">
         <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-28 relative">
-            <!-- Background Pattern Lines -->
             <div class="absolute top-0 right-0 bottom-0 left-1/2 overflow-hidden z-0 pointer-events-none">
                 <svg class="absolute top-0 right-0 h-full w-full text-[#C7E1FF] opacity-80" xmlns="http://www.w3.org/2000/svg">
                     <line x1="30%" y1="0" x2="10%" y2="100%" stroke="currentColor" stroke-width="2" />
@@ -16,7 +14,6 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center relative z-10">
-                <!-- Text Content -->
                 <div class="space-y-6 pt-12">
                     <h1 class="text-6xl md:text-7xl font-bold text-black leading-tight">
                         FIND YOUR<br/>

@@ -39,7 +39,7 @@ class OtpMail extends Mailable
     public function build()
     {
         return $this->subject('Your One-Time Password (OTP)')
-                    ->view('auth.otp.emails.otp');
+                    ->view('components.emails.otp');
     }
 
     /**
@@ -58,7 +58,7 @@ class OtpMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'auth.otp.emails.otp',
+            view: 'components.emails.otp',
         );
     }
 
