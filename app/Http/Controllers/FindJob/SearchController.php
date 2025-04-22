@@ -18,7 +18,6 @@ class SearchController extends Controller
     public function __invoke(Request $request): View
     {
         $query = $request->input('query');
-        $type = $request->input('type');
         $location = $request->input('location');
 
         $jobsQuery = JobPost::query();
@@ -28,12 +27,8 @@ class SearchController extends Controller
             $jobsQuery->where(function($q) use ($query) {
                 $q->where('title', 'like', "%$query%")
                   ->orWhere('job_description', 'like', "%$query%")
-                  ->orWhere('tags', 'like', "%$query%");
+                  ->orWhere('employer_name', 'like', "%$query%");
             });
-        }
-
-        if ($type) {
-            $jobsQuery->where('type', $type);
         }
 
         if ($location) {
@@ -45,6 +40,6 @@ class SearchController extends Controller
                           ->orderBy('created_at', 'DESC')
                           ->paginate(10);
 
-        return view('web.jobs.index', compact('jobs', 'query', 'type', 'location'));
+        return view('web.jobs.index', compact('jobs', 'query', 'location'));
     }
 }
