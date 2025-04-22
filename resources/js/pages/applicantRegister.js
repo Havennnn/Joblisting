@@ -5,16 +5,13 @@ import { togglePasswordVisibility } from '../utils/passwordVisibility.js';
  * Initialize the applicant registration form
  */
 const initApplicantRegistration = () => {
-    // Initialize password validation
     initializePasswordValidation('password');
 
-    // Set up password visibility toggles
     const passwordField = document.getElementById('password');
     const togglePasswordBtn = document.getElementById('togglePassword');
     const passwordConfirmation = document.getElementById('password_confirmation');
     const toggleConfirmBtn = document.getElementById('toggleConfirmPassword');
 
-    // Add event listeners for toggling password visibility
     if (togglePasswordBtn) {
         togglePasswordBtn.addEventListener('click', () => {
             togglePasswordVisibility(passwordField, togglePasswordBtn);
@@ -28,7 +25,6 @@ const initApplicantRegistration = () => {
     }
 };
 
-// Auto-initialize on DOM content loaded
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('applicant-registration-form')) {
         initApplicantRegistration();
