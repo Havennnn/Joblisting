@@ -30,7 +30,10 @@ export default {
                 'nextjob-orange': '#FFA500',
                 'nextjob-purple': '#800080',
                 'nextjob-yellow': '#FFC107'
-            }
+            },
+            maxWidth: {
+                '8xl': '90rem', // 1440px
+            },
         },
     },
 
