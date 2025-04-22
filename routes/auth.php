@@ -85,8 +85,8 @@ Route::middleware(['web', 'ensure.otp.eligibility'])->withoutMiddleware([\App\Ht
         Route::post('/otp-resend', 'resendOtp')->name('otp.resend');
     });
 
-        // Logout during OTP verification
-    Route::post('/logout-during-otp', [AuthController::class, 'logout'])->name('logout');
+    // Logout during OTP verification
+    Route::post('/logout-during-otp', [AuthController::class, 'logout'])->name('otp.logout');
 });
 
 // Social authentication routes
