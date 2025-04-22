@@ -1,0 +1,54 @@
+services:
+  - type: web
+    name: nextjob
+    runtime: docker
+    buildCommand: docker build -t nextjob .
+    startCommand: docker run -p $PORT:8000 nextjob
+    envVars:
+      - key: APP_NAME
+        value: NextJob
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_URL
+        sync: false
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: nextjob-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: nextjob-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: nextjob-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: nextjob-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: nextjob-db
+          property: password
+      - key: APP_KEY
+        generateValue: true
+      - key: CACHE_DRIVER
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync
+      - key: SESSION_DRIVER
+        value: cookie
+      - key: SESSION_LIFETIME
+        value: "120"
+
+databases:
+  - name: nextjob-db
+    databaseName: nextjob
+    user: nextjob
