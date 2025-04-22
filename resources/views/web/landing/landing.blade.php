@@ -28,7 +28,7 @@
                         to your skills and goals with just a few clicks.
                     </p>
 
-                    <div class="mt-8 relative" style="max-width: 150%; margin-right: -50%; z-index: 100;">
+                    <div class="mt-8 relative" style="max-width: 160%; margin-right: -60%; z-index: 100;">
                         <x-job-search.search-bar :route="'jobs.search'" />
                     </div>
                 </div>

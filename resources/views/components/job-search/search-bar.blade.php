@@ -1,6 +1,6 @@
 @props(['route' => 'jobs.search'])
 
-<div class="w-full bg-white shadow-lg p-6 relative z-50">
+<div class="w-full bg-white shadow-lg p-6 relative z-10">
     <form action="{{ route($route) }}" method="GET" class="flex flex-col sm:flex-row gap-4">
         <div class="sm:w-3/4 relative">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
