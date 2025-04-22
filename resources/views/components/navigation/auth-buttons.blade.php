@@ -16,7 +16,7 @@
             <span class="block group-hover:text-nextjob-blue">Jobseeker Login</span>
             <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-nextjob-blue group-hover:w-full transition-all duration-300 ease-in-out"></span>
         </a>
-    @elseif(request()->is('/') || request()->is('jobs') || request()->is('job-details/*') || Route::currentRouteName() == 'content.unavailable')
+    @elseif(request()->is('/') || request()->is('jobs') || Route::currentRouteName() == 'jobs.show' || Route::currentRouteName() == 'job.show' || Route::currentRouteName() == 'content.unavailable')
         <div class="flex justify-center items-center space-x-4">
             <a href="{{ route('applicant.login') }}" class="{{ $applicantLoginClass }}">
                 <span class="block group-hover:text-nextjob-blue">Jobseeker Login</span>
