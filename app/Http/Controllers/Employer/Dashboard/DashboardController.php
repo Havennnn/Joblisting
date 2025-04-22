@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Employer\Dashboard;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Jobs\Job;
+use App\Models\Jobs\JobPost;
 use App\Models\Jobs\JobApplication;
 use Carbon\Carbon;
 
@@ -47,7 +47,7 @@ class DashboardController extends Controller
             $recentApplications = $this->getRecentApplications($employer->id);
 
             // Return view with data
-            return $this->view('employer.dashboard', [
+            return view('employer.dashboard', [
                 'companyName' => $employer->company_name,
                 'dateRange' => $dateRange,
                 'activeJobs' => $activeJobs,
@@ -57,7 +57,7 @@ class DashboardController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            return $this->view('employer.dashboard', [
+            return view('employer.dashboard', [
                 'error' => 'Could not load dashboard data. ' . $e->getMessage(),
                 'user' => Auth::user()
             ]);
@@ -72,7 +72,7 @@ class DashboardController extends Controller
      */
     private function getActiveJobsCount($employerId)
     {
-        return Job::where('employer_id', $employerId)
+        return JobPost::where('employer_id', $employerId)
             ->where('status', 'active')
             ->count();
     }
@@ -86,7 +86,7 @@ class DashboardController extends Controller
     private function getApplicationStats($employerId)
     {
         // Get jobs owned by this employer
-        $jobIds = Job::where('employer_id', $employerId)->pluck('id');
+        $jobIds = JobPost::where('employer_id', $employerId)->pluck('id');
 
         // Total applications count
         $totalApplications = JobApplication::whereIn('job_id', $jobIds)->count();
@@ -183,7 +183,7 @@ class DashboardController extends Controller
     private function getRecentApplications($employerId)
     {
         // Get jobs owned by this employer
-        $jobIds = Job::where('employer_id', $employerId)->pluck('id');
+        $jobIds = JobPost::where('employer_id', $employerId)->pluck('id');
 
         // Get recent applications
         return JobApplication::whereIn('job_id', $jobIds)
