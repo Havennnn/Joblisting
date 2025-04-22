@@ -18,7 +18,7 @@
         </div>
 
         <div class="mt-4">
-            <a href="{{ route('landing') }}" class="text-sm text-gray-600 hover:text-neksjob-blue">
+            <a href="{{ route('landing') }}" class="text-sm text-gray-600 text-neksjob-blue">
                 Return to Homepage
             </a>
         </div>
