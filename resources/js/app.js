@@ -1,10 +1,9 @@
 import './bootstrap';
 import initDropdowns from './components/dropdownHandler';
+import jobDetails from './pages/jobDetails';
 
-// We're now using direct imports in the blade templates for specific pages
-// This file is mainly used for global functionality that applies to all pages
+window.jobDetails = jobDetails;
 
-// Add global Livewire hooks for debugging (no console.log)
 if (typeof window.Livewire !== 'undefined') {
     window.Livewire.hook('component.initialized', (component) => {
         // Component initialized
@@ -39,7 +38,6 @@ if (typeof window.Livewire !== 'undefined') {
     });
 }
 
-// Add global event listeners or functionality here if needed
 document.addEventListener('DOMContentLoaded', () => {
     console.log('JobFair application initialized');
     initDropdowns();

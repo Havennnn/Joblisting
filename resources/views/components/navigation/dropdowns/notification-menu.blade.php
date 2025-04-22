@@ -1,5 +1,5 @@
 @props([
-    'menuClass' => 'hidden absolute right-0 mt-3 w-80 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 overflow-hidden',
+    'menuClass' => 'hidden absolute right-0 mt-3 w-80 shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 overflow-hidden',
     'headerClass' => 'bg-gray-50 px-4 py-2 border-b border-gray-200',
     'markAllReadClass' => 'text-xs text-blue-600 hover:text-blue-800',
     'viewAllClass' => 'block w-full text-center text-sm font-medium text-blue-600 hover:text-blue-800 py-1',

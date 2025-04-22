@@ -1,69 +1,33 @@
 @extends('layouts.app')
 
-@section('title', $job->title . ' - NeksJob')
+@section('title', $job->title . ' - NextJob')
 
 @push('scripts')
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
+@vite('resources/js/pages/jobDetails.js')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        window.toggleBookmark = function(jobId) {
-            const bookmark = document.getElementById('bookmark-' + jobId);
-            const isSaved = bookmark.classList.contains('text-yellow-500');
-
-            const url = isSaved
-                ? `/applicant/saved-jobs/${jobId}/unsave`
-                : `/applicant/saved-jobs/${jobId}/save`;
-
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.saved) {
-                    bookmark.classList.remove('text-gray-500');
-                    bookmark.classList.add('text-yellow-500', 'fill-yellow-500');
-                } else {
-                    bookmark.classList.remove('text-yellow-500', 'fill-yellow-500');
-                    bookmark.classList.add('text-gray-500');
-                }
-            })
-            .catch(error => {
-                console.error('Error toggling bookmark:', error);
-            });
-        }
-
-        // Check initial bookmark status
         const jobId = '{{ $job->id }}';
-        fetch(`/applicant/saved-jobs/${jobId}/check`)
-            .then(response => response.json())
-            .then(data => {
-                const bookmark = document.getElementById('bookmark-' + jobId);
-                if (bookmark && data.saved) {
-                    bookmark.classList.remove('text-gray-500');
-                    bookmark.classList.add('text-yellow-500', 'fill-yellow-500');
-                }
-            });
+        const csrfToken = '{{ csrf_token() }}';
+        if (typeof jobDetails !== 'undefined') {
+            jobDetails.init(jobId, csrfToken);
+        }
     });
 </script>
 @endpush
 
 @section('content')
 <div class="bg-gradient-to-r from-blue-50 to-indigo-50 min-h-screen">
-    <!-- Page Header with Gradient -->
-    <div class="relative bg-gradient-to-r from-blue-600 to-indigo-700 py-12">
+    <div class="relative bg-gradient-to-r from-blue-600 to-indigo-700 py-16">
         <div class="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent"></div>
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="flex flex-col md:flex-row md:justify-between md:items-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                 <div>
                     <h1 class="text-3xl font-bold text-white mb-2">{{ $job->title }}</h1>
                     <p class="text-white/80">{{ $job->employer->company_name }}</p>
                 </div>
                 <div class="mt-4 md:mt-0 flex space-x-3">
-                    <a href="{{ route('jobs.index') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600">
+                    <a href="{{ route('jobs.index') }}" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                         <svg class="h-5 w-5 mr-2 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
                         </svg>
@@ -71,7 +35,7 @@
                     </a>
                     @auth
                         @if(auth()->user()->isApplicant())
-                            <button onclick="toggleBookmark('{{ $job->id }}')" type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+                            <button onclick="toggleBookmark('{{ $job->id }}')" type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 transition-colors">
                                 <svg id="bookmark-{{ $job->id }}" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
                                 </svg>
@@ -84,20 +48,17 @@
         </div>
     </div>
 
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 -mt-8 relative z-20">
-        <div class="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-200">
-            <!-- Job Details -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 -mt-8 relative z-20">
+        <div class="bg-white shadow-sm overflow-hidden border border-gray-200">
             <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Left Column - Main Details -->
                 <div class="md:col-span-2">
-                    <!-- Company Information -->
-                    <div class="bg-gray-50 p-6 rounded-xl mb-6 border border-gray-100">
+                    <div class="bg-gray-50 p-6 mb-6 border border-gray-100">
                         <div class="flex items-start">
                             <div class="flex-shrink-0 mr-4">
                                 @if($job->employer->company_logo_path)
-                                    <img src="{{ asset('storage/' . $job->employer->company_logo_path) }}" alt="Company Logo" class="h-16 w-16 rounded-xl object-cover">
+                                    <img src="{{ asset('storage/' . $job->employer->company_logo_path) }}" alt="Company Logo" class="h-16 w-16 object-cover border border-gray-200">
                                 @else
-                                    <div class="h-16 w-16 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center">
+                                    <div class="h-16 w-16 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white">
                                         <svg class="h-8 w-8 text-white" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M3 7h18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                                         </svg>
@@ -109,7 +70,7 @@
                                 <p class="mt-1 text-sm text-gray-600">{{ $job->employer->industry }}</p>
                                 <p class="mt-1 text-sm text-gray-600">{{ $job->employer->location }}</p>
                                 @if($job->employer->website)
-                                    <a href="{{ $job->employer->website }}" target="_blank" class="mt-2 text-sm text-red-600 hover:text-red-800 inline-flex items-center">
+                                    <a href="{{ $job->employer->website }}" target="_blank" class="mt-2 text-sm text-blue-600 hover:text-blue-800 inline-flex items-center transition-colors">
                                         <svg class="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                             <path fill-rule="evenodd" d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.56-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.56.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z" clip-rule="evenodd" />
                                         </svg>
@@ -123,19 +84,18 @@
                     <div class="mb-8">
                         <div class="flex items-center justify-between mb-4">
                             <h2 class="text-xl font-semibold text-gray-900">Job Description</h2>
-                            <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium {{ $job->tags == 'Urgent' ? 'bg-red-100 text-red-800' : ($job->tags == 'Featured' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800') }}">
+                            <span class="inline-flex items-center px-3 py-1 text-xs font-medium {{ $job->tags == 'Urgent' ? 'bg-red-100 text-red-800' : ($job->tags == 'Featured' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800') }}">
                                 {{ $job->tags ?? 'Recent' }}
                             </span>
                         </div>
-                        <div class="prose max-w-none text-gray-600 bg-white p-5 rounded-xl border border-gray-100">
+                        <div class="prose max-w-none text-gray-600 bg-white p-5 border border-gray-100">
                             <p>{{ $job->job_description }}</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Right Column - Additional Info -->
                 <div class="space-y-6">
-                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="bg-white p-5 border border-gray-200 shadow-sm">
                         <h3 class="font-medium text-gray-900 mb-3 pb-2 border-b">Job Details</h3>
                         <div class="space-y-3">
                             <div class="flex justify-between text-sm">
@@ -183,7 +143,7 @@
                         </div>
                     </div>
 
-                    <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm">
+                    <div class="bg-white p-5 border border-gray-200 shadow-sm">
                         <h3 class="font-medium text-gray-900 mb-3 pb-2 border-b">Job Information</h3>
                         <div class="space-y-3">
                             <div class="flex justify-between text-sm">
@@ -199,7 +159,6 @@
                 </div>
             </div>
 
-            <!-- Application Section -->
             <div id="apply" class="p-6 bg-gradient-to-r from-blue-50 to-indigo-50 border-t border-gray-200">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">Apply for this position</h2>
 
@@ -208,17 +167,15 @@
                         @php
                             $applicant = auth()->user();
                             $profile = $applicant->applicantProfile;
-                            // Use the value from the controller
                             $completionPercentage = $profileCompletionPercentage;
 
-                            // Check if the user has already applied for this job
                             $hasApplied = \App\Models\Jobs\JobApplication::where('job_id', $job->id)
                                 ->where('applicant_id', $applicant->id)
                                 ->exists();
                         @endphp
 
                         @if($hasApplied)
-                            <div class="bg-green-50 p-4 rounded-xl mb-4 border border-green-100">
+                            <div class="bg-green-50 p-4 mb-4 border border-green-100">
                                 <div class="flex">
                                     <div class="flex-shrink-0">
                                         <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -230,7 +187,7 @@
                                         <div class="mt-2 text-sm text-green-700">
                                             <p>You have already applied for this position.</p>
                                             <div class="mt-3">
-                                                <a href="{{ route('applicant.applications') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                                <a href="{{ route('applicant.applications') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-4 font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                                                     View My Applications
                                                 </a>
                                             </div>
@@ -241,21 +198,18 @@
                         @elseif($completionPercentage < 100)
                             <x-profile-completion-alert :percentage="$completionPercentage" userType="applicant" />
                         @else
-                            <button type="button" onclick="openApplicationModal()" class="inline-flex items-center px-5 py-3 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                            <button type="button" onclick="openApplicationModal()" class="inline-flex items-center px-5 py-3 border border-transparent text-sm font-medium shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                                 Apply Now
                             </button>
 
-                            <!-- Application Confirmation Modal -->
                             <div id="applicationModal" class="fixed inset-0 overflow-y-auto hidden z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
                                 <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                                    <!-- Background overlay -->
                                     <div id="modalOverlay" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
 
-                                    <!-- Modal panel -->
-                                    <div class="inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                                    <div class="inline-block align-bottom bg-white text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                                         <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                             <div class="sm:flex sm:items-start">
-                                                <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                                                <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
                                                     <svg class="h-6 w-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                                     </svg>
@@ -269,7 +223,7 @@
                                                             You are about to apply for <span class="font-semibold">{{ $job->title }}</span> at <span class="font-semibold">{{ $job->employer->company_name }}</span>. The following information from your profile will be shared:
                                                         </p>
 
-                                                        <div class="bg-gray-50 p-3 rounded-md mb-3">
+                                                        <div class="bg-gray-50 p-3 mb-3 border border-gray-100">
                                                             <h4 class="text-sm font-medium text-gray-700 mb-2">Personal Information</h4>
                                                             <ul class="text-sm text-gray-600 space-y-1">
                                                                 <li><span class="font-medium">Name:</span> {{ $applicant->name }}</li>
@@ -279,7 +233,7 @@
                                                             </ul>
                                                         </div>
 
-                                                        <div class="bg-gray-50 p-3 rounded-md mb-3">
+                                                        <div class="bg-gray-50 p-3 mb-3 border border-gray-100">
                                                             <h4 class="text-sm font-medium text-gray-700 mb-2">Professional Information</h4>
                                                             <ul class="text-sm text-gray-600 space-y-1">
                                                                 <li><span class="font-medium">Field:</span> {{ $profile->field }}</li>
@@ -288,7 +242,7 @@
                                                             </ul>
                                                         </div>
 
-                                                        <div class="bg-gray-50 p-3 rounded-md">
+                                                        <div class="bg-gray-50 p-3 border border-gray-100">
                                                             <h4 class="text-sm font-medium text-gray-700 mb-2">Resume</h4>
                                                             @if($profile->resume_path)
                                                                 <p class="text-sm text-gray-600">Your uploaded resume will be included with your application.</p>
@@ -303,42 +257,20 @@
                                         <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                                             <form action="{{ route('applicant.apply.job', $job->id) }}" method="POST">
                                                 @csrf
-                                                <button type="submit" class="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                                <button type="submit" class="inline-flex justify-center border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors">
                                                     Submit Application
                                                 </button>
                                             </form>
-                                            <button type="button" onclick="closeApplicationModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                                            <button type="button" onclick="closeApplicationModal()" class="mt-3 w-full inline-flex justify-center border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-colors">
                                                 Cancel
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <script>
-                                function openApplicationModal() {
-                                    document.getElementById('applicationModal').classList.remove('hidden');
-                                    document.body.classList.add('overflow-hidden');
-                                }
-
-                                function closeApplicationModal() {
-                                    document.getElementById('applicationModal').classList.add('hidden');
-                                    document.body.classList.remove('overflow-hidden');
-                                }
-
-                                // Close modal when clicking on overlay
-                                document.getElementById('modalOverlay').addEventListener('click', function() {
-                                    closeApplicationModal();
-                                });
-
-                                function scrollToApply() {
-                                    const applySection = document.getElementById('apply');
-                                    applySection.scrollIntoView({ behavior: 'smooth' });
-                                }
-                            </script>
                         @endif
                     @elseif(auth()->user()->isEmployer())
-                        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                        <div class="bg-blue-50 p-4 border border-blue-100">
                             <div class="flex">
                                 <div class="flex-shrink-0">
                                     <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -355,19 +287,19 @@
                         </div>
                     @endif
                 @else
-                    <div class="bg-white p-6 rounded-xl shadow-sm text-center">
-                        <div class="p-2 bg-red-100 w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div class="bg-white p-6 shadow-sm text-center">
+                        <div class="p-2 bg-blue-100 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                         </div>
                         <h3 class="text-lg font-medium text-gray-900 mb-4">Ready to apply?</h3>
                         <p class="text-gray-600 mb-6">Sign in or create an account to apply for this job.</p>
                         <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                            <a href="{{ route('applicant.login') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700">
+                            <a href="{{ route('applicant.login') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors">
                                 Sign In
                             </a>
-                            <a href="{{ route('applicant.register') }}" class="inline-flex items-center justify-center px-5 py-3 border border-gray-300 text-base font-medium rounded-md text-red-600 bg-white hover:bg-gray-50">
+                            <a href="{{ route('applicant.register') }}" class="inline-flex items-center justify-center px-5 py-3 border border-gray-300 text-base font-medium text-blue-600 bg-white hover:bg-gray-50 transition-colors">
                                 Create Account
                             </a>
                         </div>

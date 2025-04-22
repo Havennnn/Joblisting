@@ -24,17 +24,17 @@
         </div>
 
         <div class="mt-8">
-            <div class="bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10">
+            <div class="bg-white py-8 px-4 shadow-lg sm:px-10">
                 <!-- Status Message -->
                 @if (session('status'))
-                    <div class="mb-4 bg-green-50 border-l-4 border-green-500 text-green-700 p-4 rounded-md">
+                    <div class="mb-4 bg-green-50 border-l-4 border-green-500 text-green-700 p-4">
                         {{ session('status') }}
                     </div>
                 @endif
 
                 <!-- Error Messages -->
                 @if ($errors->any())
-                    <div class="mb-4 bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-md">
+                    <div class="mb-4 bg-red-50 border-l-4 border-red-500 text-red-700 p-4">
                         <ul class="list-disc pl-4">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -57,14 +57,14 @@
                                 </svg>
                             </div>
                             <input type="email" id="email" name="email"
-                                class="appearance-none block w-full pl-10 px-3 py-2 border border-gray-300 rounded shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#EC4899] focus:border-[#EC4899] sm:text-sm transition-colors"
+                                class="appearance-none block w-full pl-10 px-3 py-2 border border-gray-300 shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#EC4899] focus:border-[#EC4899] sm:text-sm transition-colors"
                                 placeholder="Enter your email address" value="{{ old('email') }}" required autofocus>
                         </div>
                     </div>
 
                     <div>
                         <button type="submit"
-                            class="w-full flex justify-center py-2 px-4 border border-transparent rounded shadow-sm text-sm font-medium text-white bg-[#EC4899] hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#EC4899] transition-colors">
+                            class="w-full flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium text-white bg-[#EC4899] hover:bg-pink-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#EC4899] transition-colors">
                             Send Reset Link
                         </button>
                     </div>

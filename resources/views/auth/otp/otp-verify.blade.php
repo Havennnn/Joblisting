@@ -52,7 +52,7 @@
                     <input type="hidden" name="email" value="{{ $email }}">
                     <input type="hidden" name="otp" id="otp-hidden">
 
-                    <div class="flex justify-center gap-2">
+                    <div class="flex justify-center gap-2 otp-container">
                         @for ($i = 0; $i < 6; $i++)
                             <input
                                 type="text"

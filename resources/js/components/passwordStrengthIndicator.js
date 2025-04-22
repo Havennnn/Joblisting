@@ -8,8 +8,6 @@ import {
 
 /**
  * Updates the UI to show password validation status
- * @param {Object} elements - The DOM elements involved in validation
- * @param {string} password - The password to validate
  */
 export const updatePasswordValidationUI = (elements, password) => {
     const {
@@ -21,7 +19,6 @@ export const updatePasswordValidationUI = (elements, password) => {
         numberIcon
     } = elements;
 
-    // Validate length requirement
     if (meetsLengthRequirement(password)) {
         lengthElement.classList.remove('text-red-600');
         lengthElement.classList.add('text-green-600');
@@ -32,7 +29,6 @@ export const updatePasswordValidationUI = (elements, password) => {
         lengthIcon.innerHTML = getFailurePath();
     }
 
-    // Validate uppercase requirement
     if (hasUppercase(password)) {
         uppercaseElement.classList.remove('text-red-600');
         uppercaseElement.classList.add('text-green-600');
@@ -43,7 +39,6 @@ export const updatePasswordValidationUI = (elements, password) => {
         uppercaseIcon.innerHTML = getFailurePath();
     }
 
-    // Validate number requirement
     if (hasNumber(password)) {
         numberElement.classList.remove('text-red-600');
         numberElement.classList.add('text-green-600');
@@ -57,8 +52,6 @@ export const updatePasswordValidationUI = (elements, password) => {
 
 /**
  * Initialize the password validation UI by gathering elements and setting up events
- * @param {string} passwordFieldId - The ID of the password input field
- * @returns {Object} Object containing gathered elements for validation
  */
 export const initializePasswordValidation = (passwordFieldId) => {
     const passwordField = document.getElementById(passwordFieldId);
@@ -78,10 +71,8 @@ export const initializePasswordValidation = (passwordFieldId) => {
         numberIcon: numberIcon
     };
 
-    // Initial check
     updatePasswordValidationUI(elements, passwordField.value);
 
-    // Add event listener
     passwordField.addEventListener('input', () => {
         updatePasswordValidationUI(elements, passwordField.value);
     });

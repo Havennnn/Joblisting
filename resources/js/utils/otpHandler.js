@@ -1,12 +1,3 @@
-/**
- * OTP Handler - Manages OTP input fields and countdown timer
- *
- * This utility handles:
- * 1. OTP input field navigation and auto-focus
- * 2. Countdown timer for OTP resend
- * 3. Hidden field updates for form submission and Livewire binding
- */
-
 export default function initOtpHandler() {
     initOtpInputHandling();
     initCountdownTimer();
@@ -22,14 +13,14 @@ function initOtpInputHandling() {
         const input = e.target;
         if (!input.classList.contains('otp-input')) return;
 
-        const container = input.closest('.space-y-4');
+        const container = findOtpContainer(input);
         if (!container) return;
 
-        const inputs = container.querySelectorAll('.otp-input');
-        const hiddenOtp = container.querySelector('#otp-hidden');
+        const inputs = Array.from(container.querySelectorAll('.otp-input'));
+        const hiddenOtp = container.closest('form').querySelector('#otp-hidden');
         if (!inputs.length) return;
 
-        const index = Array.from(inputs).indexOf(input);
+        const index = inputs.indexOf(input);
         const value = input.value;
 
         let livewireEl = null;
@@ -62,13 +53,13 @@ function initOtpInputHandling() {
         const input = e.target;
         if (!input.classList.contains('otp-input')) return;
 
-        const container = input.closest('.space-y-4');
+        const container = findOtpContainer(input);
         if (!container) return;
 
-        const inputs = container.querySelectorAll('.otp-input');
+        const inputs = Array.from(container.querySelectorAll('.otp-input'));
         if (!inputs.length) return;
 
-        const index = Array.from(inputs).indexOf(input);
+        const index = inputs.indexOf(input);
 
         if (e.key === 'Backspace') {
             if (!input.value && index > 0) {
@@ -94,14 +85,14 @@ function initOtpInputHandling() {
 
         e.preventDefault();
 
-        const container = input.closest('.space-y-4');
+        const container = findOtpContainer(input);
         if (!container) return;
 
-        const inputs = container.querySelectorAll('.otp-input');
-        const hiddenOtp = container.querySelector('#otp-hidden');
+        const inputs = Array.from(container.querySelectorAll('.otp-input'));
+        const hiddenOtp = container.closest('form').querySelector('#otp-hidden');
         if (!inputs.length) return;
 
-        const index = Array.from(inputs).indexOf(input);
+        const index = inputs.indexOf(input);
 
         let livewireEl = null;
         let livewireModel = null;
@@ -133,7 +124,7 @@ function initOtpInputHandling() {
  * Update both the hidden OTP field and Livewire model if they exist
  */
 function updateOTPValues(inputs, hiddenOtp, livewireEl, livewireModel) {
-    const combinedValue = Array.from(inputs).map(input => input.value || '').join('');
+    const combinedValue = inputs.map(input => input.value || '').join('');
 
     if (hiddenOtp) {
         hiddenOtp.value = combinedValue;
@@ -148,6 +139,23 @@ function updateOTPValues(inputs, hiddenOtp, livewireEl, livewireModel) {
             window.Livewire.find(componentId).set(livewireModel, combinedValue);
         }
     }
+}
+
+/**
+ * Helper function to find the closest form container for OTP inputs
+ * This provides more flexibility than relying on a specific class
+ */
+function findOtpContainer(input) {
+    let container = input.closest('.space-y-6');
+
+    if (!container) {
+        container = input.closest('form') ||
+                   input.closest('.space-y-4') ||
+                   input.closest('.otp-container') ||
+                   input.closest('.form-container');
+    }
+
+    return container;
 }
 
 /**

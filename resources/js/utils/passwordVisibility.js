@@ -45,3 +45,5 @@ export const togglePasswordVisibility = (passwordField, toggleButton) => {
         `;
     }
 };
+
+document.addEventListener('DOMContentLoaded', initPasswordToggle);

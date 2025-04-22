@@ -15,7 +15,7 @@
 
     <div class="flex flex-col items-center justify-center relative z-10">
 
-        <div class="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+        <div class="max-w-md w-full bg-white shadow-lg p-8">
             <h2 class="text-2xl font-semibold text-center text-gray-900 mb-6">
                 <img src="{{ asset('images/NextJob.svg') }}" alt="NextJob Logo" class="mx-auto h-10 mb-4">
                 Jobseeker Registration
@@ -35,7 +35,7 @@
                             </svg>
                         </div>
                         <input id="name" name="name" type="text" autocomplete="name" required
-                            class="appearance-none block w-full pl-10 px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#2563EB] focus:border-[#2563EB] sm:text-sm"
+                            class="appearance-none block w-full pl-10 px-3 py-2 border border-gray-300 shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#2563EB] focus:border-[#2563EB] sm:text-sm"
                             value="{{ old('name') }}">
                     </div>
                     @error('name')
@@ -55,7 +55,7 @@
                             </svg>
                         </div>
                         <input id="email" name="email" type="email" autocomplete="email" required
-                            class="appearance-none block w-full pl-10 px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#2563EB] focus:border-[#2563EB] sm:text-sm"
+                            class="appearance-none block w-full pl-10 px-3 py-2 border border-gray-300 shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#2563EB] focus:border-[#2563EB] sm:text-sm"
                             value="{{ old('email') }}">
                     </div>
                     @error('email')
@@ -74,9 +74,9 @@
                             </svg>
                         </div>
                         <input id="password" name="password" type="password" autocomplete="new-password" required
-                            class="appearance-none block w-full pl-10 px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#2563EB] focus:border-[#2563EB] sm:text-sm">
+                            class="appearance-none block w-full pl-10 px-3 py-2 border border-gray-300 shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#2563EB] focus:border-[#2563EB] sm:text-sm password-toggle-field">
                         <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                            <button type="button" id="togglePassword" class="text-gray-400 focus:outline-none">
+                            <button type="button" id="togglePassword" class="text-gray-400 focus:outline-none password-toggle-btn">
                                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -130,9 +130,9 @@
                         </div>
                         <input id="password_confirmation" name="password_confirmation" type="password"
                             autocomplete="new-password" required
-                            class="appearance-none block w-full pl-10 px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#2563EB] focus:border-[#2563EB] sm:text-sm">
+                            class="appearance-none block w-full pl-10 px-3 py-2 border border-gray-300 shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#2563EB] focus:border-[#2563EB] sm:text-sm password-toggle-field">
                         <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                            <button type="button" id="toggleConfirmPassword" class="text-gray-400 focus:outline-none">
+                            <button type="button" id="toggleConfirmPassword" class="text-gray-400 focus:outline-none password-toggle-btn">
                                 <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -144,7 +144,7 @@
 
                 <div class="flex items-center">
                     <input id="terms" name="terms" type="checkbox" required
-                        class="h-4 w-4 text-[#2563EB] focus:ring-[#2563EB] border-gray-300 rounded">
+                        class="h-4 w-4 text-[#2563EB] focus:ring-[#2563EB] border-gray-300">
                     <label for="terms" class="ml-2 block text-xs text-gray-700">
                         By registering, I agree to the Terms and Conditions and confirm that the information I provide is accurate. I acknowledge that I may receive job-related updates.
                     </label>
@@ -152,7 +152,7 @@
 
                 <div>
                     <button type="submit"
-                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#2563EB] hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2563EB]">
+                        class="w-full flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium text-white bg-[#2563EB] hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2563EB]">
                         Register
                     </button>
                 </div>
@@ -169,7 +169,7 @@
                 </div>
 
                 <div class="mt-6 grid grid-cols-2 gap-3">
-                    <a href="{{ route('google.login', ['user_type' => 'applicant']) }}" class="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                    <a href="{{ route('google.login', ['user_type' => 'applicant']) }}" class="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                         <svg class="h-5 w-5 mr-2" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
                             <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">
                                 <path fill="#4285F4" d="M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z"/>
@@ -181,7 +181,7 @@
                         <span>Google</span>
                     </a>
 
-                    <a href="{{ route('facebook.login', ['user_type' => 'applicant']) }}" class="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                    <a href="{{ route('facebook.login', ['user_type' => 'applicant']) }}" class="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                         <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
                             <path fill="#4267B2" d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/>
                         </svg>
@@ -202,104 +202,9 @@
 @endsection
 
 @push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const togglePassword = document.getElementById('togglePassword');
-        const password = document.getElementById('password');
-        const lengthValidation = document.getElementById('length-validation');
-        const uppercaseValidation = document.getElementById('uppercase-validation');
-        const numberValidation = document.getElementById('number-validation');
-        const lengthIcon = document.getElementById('length-icon');
-        const uppercaseIcon = document.getElementById('uppercase-icon');
-        const numberIcon = document.getElementById('number-icon');
-
-        // Function to check password requirements and update UI
-        function checkPassword() {
-            const value = password.value;
-
-            // Check minimum length
-            if (value.length >= 8) {
-                lengthValidation.classList.remove('text-red-600');
-                lengthValidation.classList.add('text-green-600');
-                lengthIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />';
-            } else {
-                lengthValidation.classList.remove('text-green-600');
-                lengthValidation.classList.add('text-red-600');
-                lengthIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />';
-            }
-
-            // Check for uppercase letter
-            if (/[A-Z]/.test(value)) {
-                uppercaseValidation.classList.remove('text-red-600');
-                uppercaseValidation.classList.add('text-green-600');
-                uppercaseIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />';
-            } else {
-                uppercaseValidation.classList.remove('text-green-600');
-                uppercaseValidation.classList.add('text-red-600');
-                uppercaseIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />';
-            }
-
-            // Check for number
-            if (/[0-9]/.test(value)) {
-                numberValidation.classList.remove('text-red-600');
-                numberValidation.classList.add('text-green-600');
-                numberIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />';
-            } else {
-                numberValidation.classList.remove('text-green-600');
-                numberValidation.classList.add('text-red-600');
-                numberIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />';
-            }
-        }
-
-        // Check password on input
-        password.addEventListener('input', checkPassword);
-
-        togglePassword.addEventListener('click', function() {
-            // Toggle type between password and text
-            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-            password.setAttribute('type', type);
-
-            // Toggle icon between eye and eye-slash
-            if (type === 'text') {
-                this.innerHTML = `
-                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                    </svg>
-                `;
-            } else {
-                this.innerHTML = `
-                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                `;
-            }
-        });
-
-        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
-        const passwordConfirmation = document.getElementById('password_confirmation');
-
-        toggleConfirmPassword.addEventListener('click', function() {
-            // Toggle type between password and text
-            const type = passwordConfirmation.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordConfirmation.setAttribute('type', type);
-
-            // Toggle icon between eye and eye-slash
-            if (type === 'text') {
-                this.innerHTML = `
-                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                    </svg>
-                `;
-            } else {
-                this.innerHTML = `
-                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                `;
-            }
-        });
-    });
-</script>
+@vite([
+    'resources/js/utils/passwordValidation.js',
+    'resources/js/utils/passwordVisibility.js',
+    'resources/js/pages/applicantRegister.js'
+])
 @endpush

@@ -25,7 +25,7 @@
             </div>
 
             <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-                <div class="bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10">
+                <div class="bg-white py-8 px-4 shadow-lg sm:px-10">
                     <form class="space-y-6" action="{{ route('applicant.login.post') }}" method="POST">
                         @csrf
 
@@ -41,7 +41,7 @@
                                     </svg>
                                 </div>
                                 <input id="email" name="email" type="email" autocomplete="email" required
-                                    class="appearance-none block w-full pl-10 px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#2563EB] focus:border-[#2563EB] sm:text-sm"
+                                    class="appearance-none block w-full pl-10 px-3 py-2 border border-gray-300 shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#2563EB] focus:border-[#2563EB] sm:text-sm"
                                     placeholder="user@gmail.com">
                             </div>
                             @error('email')
@@ -60,7 +60,7 @@
                                     </svg>
                                 </div>
                                 <input id="password" name="password" type="password" autocomplete="current-password" required
-                                    class="appearance-none block w-full pl-10 px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#2563EB] focus:border-[#2563EB] sm:text-sm"
+                                    class="appearance-none block w-full pl-10 px-3 py-2 border border-gray-300 shadow-sm placeholder-gray-400 focus:outline-none focus:ring-[#2563EB] focus:border-[#2563EB] sm:text-sm"
                                     placeholder="*************">
                                 <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
                                     <button type="button" id="togglePassword" class="text-gray-400 focus:outline-none">
@@ -79,7 +79,7 @@
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
                                 <input id="remember_me" name="remember" type="checkbox"
-                                    class="h-4 w-4 text-[#2563EB] focus:ring-[#2563EB] border-gray-300 rounded">
+                                    class="h-4 w-4 text-[#2563EB] focus:ring-[#2563EB] border-gray-300">
                                 <label for="remember_me" class="ml-2 block text-sm text-gray-900">
                                     Remember me
                                 </label>
@@ -93,7 +93,7 @@
 
                         <div>
                             <button type="submit"
-                                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#2563EB] hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2563EB]">
+                                class="w-full flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium text-white bg-[#2563EB] hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2563EB]">
                                 Sign In
                             </button>
                         </div>
@@ -112,7 +112,7 @@
                         </div>
 
                         <div class="mt-6 grid grid-cols-2 gap-3">
-                            <a href="{{ route('google.login', ['user_type' => 'applicant']) }}" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <a href="{{ route('google.login', ['user_type' => 'applicant']) }}" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                                 <svg class="h-5 w-5 mr-2" viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
                                     <g transform="matrix(1, 0, 0, 1, 27.009001, -39.238998)">
                                         <path fill="#4285F4" d="M -3.264 51.509 C -3.264 50.719 -3.334 49.969 -3.454 49.239 L -14.754 49.239 L -14.754 53.749 L -8.284 53.749 C -8.574 55.229 -9.424 56.479 -10.684 57.329 L -10.684 60.329 L -6.824 60.329 C -4.564 58.239 -3.264 55.159 -3.264 51.509 Z"/>
@@ -124,7 +124,7 @@
                                 <span>Google</span>
                             </a>
 
-                            <a href="{{ route('facebook.login', ['user_type' => 'applicant']) }}" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                            <a href="{{ route('facebook.login', ['user_type' => 'applicant']) }}" class="w-full inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
                                 <svg class="h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
                                     <path fill="#4267B2" d="M279.14 288l14.22-92.66h-88.91v-60.13c0-25.35 12.42-50.06 52.24-50.06h40.42V6.26S260.43 0 225.36 0c-73.22 0-121.08 44.38-121.08 124.72v70.62H22.89V288h81.39v224h100.17V288z"/>
                                 </svg>

@@ -1,5 +1,5 @@
 @props([
-    'menuClass' => 'hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50',
+    'menuClass' => 'hidden absolute right-0 mt-2 w-48 shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50',
     'linkClass' => 'block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100'
 ])
 
