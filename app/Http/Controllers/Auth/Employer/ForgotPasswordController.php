@@ -47,14 +47,11 @@ class ForgotPasswordController extends Controller
             return back()->withErrors(['email' => 'We could not find an employer account with that email address.']);
         }
 
-        // Generate and send OTP
         $this->otpService->generateOtp($user);
 
-        // Store user email in session for the reset form
         Session::put('reset_email', $user->email);
         Session::put('reset_type', 'employer');
 
-        // Redirect to the employer-specific reset password route
         return redirect()->route('employer.password.reset')
             ->with('status', 'We have emailed you a one-time password to reset your password.');
     }
@@ -95,19 +92,16 @@ class ForgotPasswordController extends Controller
         $email = $request->email;
         $otp = $request->otp;
 
-        // Verify OTP
         $user = $this->otpService->verifyOtp($email, $otp);
 
         if (!$user || $user->role !== 'employer') {
             return back()->withErrors(['otp' => 'The one-time password is invalid or has expired.']);
         }
 
-        // Update the password
         $user->update([
             'password' => Hash::make($request->password),
         ]);
 
-        // Clear session data
         Session::forget(['reset_email', 'reset_type', 'otp_' . $email, 'otp_expires_at_' . $email]);
 
         return redirect()->route('employer.login')
