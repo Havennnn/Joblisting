@@ -34,6 +34,9 @@ Route::prefix('applicant')->name('applicant.')->middleware('guest')->group(funct
     Route::controller(ForgotPasswordController::class)->group(function () {
         Route::get('/forgot-password', 'showApplicantForm')->name('password.request');
         Route::post('/forgot-password', 'sendApplicantResetLink')->name('password.email');
+        Route::get('/reset-password', function () {
+            return redirect()->route('password.reset.otp');
+        })->name('password.reset');
     });
 });
 
@@ -49,6 +52,9 @@ Route::prefix('employer')->name('employer.')->middleware('guest')->group(functio
     Route::controller(ForgotPasswordController::class)->group(function () {
         Route::get('/forgot-password', 'showEmployerForm')->name('password.request');
         Route::post('/forgot-password', 'sendEmployerResetLink')->name('password.email');
+        Route::get('/reset-password', function () {
+            return redirect()->route('password.reset.otp', ['type' => 'employer']);
+        })->name('password.reset');
     });
 });
 

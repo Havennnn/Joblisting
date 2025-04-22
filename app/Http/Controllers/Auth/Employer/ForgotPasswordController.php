@@ -54,7 +54,8 @@ class ForgotPasswordController extends Controller
         Session::put('reset_email', $user->email);
         Session::put('reset_type', 'employer');
 
-        return redirect()->route('password.reset.otp', ['type' => 'employer'])
+        // Redirect to the employer-specific reset password route
+        return redirect()->route('employer.password.reset')
             ->with('status', 'We have emailed you a one-time password to reset your password.');
     }
 
