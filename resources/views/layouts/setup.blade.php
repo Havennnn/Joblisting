@@ -27,7 +27,7 @@
                 <div class="flex justify-between items-center">
                     <div class="flex-shrink-0">
                         <a href="/" class="flex items-center">
-                            <img src="{{ asset('images/logo.svg') }}" alt="Logo" class="h-8 w-auto">
+                            <img src="{{ asset('images/NextJob.svg') }}" alt="Logo" class="h-8 w-auto">
                         </a>
                     </div>
                     <div class="flex items-center">
