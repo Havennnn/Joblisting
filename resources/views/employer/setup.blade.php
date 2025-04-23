@@ -37,7 +37,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('employer.setup') }}" method="POST" class="space-y-6">
+                    <form action="{{ route('employer.setup.process') }}" method="POST" class="space-y-6">
                         @csrf
                         <div>
                             <h2 class="text-lg font-medium text-gray-900 mb-4">Personal Contact Information</h2>

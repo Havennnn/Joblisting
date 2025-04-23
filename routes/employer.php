@@ -24,10 +24,10 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Setup wizard routes
-    Route::controller(SetupController::class)->prefix('setup')->name('setup')->group(function () {
-        Route::get('/', 'index');
-        Route::post('/', 'processSetup');
-        Route::get('/skip', 'skip')->name('.skip');
+    Route::controller(SetupController::class)->prefix('setup')->name('setup.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'processSetup')->name('process');
+        Route::get('/skip', 'skip')->name('skip');
     });
 
     // Profile routes
