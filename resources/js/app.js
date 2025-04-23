@@ -1,8 +1,10 @@
 import './bootstrap';
 import initDropdowns from './components/dropdownHandler';
 import jobDetails from './pages/jobDetails';
+import * as employerJobPosts from './pages/employerJobPosts';
 
 window.jobDetails = jobDetails;
+window.employerJobPosts = employerJobPosts;
 
 if (typeof window.Livewire !== 'undefined') {
     window.Livewire.hook('component.initialized', (component) => {
