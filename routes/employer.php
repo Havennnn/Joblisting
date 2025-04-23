@@ -41,6 +41,11 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
         Route::get('/logo/{user}', [ProfileController::class, 'showCompanyLogo'])->name('logo');
     });
 
+    // Company routes
+    Route::controller(\App\Http\Controllers\Employer\Company\CompanyController::class)->prefix('company')->name('company.')->group(function () {
+        Route::get('/', 'index')->name('index');
+    });
+
     // Applicants routes
     Route::controller(ApplicationController::class)->prefix('applicants')->name('applicants')->group(function () {
         Route::get('/', 'index');
