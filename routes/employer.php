@@ -7,6 +7,9 @@ use App\Http\Controllers\Employer\ProfileController;
 use App\Http\Controllers\Employer\SetupController;
 use App\Http\Controllers\Employer\NotificationController;
 use App\Http\Controllers\Employer\ApplicationController;
+use App\Http\Controllers\Employer\Company\CompanyController;
+use App\Http\Controllers\Employer\Company\CreateController;
+use App\Http\Controllers\Employer\Company\InviteController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,9 +41,20 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
         Route::get('/logo/{user}', [ProfileController::class, 'showCompanyLogo'])->name('logo');
     });
 
-    // Company routes
-    Route::controller(\App\Http\Controllers\Employer\Company\CompanyController::class)->prefix('company')->name('company.')->group(function () {
-        Route::get('/', 'index')->name('index');
+    // Company management routes
+    Route::prefix('company')->name('company.')->group(function () {
+        // Main company page
+        Route::get('/', [CompanyController::class, 'index'])->name('index');
+
+        // Company creation
+        Route::get('/create', [CreateController::class, 'show'])->name('create');
+        Route::post('/create', [CreateController::class, '__invoke'])->name('store');
+
+        // Company invites - individual routes to avoid parameter issues
+        Route::get('/invite', [InviteController::class, 'show'])->name('invite');
+        Route::post('/invite', [InviteController::class, 'send'])->name('invite.send');
+        Route::get('/invite/{token}', [InviteController::class, 'accept'])->name('invite.accept');
+        Route::delete('/invite/{id}', [InviteController::class, 'cancel'])->name('invite.cancel');
     });
 
     // Applicants routes

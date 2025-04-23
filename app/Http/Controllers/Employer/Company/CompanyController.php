@@ -15,6 +15,9 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        return view('employer.company.index');
+        $employer = Auth::user()->employer;
+        $company = $employer ? $employer->company : null;
+
+        return view('employer.company.index', compact('company'));
     }
 }

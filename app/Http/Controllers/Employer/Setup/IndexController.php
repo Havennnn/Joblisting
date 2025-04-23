@@ -16,6 +16,10 @@ class IndexController extends Controller
      */
     public function __invoke(): View
     {
+        // Ensure the employer_setup_completed flag is set
+        // This prevents redirect loops
+        Session::put('employer_setup_completed', true);
+
         $user = Auth::user();
         $employer = $user->employer;
 

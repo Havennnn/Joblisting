@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 class EnsureUserIsEmployer
@@ -24,21 +23,8 @@ class EnsureUserIsEmployer
             $user = Auth::user();
             $currentRoute = $request->route()->getName();
 
-            // Log middleware execution for debugging
-            Log::info('EnsureUserIsEmployer middleware executed', [
-                'user_id' => $user->id,
-                'route' => $currentRoute,
-                'has_employer' => $user->employer ? true : false,
-                'setup_completed' => $user->employer ? $user->employer->setup_completed : false,
-                'session_id' => $request->session()->getId(),
-                'session_flag' => Session::has('employer_setup_completed')
-            ]);
-
             // Check if we just completed setup (special flag in session)
             if (Session::has('employer_setup_completed')) {
-                Log::info('Found employer_setup_completed flag in session, bypassing setup check', [
-                    'user_id' => $user->id
-                ]);
                 return $next($request);
             }
 
@@ -49,21 +35,18 @@ class EnsureUserIsEmployer
             }
 
             // If setup isn't completed and not on a setup page, redirect to setup
-            if (!$setupCompleted &&
-                !in_array($currentRoute, [
-                    'employer.setup',
-                    'employer.setup.step-one',
-                    'employer.setup.step-two',
-                    'employer.setup.step-three',
-                    'employer.setup.previous',
-                    'employer.setup.skip'
-                ])) {
-                Log::info('Redirecting to employer setup from middleware', [
-                    'user_id' => $user->id,
-                    'route' => $currentRoute,
-                    'setup_completed' => $setupCompleted
-                ]);
-                return redirect()->route('employer.setup');
+            $setupRoutes = [
+                'employer.setup.index',
+                'employer.setup.process',
+                'employer.setup.skip'
+            ];
+
+            // Check if current route is a setup route
+            $isSetupRoute = in_array($currentRoute, $setupRoutes) ||
+                            str_starts_with($currentRoute, 'employer.setup.');
+
+            if (!$setupCompleted && !$isSetupRoute) {
+                return redirect()->route('employer.setup.index');
             }
 
             return $next($request);

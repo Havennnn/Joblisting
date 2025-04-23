@@ -65,14 +65,14 @@ class VerifyOtpController extends Controller
             if ($pendingSetup === 'applicant') {
                 return redirect()->route('applicant.setup');
             } elseif ($pendingSetup === 'employer') {
-                return redirect()->route('employer.setup');
+                return redirect()->route('employer.setup.index');
             }
         }
 
         // If no pending setup but user is not verified, redirect to setup
         if (!$user->email_verified_at) {
             if ($user->isEmployer()) {
-                return redirect()->route('employer.setup');
+                return redirect()->route('employer.setup.index');
             }
             return redirect()->route('applicant.setup');
         }

@@ -45,7 +45,7 @@ class InviteController extends Controller
     {
         $validated = $request->validate([
             'email' => 'required|email|max:255',
-            'name' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255',
         ]);
 
         $company = Auth::user()->employer->company;
@@ -56,8 +56,23 @@ class InviteController extends Controller
 
         // Check if email is already associated with the company
         $existingUser = User::where('email', $validated['email'])->first();
-        if ($existingUser && $existingUser->employer && $existingUser->employer->company_id == $company->id) {
-            return back()->with('error', 'This person is already part of your company.');
+
+        // If the user exists, check their role and company association
+        if ($existingUser) {
+            // Check if user is not an employer
+            if (!$existingUser->isEmployer()) {
+                return back()->with('error', 'This email belongs to a user who is not registered as an employer.');
+            }
+
+            // Check if already in this company
+            if ($existingUser->employer && $existingUser->employer->company_id == $company->id) {
+                return back()->with('error', 'This person is already part of your company.');
+            }
+
+            // Use the existing user's name if not provided
+            if (empty($validated['name'])) {
+                $validated['name'] = $existingUser->name;
+            }
         }
 
         // Check for existing pending invitation
@@ -74,7 +89,7 @@ class InviteController extends Controller
         $invitation = new CompanyInvitation();
         $invitation->company_id = $company->id;
         $invitation->email = $validated['email'];
-        $invitation->name = $validated['name'];
+        $invitation->name = $validated['name'] ?? 'Invited User';
         $invitation->token = Str::random(64);
         $invitation->created_by = Auth::id();
         $invitation->status = 'pending';

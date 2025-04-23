@@ -124,7 +124,7 @@ class GoogleCallbackController extends Controller
                 Log::info('Redirecting to employer setup', [
                     'user_id' => $user->id
                 ]);
-                return redirect()->route('employer.setup');
+                return redirect()->route('employer.setup.index');
             } elseif ($userType === 'applicant' && !$user->applicantProfile?->setup_completed) {
                 // Set a flag in the session to bypass middleware check
                 session()->put('applicant_setup_completed', true);

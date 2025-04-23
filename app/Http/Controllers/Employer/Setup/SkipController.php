@@ -28,7 +28,7 @@ class SkipController extends Controller
         }
 
         // Clear any stored setup data
-        Session::forget('setup_data');
+        Session::forget(['setup_data', 'employer_setup_completed']);
 
         return redirect()->route('employer.dashboard')
             ->with('status', 'You can complete your profile later.');

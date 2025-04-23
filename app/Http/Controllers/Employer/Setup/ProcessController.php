@@ -50,7 +50,7 @@ class ProcessController extends Controller
         }
 
         // Clear session data
-        Session::forget('setup_data');
+        Session::forget(['setup_data', 'employer_setup_completed']);
 
         return redirect()->route('employer.dashboard')
             ->with('status', 'Profile setup completed successfully!');
