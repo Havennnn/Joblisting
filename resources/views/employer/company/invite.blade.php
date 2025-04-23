@@ -86,14 +86,6 @@
                                 <p class="mt-1 text-xs text-gray-500">Enter the email address of an employer you want to invite</p>
                             </div>
 
-                            <div>
-                                <label for="name" class="block text-sm font-medium text-gray-700">Name (Optional)</label>
-                                <input type="text" name="name" id="name" value="{{ old('name') }}"
-                                    class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                                    placeholder="John Doe">
-                                <p class="mt-1 text-xs text-gray-500">If left blank, we'll use their name if they're already registered</p>
-                            </div>
-
                             <div class="pt-4">
                                 <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                     Send Invitation
@@ -115,9 +107,6 @@
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Name
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Email
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -131,9 +120,6 @@
                                 <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach($pendingInvitations as $invitation)
                                         <tr>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm font-medium text-gray-900">{{ $invitation->name }}</div>
-                                            </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <div class="text-sm text-gray-500">{{ $invitation->email }}</div>
                                             </td>

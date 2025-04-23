@@ -57,7 +57,8 @@ class ProfileCompletionController extends Controller
                 'phone_number' => $employer ? $employer->phone_number : null,
                 'location' => $employer ? $employer->location : null,
                 'company_name' => $employer ? $employer->company_name : null,
-                'has_logo' => $employer && $employer->company_logo_path ? true : false
+                'has_logo' => $employer && $employer->company_logo_path ? true : false,
+                'company_id' => $employer ? $employer->company_id : null
             ]);
 
             // Calculate profile completion percentage
@@ -69,23 +70,25 @@ class ProfileCompletionController extends Controller
             // Determine the message to display
             $message = $this->getCompletionMessage($completionPercentage, $user);
 
-            // Determine the action link
-            $actionLink = $this->getActionLink($completionPercentage, $user);
+            // Determine the action link and text
+            $actionData = $this->getActionLinkAndText($completionPercentage, $user);
 
             // Log the final result
             \Illuminate\Support\Facades\Log::info('Profile Completion Result', [
                 'user_id' => $user->id,
                 'percentage' => $completionPercentage,
                 'color' => $progressColor,
-                'message' => $message
+                'message' => $message,
+                'action_link' => $actionData['link'],
+                'action_text' => $actionData['text']
             ]);
 
             return [
                 'percentage' => $completionPercentage,
                 'color' => $progressColor,
                 'message' => $message,
-                'action_link' => $actionLink,
-                'action_text' => 'Complete Your Profile'
+                'action_link' => $actionData['link'],
+                'action_text' => $actionData['text']
             ];
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('Error calculating profile completion', [
@@ -115,8 +118,10 @@ class ProfileCompletionController extends Controller
     {
         if ($percentage < 50) {
             return 'bg-red-500';
-        } elseif ($percentage < 100) {
+        } elseif ($percentage < 90) {
             return 'bg-yellow-500';
+        } elseif ($percentage == 90) {
+            return 'bg-blue-500'; // Special color for "almost complete" status
         } else {
             return 'bg-green-500';
         }
@@ -131,13 +136,67 @@ class ProfileCompletionController extends Controller
      */
     private function getCompletionMessage(int $percentage, $user): string
     {
-        if ($percentage < 50) {
-            return 'Your company profile is incomplete. Complete it to attract more applicants.';
-        } elseif ($percentage < 100) {
-            return 'Your company profile is partially complete. Add more details to attract qualified candidates.';
-        } else {
-            return 'Your company profile is complete! You\'re ready to post jobs.';
+        $employer = $user->employer;
+        $hasCompany = !empty($employer->company_id);
+
+        if ($hasCompany) {
+            if ($percentage == 90) {
+                return 'Your profile is ready to post jobs! Adding your phone number would make your profile 100% complete.';
+            } elseif ($percentage == 100) {
+                return 'Your company profile is complete! You\'re ready to post jobs.';
+            }
         }
+
+        if ($percentage < 30) {
+            return 'Your employer profile is incomplete. Please complete your basic information.';
+        } elseif ($percentage < 50) {
+            return 'Your profile needs more information before you can post jobs.';
+        } elseif ($percentage < 70) {
+            return 'Your profile is progressing. Add more details or create/join a company to post jobs.';
+        } else {
+            return 'Your profile is almost there. Create or join a company to post jobs.';
+        }
+    }
+
+    /**
+     * Get the appropriate action link and text based on completion percentage and user profile data.
+     *
+     * @param int $completionPercentage
+     * @param \Illuminate\Contracts\Auth\Authenticatable|\App\Models\Users\User $user
+     * @return array
+     */
+    private function getActionLinkAndText($completionPercentage, $user): array
+    {
+        $employer = $user->employer;
+        $hasCompany = !empty($employer->company_id);
+
+        if ($hasCompany) {
+            if ($completionPercentage == 90) {
+                return [
+                    'link' => route('employer.profile.index'),
+                    'text' => 'Add Phone Number'
+                ];
+            } elseif ($completionPercentage == 100) {
+                return [
+                    'link' => route('employer.jobs.create'),
+                    'text' => 'Post a Job'
+                ];
+            }
+        } else {
+            // If they don't have a company
+            if ($completionPercentage >= 70) {
+                return [
+                    'link' => route('employer.company.index'),
+                    'text' => 'Create or Join a Company'
+                ];
+            }
+        }
+
+        // Default action for incomplete profiles
+        return [
+            'link' => route('employer.profile.index'),
+            'text' => 'Complete Your Profile'
+        ];
     }
 
     /**
@@ -149,10 +208,7 @@ class ProfileCompletionController extends Controller
      */
     private function getActionLink($completionPercentage, $user)
     {
-        if ($completionPercentage < 100) {
-            return route('employer.profile.index');
-        }
-
-        return route('employer.profile.index');
+        $actionData = $this->getActionLinkAndText($completionPercentage, $user);
+        return $actionData['link'];
     }
 }

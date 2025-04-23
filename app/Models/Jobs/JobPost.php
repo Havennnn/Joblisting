@@ -34,6 +34,7 @@ class JobPost extends BaseModel
         'tags',
         'auto_delete_at',
         'employer_id',
+        'company_id',
         'application_count',
         'unread_application_count',
     ];
@@ -50,6 +51,14 @@ class JobPost extends BaseModel
     public function employer()
     {
         return $this->belongsTo(Employer::class);
+    }
+
+    /**
+     * Get the company associated with the job post.
+     */
+    public function company()
+    {
+        return $this->belongsTo(\App\Models\Companies\Company::class);
     }
 
     /**

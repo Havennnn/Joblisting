@@ -25,10 +25,21 @@ class StoreController extends Controller
      */
     public function __invoke(Request $request)
     {
-        // Check if employer profile is complete enough (at least 70%)
-        $completionPercentage = $this->profileCompletionService->calculateEmployerCompletion(Auth::user());
+        $user = Auth::user();
+        $employer = $user->employer;
 
-        if ($completionPercentage < 70) {
+        // Check if employer has a company
+        $hasCompany = !empty($employer->company_id);
+
+        // Check if employer profile is complete enough (at least 90%)
+        $completionPercentage = $this->profileCompletionService->calculateEmployerCompletion($user);
+
+        if ($completionPercentage < 90) {
+            if (!$hasCompany) {
+                return redirect()->route('employer.company.index')
+                    ->with('warning', 'You need to create or join a company before posting a job. Your profile is ' . $completionPercentage . '% complete.');
+            }
+
             return redirect()->route('employer.profile.edit')
                 ->with('warning', 'Please complete your employer profile before posting a job. Your profile is ' . $completionPercentage . '% complete.');
         }
@@ -51,7 +62,13 @@ class StoreController extends Controller
 
         // Set default values for nullable fields
         $validatedData['salary'] = $validatedData['salary'] ?? 0;
-        $validatedData['employer_id'] = Auth::user()->employer->id;
+        $validatedData['employer_id'] = $employer->id;
+
+        // Use company_id directly from the employer model
+        if ($hasCompany) {
+            $validatedData['company_id'] = $employer->company_id;
+        }
+
         $validatedData['auto_delete_at'] = now()->addDays(7);
 
         // Create the job post

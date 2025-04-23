@@ -104,57 +104,77 @@ class ProfileCompletionService
             return 0;
         }
 
-        // Check if all essential fields are filled
+        // Add more detailed logging
+        Log::info('Employer Data for Profile Completion', [
+            'user_id' => $user->id,
+            'employer_id' => $employer->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'company_id' => $employer->company_id,
+            'company_name' => $employer->company_name ?? null,
+            'industry' => $employer->industry ?? null,
+            'phone_number' => $employer->phone_number ?? null,
+            'location' => $employer->location ?? null,
+        ]);
+
+        // Check if employer has a company
+        $hasCompany = !empty($employer->company_id);
+
+        // If employer has a company, they automatically get at least 60% completion
+        if ($hasCompany) {
+            Log::info('Employer has company association', [
+                'user_id' => $user->id,
+                'employer_id' => $employer->id,
+                'company_id' => $employer->company_id
+            ]);
+
+            // If they have a company and phone number, they're at 100%
+            if (!empty($employer->phone_number)) {
+                return 100;
+            }
+
+            // If they have a company but no phone number, they're at 90%
+            return 90;
+        }
+
+        // Without a company, calculate normally based on profile fields
         $essentialFields = [
             'name' => $user->name,
             'email' => $user->email,
             'company_name' => $employer->company_name ?? null,
-            'company_description' => $employer->company_description ?? null,
             'industry' => $employer->industry ?? null,
             'phone_number' => $employer->phone_number ?? null,
             'location' => $employer->location ?? null,
         ];
 
         $filledEssentials = 0;
+        $totalEssentials = count($essentialFields);
+        $missingFields = [];
+
         foreach ($essentialFields as $field => $value) {
             if (!empty($value)) {
                 $filledEssentials++;
+            } else {
+                $missingFields[] = $field;
             }
         }
 
-        // If all essential fields are filled, return 100%
-        if ($filledEssentials >= count($essentialFields) - 1) {
-            return 100;
+        Log::info('Employer profile completion analysis', [
+            'user_id' => $user->id,
+            'filled_essentials' => $filledEssentials,
+            'total_essentials' => $totalEssentials,
+            'missing_fields' => $missingFields
+        ]);
+
+        // Calculate percentage based on filled fields
+        $completionPercentage = round(($filledEssentials / $totalEssentials) * 100);
+
+        // If they have a basic profile (name and email) but nothing else, cap at 30%
+        if ($filledEssentials == 2 && !empty($user->name) && !empty($user->email)) {
+            $completionPercentage = max(30, $completionPercentage);
         }
 
-        // Required fields for basic profile
-        $requiredFields = [
-            'name' => $user->name,
-            'email' => $user->email,
-        ];
-
-        // Optional fields that contribute to profile completion
-        $optionalFields = [
-            'company_name',
-            'company_description',
-            'website',
-            'industry',
-            'phone_number',
-            'location',
-        ];
-
-        // Optional file fields
-        $optionalFileFields = [
-            'company_logo_path',
-        ];
-
-        return $this->calculateCompletion(
-            $requiredFields,
-            $optionalFields,
-            $optionalFileFields,
-            $employer,
-            $employer->setup_completed
-        );
+        return $completionPercentage;
     }
 
     /**
