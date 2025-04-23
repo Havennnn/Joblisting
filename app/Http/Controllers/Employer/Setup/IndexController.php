@@ -4,24 +4,35 @@ namespace App\Http\Controllers\Employer\Setup;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class IndexController extends Controller
 {
     /**
-     * Show the setup wizard based on current step
+     * Show the setup wizard
      *
-     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Contracts\View\View
      */
-    public function __invoke(Request $request)
+    public function __invoke(): View
     {
         $user = Auth::user();
-        $step = Session::get('setup_step', 1);
-        $data = Session::get('setup_data', []);
+        $employer = $user->employer;
 
-        return view('employer.setup', compact('user', 'step', 'data'));
+        $data = [];
+        if (Session::has('setup_data')) {
+            $data = Session::get('setup_data');
+        } else if ($employer) {
+            $data = [
+                'full_name' => $user->name,
+                'email' => $user->email,
+                'phone_number' => $employer->phone_number,
+            ];
+        }
+
+        return view('employer.setup', [
+            'user' => $user,
+            'data' => $data
+        ]);
     }
 }

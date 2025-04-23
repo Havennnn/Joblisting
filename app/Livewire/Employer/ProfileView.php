@@ -4,7 +4,6 @@ namespace App\Livewire\Employer;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class ProfileView extends Component
 {

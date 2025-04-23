@@ -26,10 +26,7 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
     // Setup wizard routes
     Route::controller(SetupController::class)->prefix('setup')->name('setup')->group(function () {
         Route::get('/', 'index');
-        Route::post('/step-one', 'processStepOne')->name('.step-one');
-        Route::post('/step-two', 'processStepTwo')->name('.step-two');
-        Route::post('/step-three', 'processStepThree')->name('.step-three');
-        Route::get('/previous', 'previous')->name('.previous');
+        Route::post('/', 'processSetup');
         Route::get('/skip', 'skip')->name('.skip');
     });
 
