@@ -1,5 +1,5 @@
 @if (session('error'))
-<div id="flash-message" class="fixed top-4 right-4 z-50 bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-md shadow-lg transition-all duration-300 ease-in-out transform" role="alert">
+<div id="flash-message" class="fixed top-4 right-4 bg-white z-100 border-l-4 border-red-500 text-red-700 p-4 shadow-lg transition-all duration-300 ease-in-out transform" role="alert">
     <div class="flex items-center">
         <div class="py-1">
             <svg class="h-6 w-6 text-red-500 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -10,7 +10,7 @@
             <p class="font-semibold text-red-700">Error</p>
             <p class="text-sm">{{ session('error') }}</p>
         </div>
-        <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-red-50 text-red-500 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-red-100 inline-flex h-8 w-8 transition-colors" onclick="closeFlashMessage()">
+        <button type="button" class="ml-auto -mx-1.5 -my-1.5 text-red-500 focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-red-100 inline-flex h-8 w-8 transition-colors" onclick="closeFlashMessage()">
             <span class="sr-only">Close</span>
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
@@ -19,7 +19,7 @@
     </div>
 </div>
 @elseif (session('success'))
-<div id="flash-message" class="fixed top-4 right-4 z-50 bg-blue-50 border-l-4 border-[#2563EB] text-blue-700 p-4 rounded-md shadow-lg transition-all duration-300 ease-in-out transform" role="alert">
+<div id="flash-message" class="fixed top-4 right-4 bg-white z-100 border-l-4 border-[#2563EB] text-blue-700 p-4 shadow-lg transition-all duration-300 ease-in-out transform" role="alert">
     <div class="flex items-center">
         <div class="py-1">
             <svg class="h-6 w-6 text-[#2563EB] mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -30,7 +30,7 @@
             <p class="font-semibold text-blue-700">Success</p>
             <p class="text-sm">{{ session('success') }}</p>
         </div>
-        <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-blue-50 text-blue-500 rounded-lg focus:ring-2 focus:ring-blue-400 p-1.5 hover:bg-blue-100 inline-flex h-8 w-8 transition-colors" onclick="closeFlashMessage()">
+        <button type="button" class="ml-auto -mx-1.5 -my-1.5 text-blue-500 focus:ring-2 focus:ring-blue-400 p-1.5 hover:bg-blue-100 inline-flex h-8 w-8 transition-colors" onclick="closeFlashMessage()">
             <span class="sr-only">Close</span>
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
@@ -39,7 +39,7 @@
     </div>
 </div>
 @elseif (session('warning'))
-<div id="flash-message" class="fixed top-4 right-4 z-50 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded-md shadow-lg transition-all duration-300 ease-in-out transform" role="alert">
+<div id="flash-message" class="fixed top-4 right-4 bg-white z-100 border-l-4 border-yellow-500 text-nextjob-black p-4 shadow-lg transition-all duration-300 ease-in-out transform" role="alert">
     <div class="flex items-center">
         <div class="py-1">
             <svg class="h-6 w-6 text-yellow-500 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -50,7 +50,7 @@
             <p class="font-semibold text-yellow-700">Warning</p>
             <p class="text-sm">{{ session('warning') }}</p>
         </div>
-        <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-yellow-50 text-yellow-500 rounded-lg focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-100 inline-flex h-8 w-8 transition-colors" onclick="closeFlashMessage()">
+        <button type="button" class="ml-auto -mx-1.5 -my-1.5 text-yellow-500 focus:ring-2 focus:ring-yellow-400 p-1.5 hover:bg-yellow-100 inline-flex h-8 w-8 transition-colors" onclick="closeFlashMessage()">
             <span class="sr-only">Close</span>
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
@@ -59,7 +59,7 @@
     </div>
 </div>
 @elseif (session('info'))
-<div id="flash-message" class="fixed top-4 right-4 z-50 bg-indigo-50 border-l-4 border-indigo-500 text-indigo-700 p-4 rounded-md shadow-lg transition-all duration-300 ease-in-out transform" role="alert">
+<div id="flash-message" class="fixed top-4 right-4 bg-white z-100 border-l-4 border-indigo-500 text-indigo-700 p-4 shadow-lg transition-all duration-300 ease-in-out transform" role="alert">
     <div class="flex items-center">
         <div class="py-1">
             <svg class="h-6 w-6 text-indigo-500 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -70,7 +70,7 @@
             <p class="font-semibold text-indigo-700">Information</p>
             <p class="text-sm">{{ session('info') }}</p>
         </div>
-        <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-indigo-50 text-indigo-500 rounded-lg focus:ring-2 focus:ring-indigo-400 p-1.5 hover:bg-indigo-100 inline-flex h-8 w-8 transition-colors" onclick="closeFlashMessage()">
+        <button type="button" class="ml-auto -mx-1.5 -my-1.5 text-indigo-500 focus:ring-2 focus:ring-indigo-400 p-1.5 hover:bg-indigo-100 inline-flex h-8 w-8 transition-colors" onclick="closeFlashMessage()">
             <span class="sr-only">Close</span>
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
@@ -89,7 +89,6 @@
     function closeFlashMessage() {
         const flashMessage = document.getElementById('flash-message');
         if (flashMessage) {
-            flashMessage.style.opacity = '0';
             flashMessage.style.transform = 'translateY(-10px)';
             setTimeout(function() {
                 flashMessage.style.display = 'none';
