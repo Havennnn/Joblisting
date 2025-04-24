@@ -18,15 +18,12 @@ class Company extends BaseModel
         'industry',
         'description',
         'website',
-        'founding_year',
         'logo_path',
         'location',
-        'size',
         'is_verified',
     ];
 
     protected $casts = [
-        'founding_year' => 'integer',
         'is_verified' => 'boolean',
     ];
 

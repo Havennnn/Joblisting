@@ -50,6 +50,10 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
         Route::get('/create', [CompanyController::class, 'create'])->name('create');
         Route::post('/create', [CompanyController::class, 'store'])->name('store');
 
+        // Company settings
+        Route::get('/edit', [CompanyController::class, 'edit'])->name('edit');
+        Route::put('/update', [CompanyController::class, 'update'])->name('update');
+
         // Company member management
         Route::delete('/members/{id}', \App\Http\Controllers\Employer\Company\Member\KickMemberController::class)->name('kick-member');
 

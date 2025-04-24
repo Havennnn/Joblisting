@@ -126,9 +126,7 @@ class CompanyController extends Controller
             'industry' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
             'website' => 'nullable|url|max:255',
-            'founding_year' => 'nullable|integer|min:1800|max:' . date('Y'),
             'location' => 'required|string|max:255',
-            'size' => 'required|string|max:255',
             'logo' => 'nullable|image|max:2048',
         ]);
 
@@ -137,9 +135,7 @@ class CompanyController extends Controller
         $company->industry = $validated['industry'];
         $company->description = $validated['description'];
         $company->website = $validated['website'] ?? null;
-        $company->founding_year = $validated['founding_year'] ?? null;
         $company->location = $validated['location'];
-        $company->size = $validated['size'];
         $company->is_verified = false;
 
         if ($request->hasFile('logo')) {
@@ -469,5 +465,61 @@ class CompanyController extends Controller
         $invitation->save();
 
         return back()->with('success', 'Invitation cancelled successfully.');
+    }
+
+    /**
+     * Display the company edit form
+     *
+     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     */
+    public function edit()
+    {
+        if (!$this->company || !$this->isOwner) {
+            return redirect()->route('employer.company.index')
+                ->with('error', 'You must be the owner of the company to edit its details.');
+        }
+
+        return view('employer.company.edit', [
+            'company' => $this->company
+        ]);
+    }
+
+    /**
+     * Update the company details
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(Request $request)
+    {
+        if (!$this->company || !$this->isOwner) {
+            return redirect()->route('employer.company.index')
+                ->with('error', 'You must be the owner of the company to update its details.');
+        }
+
+        $validated = $request->validate([
+            'description' => 'required|string|max:1000',
+            'website' => 'nullable|url|max:255',
+            'location' => 'required|string|max:255',
+            'logo' => 'nullable|image|max:2048',
+        ]);
+
+        $this->company->description = $validated['description'];
+        $this->company->website = $validated['website'] ?? null;
+        $this->company->location = $validated['location'];
+
+        if ($request->hasFile('logo')) {
+            // Delete old logo if exists
+            if ($this->company->logo_path) {
+                Storage::disk('public')->delete($this->company->logo_path);
+            }
+            $path = $request->file('logo')->store('company-logos', 'public');
+            $this->company->logo_path = $path;
+        }
+
+        $this->company->save();
+
+        return redirect()->route('employer.company.index')
+            ->with('success', 'Company details updated successfully.');
     }
 }
