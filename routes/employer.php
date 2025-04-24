@@ -47,8 +47,16 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
         Route::get('/', [CompanyController::class, 'index'])->name('index');
 
         // Company creation
-        Route::get('/create', [CreateController::class, 'show'])->name('create');
-        Route::post('/create', [CreateController::class, '__invoke'])->name('store');
+        Route::get('/create', [CompanyController::class, 'create'])->name('create');
+        Route::post('/create', [CompanyController::class, 'store'])->name('store');
+
+        // Company member management
+        Route::delete('/members/{id}', [CompanyController::class, 'kickMember'])->name('kick-member');
+
+        // Company job post management
+        Route::get('/job-posts/{id}', [CompanyController::class, 'viewJobPost'])->name('job-post.view');
+        Route::get('/job-posts/{id}/edit', [CompanyController::class, 'editJobPost'])->name('job-post.edit');
+        Route::delete('/job-posts/{id}', [CompanyController::class, 'deleteJobPost'])->name('job-post.delete');
 
         // Company invites - individual routes to avoid parameter issues
         Route::get('/invite', [InviteController::class, 'show'])->name('invite');

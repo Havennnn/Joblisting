@@ -15,36 +15,6 @@
                 <p class="mt-1 text-gray-600">Manage your company or create a new one</p>
             </div>
 
-            @if(session('success'))
-            <div class="mb-4 bg-green-50 border-l-4 border-green-400 p-4">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm text-green-700">{{ session('success') }}</p>
-                    </div>
-                </div>
-            </div>
-            @endif
-
-            @if(session('error'))
-            <div class="mb-4 bg-red-50 border-l-4 border-red-400 p-4">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <p class="text-sm text-red-700">{{ session('error') }}</p>
-                    </div>
-                </div>
-            </div>
-            @endif
-
             <div class="bg-white rounded-lg shadow-sm overflow-hidden">
                 @if($company)
                 <!-- Company Information -->
@@ -129,7 +99,7 @@
                 <!-- Company Members Section -->
                 <div class="p-6 border-b border-gray-100">
                     <h2 class="text-lg font-medium text-gray-800 mb-4">Company Members</h2>
-                    @if($company->employers->count() > 1)
+                    @if($company->employers->count() > 0)
                         <div class="space-y-3">
                             @foreach($company->employers as $member)
                                 <div class="flex items-center justify-between p-3 border rounded-md">
@@ -137,6 +107,15 @@
                                         <h4 class="font-medium">{{ $member->user->name }}</h4>
                                         <p class="text-sm text-gray-600">{{ $member->user->email }}</p>
                                     </div>
+                                    @if($isOwner && $member->id !== Auth::user()->employer->id)
+                                        <form action="{{ route('employer.company.kick-member', $member->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to remove this member from your company?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="px-3 py-1 bg-red-100 text-red-700 text-sm rounded-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                                                Remove
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
                             @endforeach
                         </div>
@@ -145,60 +124,60 @@
                     @endif
                 </div>
 
-                <!-- Pending Invitations Section -->
+                <!-- Company Job Posts Section -->
                 <div class="p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-lg font-medium text-gray-800">Pending Invitations</h2>
-                        @if($pendingInvitations->count() > 0)
-                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">{{ $pendingInvitations->count() }}</span>
-                        @endif
-                    </div>
+                    <h2 class="text-lg font-medium text-gray-800 mb-4">Company Job Posts</h2>
 
-                    @if($pendingInvitations->count() > 0)
+                    @if($companyJobs && $companyJobs->count() > 0)
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Name
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Email
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Date Sent
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Actions
-                                        </th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Posted By</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Posted Date</th>
+                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    @foreach($pendingInvitations as $invitation)
-                                        <tr>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm font-medium text-gray-900">{{ $invitation->name }}</div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm text-gray-500">{{ $invitation->email }}</div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <div class="text-sm text-gray-500">{{ $invitation->created_at->format('M d, Y') }}</div>
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                                <form action="{{ route('employer.company.invite.cancel', $invitation->id) }}" method="POST" class="inline">
+                                    @foreach($companyJobs as $job)
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm font-medium text-gray-900">{{ $job->title }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-500">{{ $job->employer->user->name }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="text-sm text-gray-500">{{ $job->created_at->format('M d, Y') }}</div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <a href="{{ route('employer.company.job-post.view', $job->id) }}" class="text-indigo-600 hover:text-indigo-900 mr-3">View</a>
+
+                                            @if($isOwner || Auth::user()->employer->id === $job->employer_id)
+                                                <a href="{{ route('employer.company.job-post.edit', $job->id) }}" class="text-blue-600 hover:text-blue-900 mr-3">Edit</a>
+
+                                                <form method="POST" action="{{ route('employer.company.job-post.delete', $job->id) }}" class="inline">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="text-red-600 hover:text-red-900">Cancel</button>
+                                                    <button type="submit" onclick="return confirm('Are you sure you want to delete this job post?')" class="text-red-600 hover:text-red-900">
+                                                        Delete
+                                                    </button>
                                                 </form>
-                                            </td>
-                                        </tr>
+                                            @endif
+                                        </td>
+                                    </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
+
+                        <!-- Pagination -->
+                        <div class="mt-4">
+                            {{ $companyJobs->links() }}
+                        </div>
                     @else
-                        <p class="text-gray-600">No pending invitations.</p>
+                        <p class="text-gray-600">No job posts have been created by members of this company yet.</p>
                     @endif
                 </div>
                 @endif

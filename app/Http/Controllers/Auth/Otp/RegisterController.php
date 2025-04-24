@@ -30,8 +30,10 @@ class RegisterController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,NULL,id,email_verified_at,NULL',
+            'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|confirmed|min:8',
+        ], [
+            'email.unique' => 'This email address is already taken.',
         ]);
 
         $user = User::where('email', $request->email)->first();
