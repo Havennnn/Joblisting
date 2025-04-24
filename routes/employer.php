@@ -62,6 +62,7 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
         Route::get('/invite', \App\Http\Controllers\Employer\Company\Invite\ShowInviteFormController::class)->name('invite');
         Route::post('/invite', \App\Http\Controllers\Employer\Company\Invite\SendInviteController::class)->name('invite.send');
         Route::get('/invite/{token}', \App\Http\Controllers\Employer\Company\Invite\AcceptInviteController::class)->name('invite.accept');
+        Route::get('/invite/{token}/decline', \App\Http\Controllers\Employer\Company\Invite\DeclineInviteController::class)->name('invite.decline');
         Route::delete('/invite/{id}', \App\Http\Controllers\Employer\Company\Invite\CancelInviteController::class)->name('invite.cancel');
     });
 

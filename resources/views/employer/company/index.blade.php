@@ -83,10 +83,16 @@
                                     <p class="text-sm text-gray-600 mt-1">Invited by: {{ $invitation->creator->name }}</p>
                                     <p class="text-sm text-gray-500 mt-1">Sent on: {{ $invitation->created_at->format('M d, Y') }}</p>
                                 </div>
-                                <a href="{{ route('employer.company.invite.accept', $invitation->token) }}"
-                                   class="px-4 py-2 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                    Accept Invitation
-                                </a>
+                                <div class="flex space-x-2">
+                                    <a href="{{ route('employer.company.invite.accept', $invitation->token) }}"
+                                       class="px-4 py-2 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                        Accept
+                                    </a>
+                                    <a href="{{ route('employer.company.invite.decline', $invitation->token) }}"
+                                       class="px-4 py-2 bg-gray-200 text-gray-700 text-sm rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                                        Decline
+                                    </a>
+                                </div>
                             </div>
                         </div>
                         @endforeach

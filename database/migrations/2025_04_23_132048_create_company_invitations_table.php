@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('name')->nullable();
             $table->string('token')->unique();
-            $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
+            $table->enum('status', ['pending', 'accepted', 'rejected', 'declined', 'cancelled'])->default('pending');
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('accepted_by')->nullable()->constrained('users');
             $table->timestamp('accepted_at')->nullable();
