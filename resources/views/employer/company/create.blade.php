@@ -93,7 +93,7 @@
                                     </div>
                                     <input type="file" name="logo" id="logo" accept="image/*"
                                         class="ml-4 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                    <p class="ml-2 text-xs text-gray-500">Max size: 2MB</p>
+                                    <p class="ml-2 text-xs text-gray-500">Max size: 5MB</p>
                                 </div>
                             </div>
 

@@ -17,8 +17,6 @@ export default {
                 montserrat: ['Montserrat', ...defaultTheme.fontFamily.sans],
             },
             colors: {
-                'neksjob-blue': '#3674B5',
-                'neksjob-pink': '#D91656',
                 'nextjob-black': '#1A1A1A',
                 'nextjob-white': '#FFFFFF',
                 'nextjob-cream': '#F4F4F4',
@@ -29,7 +27,8 @@ export default {
                 'nextjob-green': '#32CD32',
                 'nextjob-orange': '#FFA500',
                 'nextjob-purple': '#800080',
-                'nextjob-yellow': '#FFC107'
+                'nextjob-yellow': '#FFC107',
+                'nextjob-blue-light': '#F0F7FF',
             },
             maxWidth: {
                 '8xl': '90rem', // 1440px
