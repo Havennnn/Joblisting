@@ -51,18 +51,18 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
         Route::post('/create', [CompanyController::class, 'store'])->name('store');
 
         // Company member management
-        Route::delete('/members/{id}', [CompanyController::class, 'kickMember'])->name('kick-member');
+        Route::delete('/members/{id}', \App\Http\Controllers\Employer\Company\Member\KickMemberController::class)->name('kick-member');
 
         // Company job post management
-        Route::get('/job-posts/{id}', [CompanyController::class, 'viewJobPost'])->name('job-post.view');
-        Route::get('/job-posts/{id}/edit', [CompanyController::class, 'editJobPost'])->name('job-post.edit');
-        Route::delete('/job-posts/{id}', [CompanyController::class, 'deleteJobPost'])->name('job-post.delete');
+        Route::get('/job-posts/{id}', \App\Http\Controllers\Employer\Company\JobPost\ViewJobPostController::class)->name('job-post.view');
+        Route::get('/job-posts/{id}/edit', \App\Http\Controllers\Employer\Company\JobPost\EditJobPostController::class)->name('job-post.edit');
+        Route::delete('/job-posts/{id}', \App\Http\Controllers\Employer\Company\JobPost\DeleteJobPostController::class)->name('job-post.delete');
 
         // Company invites - individual routes to avoid parameter issues
-        Route::get('/invite', [InviteController::class, 'show'])->name('invite');
-        Route::post('/invite', [InviteController::class, 'send'])->name('invite.send');
-        Route::get('/invite/{token}', [InviteController::class, 'accept'])->name('invite.accept');
-        Route::delete('/invite/{id}', [InviteController::class, 'cancel'])->name('invite.cancel');
+        Route::get('/invite', \App\Http\Controllers\Employer\Company\Invite\ShowInviteFormController::class)->name('invite');
+        Route::post('/invite', \App\Http\Controllers\Employer\Company\Invite\SendInviteController::class)->name('invite.send');
+        Route::get('/invite/{token}', \App\Http\Controllers\Employer\Company\Invite\AcceptInviteController::class)->name('invite.accept');
+        Route::delete('/invite/{id}', \App\Http\Controllers\Employer\Company\Invite\CancelInviteController::class)->name('invite.cancel');
     });
 
     // Applicants routes
