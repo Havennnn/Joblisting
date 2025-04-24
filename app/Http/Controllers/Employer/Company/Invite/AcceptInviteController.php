@@ -6,13 +6,27 @@ use App\Http\Controllers\Employer\Company\CompanyController;
 use App\Models\Companies\Company;
 use App\Models\Companies\CompanyInvitation;
 use App\Models\Users\User;
-use App\Notifications\InvitationAccepted;
+use App\Services\CompanyInvitationService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
 class AcceptInviteController extends CompanyController
 {
+    /**
+     * @var CompanyInvitationService
+     */
+    protected $invitationService;
+
+    /**
+     * Constructor with dependency injection
+     */
+    public function __construct(CompanyInvitationService $invitationService)
+    {
+        parent::__construct();
+        $this->invitationService = $invitationService;
+    }
+
     /**
      * Accept a company invitation
      *
@@ -50,22 +64,12 @@ class AcceptInviteController extends CompanyController
                 ->with('error', "You are already part of {$companyName}. You must leave your current company before you can join {$invitingCompanyName}.");
         }
 
+        // Update the employer's company ID
         $this->employer->company_id = $invitation->company_id;
         $this->employer->save();
 
-        $invitation->status = 'accepted';
-        $invitation->accepted_by = $this->user->id;
-        $invitation->accepted_at = now();
-        $invitation->save();
-
-        $creator = User::find($invitation->created_by);
-        if ($creator) {
-            try {
-                $creator->notify(new InvitationAccepted($invitation, $this->getTypedUser()));
-            } catch (\Exception $e) {
-                // Continue with acceptance even if notification fails
-            }
-        }
+        // Process the invitation acceptance
+        $this->invitationService->acceptInvitation($invitation, $this->getTypedUser());
 
         return redirect()->route('employer.company.index')
             ->with('success', 'You have successfully joined ' . $invitation->company->name . '.');

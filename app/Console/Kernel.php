@@ -16,6 +16,9 @@ class Kernel extends ConsoleKernel
 
         // Run the job to delete expired job posts every day at midnight
         $schedule->command('app:delete-expired-job-posts')->daily();
+
+        // Expire pending invitations older than 7 days
+        $schedule->command('invitations:expire')->daily();
     }
 
     /**

@@ -6,14 +6,26 @@ use App\Http\Controllers\Employer\Company\CompanyController;
 use App\Models\Companies\Company;
 use App\Models\Companies\CompanyInvitation;
 use App\Models\Users\User;
-use App\Notifications\CompanyInvitationNotification;
+use App\Services\CompanyInvitationService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Str;
 
 class SendInviteController extends CompanyController
 {
+    /**
+     * @var CompanyInvitationService
+     */
+    protected $invitationService;
+
+    /**
+     * Constructor with dependency injection
+     */
+    public function __construct(CompanyInvitationService $invitationService)
+    {
+        parent::__construct();
+        $this->invitationService = $invitationService;
+    }
+
     /**
      * Send an invitation to join the company
      *
@@ -60,37 +72,17 @@ class SendInviteController extends CompanyController
             return back()->with('error', 'An invitation has already been sent to this email.');
         }
 
-        $invitation = new CompanyInvitation();
-        $invitation->company_id = $this->company->id;
-        $invitation->email = $validated['email'];
-        $invitation->name = $existingUser ? $existingUser->name : null;
-        $invitation->token = Str::random(64);
-        $invitation->created_by = $this->user->id;
-        $invitation->status = 'pending';
-        $invitation->save();
-
         try {
-            if ($existingUser) {
-                $existingUser->notify(new CompanyInvitationNotification($invitation));
-            } else {
-                Notification::route('mail', [
-                    $validated['email'] => $existingUser ? $existingUser->name : 'Invited Employer',
-                ])->notify(new CompanyInvitationNotification($invitation));
-            }
+            // Create the invitation
+            $invitation = $this->invitationService->createInvitation(
+                $this->company->id,
+                $validated['email'],
+                $this->getTypedUser(),
+                $existingUser ? $existingUser->name : null
+            );
 
-            if ($existingUser) {
-                $existingUser->notifications()->create([
-                    'type' => 'App\Notifications\CompanyInvitationNotification',
-                    'data' => [
-                        'type' => 'company_invitation',
-                        'invitation_id' => $invitation->id,
-                        'company_id' => $this->company->id,
-                        'company_name' => $this->company->name,
-                        'sender_name' => $this->user->name,
-                        'token' => $invitation->token,
-                    ],
-                ]);
-            }
+            // Send notification
+            $this->invitationService->sendInvitationNotification($invitation, $existingUser);
 
             return back()->with('success', 'Invitation sent successfully to ' . $validated['email']);
         } catch (\Exception $e) {

@@ -5,7 +5,7 @@ use App\Http\Controllers\Employer\JobListingController;
 use App\Http\Controllers\Employer\DashboardController;
 use App\Http\Controllers\Employer\ProfileController;
 use App\Http\Controllers\Employer\SetupController;
-use App\Http\Controllers\Employer\NotificationController;
+use App\Http\Controllers\Employer\Notification\CentralNotificationController;
 use App\Http\Controllers\Employer\ApplicationController;
 use App\Http\Controllers\Employer\Company\CompanyController;
 use App\Http\Controllers\Employer\Company\CreateController;
@@ -97,7 +97,7 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
     });
 
     //Notification Routes
-    Route::controller(NotificationController::class)->prefix('notifications')->name('notifications.')->group(function () {
+    Route::controller(CentralNotificationController::class)->prefix('notifications')->name('notifications.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::post('/{id}/read', 'markAsRead')->name('read');
         Route::post('/read-all', 'markAllAsRead')->name('read-all');

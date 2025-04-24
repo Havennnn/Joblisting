@@ -41,30 +41,53 @@
                     @endif
                     <div class="ml-2 w-full">
                         <div class="flex justify-between items-start">
-                            <p class="text-sm font-medium text-gray-900">
-                                @if ($type === 'applicant' && $notification->type === 'App\\Notifications\\ApplicationStatusChanged')
-                                    {{ ucfirst($notification->data['status']) }}
-                                @elseif ($type === 'employer' && $notification->type === 'App\\Notifications\\NewJobApplication')
-                                    New Application
+                            <div class="flex items-center">
+                                @if(str_contains($notification->type, 'Application'))
+                                    <svg class="h-5 w-5 text-indigo-500 mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" />
+                                        <path fill-rule="evenodd" d="M4 2a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V8.414a2 2 0 00-.293-1.037l-4.586-4.586A2 2 0 0010.586 2H4zm3 5a1 1 0 000 2h6a1 1 0 100-2H7zm0 4a1 1 0 100 2h4a1 1 0 100-2H7z" clip-rule="evenodd" />
+                                    </svg>
+                                @elseif(str_contains($notification->type, 'Invitation'))
+                                    <svg class="h-5 w-5 text-green-500 mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+                                    </svg>
                                 @else
-                                    New notification
+                                    <svg class="h-5 w-5 text-blue-500 mr-1.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
+                                    </svg>
                                 @endif
-                            </p>
+                                <p class="text-sm font-medium text-gray-900">
+                                    @if($type === 'applicant' && $notification->type === 'App\\Notifications\\ApplicationStatusChanged')
+                                        Application Status Update
+                                    @elseif($type === 'employer' && $notification->type === 'App\\Notifications\\NewJobApplication')
+                                        New Application
+                                    @elseif($type === 'employer' && ($notification->type === 'App\\Notifications\\Company\\InvitationSent' || $notification->type === 'App\\Notifications\\CompanyInvitationNotification'))
+                                        Company Invitation
+                                    @elseif($type === 'employer' && ($notification->type === 'App\\Notifications\\Company\\InvitationAccepted' || $notification->type === 'App\\Notifications\\InvitationAccepted'))
+                                        Invitation Accepted
+                                    @else
+                                        New Notification
+                                    @endif
+                                </p>
+                            </div>
                             <span
                                 class="text-xs text-gray-500">{{ $notification->created_at->diffForHumans() }}</span>
                         </div>
                         <p class="text-xs text-gray-600 mt-1">
-                            @if ($type === 'applicant' && $notification->type === 'App\\Notifications\\ApplicationStatusChanged')
-                                Application for {{ $notification->data['job_title'] }}
-                            @elseif ($type === 'employer' && $notification->type === 'App\\Notifications\\NewJobApplication')
-                                {{ $notification->data['applicant_name'] }} applied for
-                                {{ $notification->data['job_title'] }}
+                            @if($type === 'applicant' && $notification->type === 'App\\Notifications\\ApplicationStatusChanged')
+                                Your application for the position of "<strong>{{ $notification->data['job_title'] }}</strong>" at {{ $notification->data['employer_name'] }} has been updated to <strong>{{ ucfirst($notification->data['status']) }}</strong>.
+                            @elseif($type === 'employer' && $notification->type === 'App\\Notifications\\NewJobApplication')
+                                <strong>{{ $notification->data['applicant_name'] }}</strong> has applied for the position of "<strong>{{ $notification->data['job_title'] }}</strong>".
+                            @elseif($type === 'employer' && ($notification->type === 'App\\Notifications\\Company\\InvitationSent' || $notification->type === 'App\\Notifications\\CompanyInvitationNotification'))
+                                You have been invited to join <strong>{{ $notification->data['company_name'] }}</strong> by {{ $notification->data['sender_name'] }}.
+                            @elseif($type === 'employer' && ($notification->type === 'App\\Notifications\\Company\\InvitationAccepted' || $notification->type === 'App\\Notifications\\InvitationAccepted'))
+                                <strong>{{ $notification->data['acceptor_name'] }}</strong> has accepted your invitation to join <strong>{{ $notification->data['company_name'] }}</strong>.
                             @else
                                 You have a new notification
                             @endif
                         </p>
                         <div class="mt-1 flex justify-between items-center">
-                            @if ($type === 'applicant')
+                            @if($type === 'applicant')
                                 <a href="{{ route('applicant.applications') }}"
                                     class="text-xs text-blue-600 hover:text-blue-800">
                                     View details
@@ -78,7 +101,7 @@
                                 <span></span>
                             @endif
 
-                            @if (!$notification->read_at)
+                            @if(!$notification->read_at)
                                 <form
                                     action="{{ route($type.'.notifications.read', $notification->id) }}"
                                     method="POST" class="inline">
