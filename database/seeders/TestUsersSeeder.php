@@ -42,11 +42,10 @@ class TestUsersSeeder extends Seeder
 
         // Create test company
         $company = Company::create([
-            'name' => 'Test Company',
+            'name' => 'Nextjob',
             'industry' => 'Information Technology',
             'description' => 'A test company for development purposes',
             'location' => 'Manila, Philippines',
-            'size' => 'Small (1-50 employees)',
             'is_verified' => true,
         ]);
 
