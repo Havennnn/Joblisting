@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Users\User;
+use App\Models\Users\Employer;
+use App\Models\Companies\Company;
 use Illuminate\Support\Facades\Hash;
 
 class TestUsersSeeder extends Seeder
@@ -25,6 +27,7 @@ class TestUsersSeeder extends Seeder
         // Create applicant profile
         $applicant->applicantProfile()->create([
             'full_name' => 'Applicant Test',
+            'phone_number' => '1234567890',
             'setup_completed' => false,
         ]);
 
@@ -37,11 +40,21 @@ class TestUsersSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        // Create employer profile
+        // Create test company
+        $company = Company::create([
+            'name' => 'Test Company',
+            'industry' => 'Information Technology',
+            'description' => 'A test company for development purposes',
+            'location' => 'Manila, Philippines',
+            'size' => 'Small (1-50 employees)',
+            'is_verified' => true,
+        ]);
+
+        // Create employer profile with company association
         $employer->employer()->create([
-            'full_name' => 'Employer Test',
-            'company_name' => 'Test Company',
-            'setup_completed' => false,
+            'phone_number' => '9876543210',
+            'setup_completed' => true,
+            'company_id' => $company->id,
         ]);
 
         $this->command->info('Test users created successfully:');

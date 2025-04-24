@@ -7,6 +7,7 @@ use App\Models\Jobs\JobPost;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\RoutesNotifications;
+use App\Models\Companies\Company;
 
 class Employer extends BaseModel
 {
@@ -16,20 +17,11 @@ class Employer extends BaseModel
 
     protected $fillable = [
         'user_id',
-        'company_name',
-        'company_size',
-        'industry',
-        'company_description',
-        'website',
-        'founding_year',
-        'company_logo_path',
-        'location',
         'phone_number',
         'setup_completed'
     ];
 
     protected $casts = [
-        'founding_year' => 'integer',
         'setup_completed' => 'boolean'
     ];
 
@@ -78,5 +70,13 @@ class Employer extends BaseModel
         if ($this->user) {
             return 'users.'.$this->user->id;
         }
+    }
+
+    /**
+     * Get the company that the employer belongs to.
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 }

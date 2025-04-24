@@ -113,7 +113,7 @@ class AuthController extends Controller
             if (Auth::user()->employer && !Auth::user()->employer->setup_completed) {
                 // Set a flag in the session to bypass middleware check
                 session()->put('employer_setup_completed', true);
-                return redirect()->route('employer.setup');
+                return redirect()->route('employer.setup.index');
             }
 
             return redirect()->intended(route('employer.dashboard'));
@@ -266,7 +266,7 @@ class AuthController extends Controller
         // Set a flag in the session to bypass middleware check
         session()->put('employer_setup_completed', true);
 
-        return redirect()->route('employer.setup');
+        return redirect()->route('employer.setup.index');
     }
 
     /**

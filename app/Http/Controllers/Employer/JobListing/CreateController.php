@@ -25,10 +25,21 @@ class CreateController extends Controller
      */
     public function __invoke()
     {
-        // Check if employer profile is complete enough (at least 70%)
-        $completionPercentage = $this->profileCompletionService->calculateEmployerCompletion(Auth::user());
+        $user = Auth::user();
+        $employer = $user->employer;
 
-        if ($completionPercentage < 70) {
+        // Check if employer has a company
+        $hasCompany = !empty($employer->company_id);
+
+        // Check if employer profile is complete enough (at least 90%)
+        $completionPercentage = $this->profileCompletionService->calculateEmployerCompletion($user);
+
+        if ($completionPercentage < 90) {
+            if (!$hasCompany) {
+                return redirect()->route('employer.company.index')
+                    ->with('warning', 'You need to create or join a company before posting a job. Your profile is ' . $completionPercentage . '% complete.');
+            }
+
             return redirect()->route('employer.profile.edit')
                 ->with('warning', 'Please complete your employer profile before posting a job. Your profile is ' . $completionPercentage . '% complete.');
         }

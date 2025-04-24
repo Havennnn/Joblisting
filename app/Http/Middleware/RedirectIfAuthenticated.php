@@ -24,6 +24,13 @@ class RedirectIfAuthenticated
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 $user = Auth::user();
+                $currentRoute = $request->route()->getName();
+
+                // Don't redirect if we're already on a setup page
+                if (str_starts_with($currentRoute, 'employer.setup.') ||
+                    str_starts_with($currentRoute, 'applicant.setup')) {
+                    return $next($request);
+                }
 
                 // Check if we're in the middle of a setup process
                 if (session()->has('employer_setup_completed') || session()->has('applicant_setup_completed')) {
@@ -34,7 +41,7 @@ class RedirectIfAuthenticated
                 if ($user->isEmployer()) {
                     // Check if setup is completed
                     if (!$user->employer || !$user->employer->setup_completed) {
-                        return redirect()->route('employer.setup');
+                        return redirect()->route('employer.setup.index');
                     }
                     return redirect()->route('employer.dashboard');
                 } else {

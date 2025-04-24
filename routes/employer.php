@@ -7,6 +7,9 @@ use App\Http\Controllers\Employer\ProfileController;
 use App\Http\Controllers\Employer\SetupController;
 use App\Http\Controllers\Employer\NotificationController;
 use App\Http\Controllers\Employer\ApplicationController;
+use App\Http\Controllers\Employer\Company\CompanyController;
+use App\Http\Controllers\Employer\Company\CreateController;
+use App\Http\Controllers\Employer\Company\InviteController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,13 +27,10 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Setup wizard routes
-    Route::controller(SetupController::class)->prefix('setup')->name('setup')->group(function () {
-        Route::get('/', 'index');
-        Route::post('/step-one', 'processStepOne')->name('.step-one');
-        Route::post('/step-two', 'processStepTwo')->name('.step-two');
-        Route::post('/step-three', 'processStepThree')->name('.step-three');
-        Route::get('/previous', 'previous')->name('.previous');
-        Route::get('/skip', 'skip')->name('.skip');
+    Route::controller(SetupController::class)->prefix('setup')->name('setup.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::post('/', 'processSetup')->name('process');
+        Route::get('/skip', 'skip')->name('skip');
     });
 
     // Profile routes
@@ -39,6 +39,30 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
         Route::get('/edit', 'edit')->name('edit');
         Route::put('/', 'update')->name('update');
         Route::get('/logo/{user}', [ProfileController::class, 'showCompanyLogo'])->name('logo');
+    });
+
+    // Company management routes
+    Route::prefix('company')->name('company.')->group(function () {
+        // Main company page
+        Route::get('/', [CompanyController::class, 'index'])->name('index');
+
+        // Company creation
+        Route::get('/create', [CompanyController::class, 'create'])->name('create');
+        Route::post('/create', [CompanyController::class, 'store'])->name('store');
+
+        // Company member management
+        Route::delete('/members/{id}', [CompanyController::class, 'kickMember'])->name('kick-member');
+
+        // Company job post management
+        Route::get('/job-posts/{id}', [CompanyController::class, 'viewJobPost'])->name('job-post.view');
+        Route::get('/job-posts/{id}/edit', [CompanyController::class, 'editJobPost'])->name('job-post.edit');
+        Route::delete('/job-posts/{id}', [CompanyController::class, 'deleteJobPost'])->name('job-post.delete');
+
+        // Company invites - individual routes to avoid parameter issues
+        Route::get('/invite', [InviteController::class, 'show'])->name('invite');
+        Route::post('/invite', [InviteController::class, 'send'])->name('invite.send');
+        Route::get('/invite/{token}', [InviteController::class, 'accept'])->name('invite.accept');
+        Route::delete('/invite/{id}', [InviteController::class, 'cancel'])->name('invite.cancel');
     });
 
     // Applicants routes

@@ -6,6 +6,8 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Models\Users\Employer;
+use App\Models\Jobs\JobPost;
 
 class JobPostSeeder extends Seeder
 {
@@ -15,10 +17,10 @@ class JobPostSeeder extends Seeder
     public function run(): void
     {
         // Find an employer user
-        $employer = DB::table('users')
-            ->where('role', 'employer')
-            ->join('employers', 'users.id', '=', 'employers.user_id')
-            ->select('employers.id')
+        $employer = Employer::with('user')
+            ->whereHas('user', function ($query) {
+                $query->where('role', 'employer');
+            })
             ->first();
 
         if (!$employer) {
@@ -27,8 +29,6 @@ class JobPostSeeder extends Seeder
         }
 
         $employer_id = $employer->id;
-
-        $jobPosts = [];
 
         // Sample data arrays
         $jobTitles = [
@@ -67,7 +67,7 @@ class JobPostSeeder extends Seeder
             $jobTitle = $jobTitles[$i % count($jobTitles)];
             $industry = $industries[$i % count($industries)];
 
-            $jobPosts[] = [
+            JobPost::create([
                 'employer_id' => $employer_id,
                 'title' => $jobTitle,
                 'job_description' => "We are looking for a talented $jobTitle to join our team. This position requires excellent skills in $industry and the ability to work in a fast-paced environment. The ideal candidate will have strong communication skills and be detail-oriented.",
@@ -82,13 +82,9 @@ class JobPostSeeder extends Seeder
                 'educational_level' => $educationalLevels[$i % count($educationalLevels)],
                 'shift' => $shifts[$i % count($shifts)],
                 'tags' => $tags[$i % count($tags)],
-                'created_at' => Carbon::now()->subDays($i),
-                'updated_at' => Carbon::now(),
                 'auto_delete_at' => Carbon::now()->addDays(30),
-            ];
+            ]);
         }
-
-        DB::table('jobposts')->insert($jobPosts);
 
         $this->command->info('20 job posts created successfully for employer ID: ' . $employer_id);
     }
