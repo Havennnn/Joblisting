@@ -3,9 +3,13 @@
 namespace App\Http\Controllers\Employer\Company\Member;
 
 use App\Http\Controllers\Employer\Company\CompanyController;
+use App\Http\Controllers\Employer\Company\DeleteService;
 use App\Models\Users\Employer;
+use App\Models\Jobs\JobPost;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class KickMemberController extends CompanyController
 {
@@ -18,22 +22,15 @@ class KickMemberController extends CompanyController
      */
     public function __invoke(Request $request, int $id): RedirectResponse
     {
-        if (!$this->company || $this->employer->id === (int)$id) {
+        $deleteService = new DeleteService();
+        $result = $deleteService->kickMember($id, $this->employer, $this->company);
+
+        if ($result['success']) {
             return redirect()->route('employer.company.index')
-                ->with('error', 'You cannot remove yourself from the company.');
-        }
-
-        $employer = Employer::findOrFail($id);
-
-        if ($employer->company_id !== $this->company->id) {
+                ->with('success', $result['message']);
+        } else {
             return redirect()->route('employer.company.index')
-                ->with('error', 'This employer is not a member of your company.');
+                ->with('error', $result['message']);
         }
-
-        $employer->company_id = null;
-        $employer->save();
-
-        return redirect()->route('employer.company.index')
-            ->with('success', 'Member has been removed from the company.');
     }
 }

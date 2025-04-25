@@ -3,6 +3,8 @@
  */
 export function toggleBookmark(jobId, csrfToken) {
     const bookmark = document.getElementById('bookmark-' + jobId);
+    const bookmarkText = document.getElementById('bookmark-text-' + jobId);
+
     if (!bookmark) return;
 
     const isSaved = bookmark.classList.contains('text-yellow-500');
@@ -18,19 +20,38 @@ export function toggleBookmark(jobId, csrfToken) {
             'X-CSRF-TOKEN': csrfToken
         }
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.saved) {
-            bookmark.classList.remove('text-gray-500');
-            bookmark.classList.add('text-yellow-500', 'fill-yellow-500');
-        } else {
-            bookmark.classList.remove('text-yellow-500', 'fill-yellow-500');
-            bookmark.classList.add('text-gray-500');
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
         }
+        return response.json();
+    })
+    .then(data => {
+        // Update UI based on the response
+        updateBookmarkUI(bookmark, bookmarkText, data.saved);
     })
     .catch(error => {
-        console.error('Error toggling bookmark:', error);
+        // If there's an error, just revert the UI back to original state
+        updateBookmarkUI(bookmark, bookmarkText, isSaved);
     });
+
+    // Update UI immediately for a better user experience
+    updateBookmarkUI(bookmark, bookmarkText, !isSaved);
+}
+
+/**
+ * Update bookmark UI elements
+ */
+function updateBookmarkUI(bookmark, bookmarkText, isSaved) {
+    if (isSaved) {
+        bookmark.classList.remove('text-gray-500');
+        bookmark.classList.add('text-yellow-500', 'fill-yellow-500');
+        if (bookmarkText) bookmarkText.textContent = 'Saved';
+    } else {
+        bookmark.classList.remove('text-yellow-500', 'fill-yellow-500');
+        bookmark.classList.add('text-gray-500');
+        if (bookmarkText) bookmarkText.textContent = 'Save Job';
+    }
 }
 
 /**
@@ -38,13 +59,22 @@ export function toggleBookmark(jobId, csrfToken) {
  */
 export function checkBookmarkStatus(jobId) {
     fetch(`/applicant/saved-jobs/${jobId}/check`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             const bookmark = document.getElementById('bookmark-' + jobId);
+            const bookmarkText = document.getElementById('bookmark-text-' + jobId);
+
             if (bookmark && data.saved) {
-                bookmark.classList.remove('text-gray-500');
-                bookmark.classList.add('text-yellow-500', 'fill-yellow-500');
+                updateBookmarkUI(bookmark, bookmarkText, true);
             }
+        })
+        .catch(error => {
+            // Silent fail - just keep default state
         });
 }
 

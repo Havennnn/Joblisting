@@ -41,15 +41,12 @@ class InvitationSent extends Notification implements ShouldQueue
         $creatorName = $this->invitation->creator ? $this->invitation->creator->name : 'A company administrator';
         $companyName = $this->invitation->company ? $this->invitation->company->name : 'a company';
 
-        $declineUrl = route('employer.company.invite.decline', $this->invitation->token);
-
         return (new MailMessage)
-            ->subject('You have been invited to join ' . $companyName)
+            ->subject('You have been invited to join a company')
             ->greeting('Hello!')
             ->line("You have been invited to join {$companyName} on Neksjob.")
             ->line("This invitation was sent by {$creatorName}.")
             ->action('Accept Invitation', $acceptUrl)
-            ->line("If you don't want to join this company, you can [decline the invitation]({$declineUrl}).")
             ->line('If you already have an account, you will need to log in first. If you do not have an account, you will need to register as an employer.')
             ->line('This invitation link will expire in 7 days.');
     }
@@ -71,7 +68,6 @@ class InvitationSent extends Notification implements ShouldQueue
             'company_name' => $companyName,
             'sender_name' => $creatorName,
             'token' => $this->invitation->token,
-            'created_at' => $this->invitation->created_at,
         ];
     }
 }

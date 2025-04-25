@@ -179,25 +179,6 @@
                                     @method('PATCH')
 
                                     <div class="mb-4">
-                                        <label for="status" class="block font-medium text-gray-700 mb-2">Update
-                                            Status</label>
-                                        <select id="status" name="status"
-                                            class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                            <option value="pending"
-                                                {{ $application->status === 'pending' ? 'selected' : '' }}>Pending</option>
-                                            <option value="reviewing"
-                                                {{ $application->status === 'reviewing' ? 'selected' : '' }}>Reviewing
-                                            </option>
-                                            <option value="accepted"
-                                                {{ $application->status === 'accepted' ? 'selected' : '' }}>Accepted
-                                            </option>
-                                            <option value="rejected"
-                                                {{ $application->status === 'rejected' ? 'selected' : '' }}>Rejected
-                                            </option>
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-4">
                                         <label for="notes" class="block font-medium text-gray-700 mb-2">Notes</label>
                                         <textarea id="notes" name="notes" rows="4"
                                             class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">{{ $application->notes }}</textarea>
@@ -206,10 +187,37 @@
                                         </p>
                                     </div>
 
-                                    <div class="flex justify-end">
+                                    <input type="hidden" name="status" id="status" value="{{ $application->status }}">
+
+                                    <div class="flex justify-end space-x-3">
+                                        @if($application->status !== 'rejected')
+                                        <button type="submit"
+                                            onclick="document.getElementById('status').value = 'rejected'"
+                                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                            <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                            </svg>
+                                            Decline Application
+                                        </button>
+                                        @endif
+
+                                        @if($application->status === 'reviewing')
+                                        <button type="submit"
+                                            onclick="document.getElementById('status').value = 'accepted'"
+                                            class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                                            <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                                            </svg>
+                                            Schedule Interview
+                                        </button>
+                                        @endif
+
                                         <button type="submit"
                                             class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                            Update Application
+                                            <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                            </svg>
+                                            Save Notes
                                         </button>
                                     </div>
                                 </form>

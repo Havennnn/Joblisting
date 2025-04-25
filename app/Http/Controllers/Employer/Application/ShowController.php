@@ -8,6 +8,7 @@ use App\Services\Dashboard\ProfileCompletionService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Notifications\ApplicationStatusChanged;
 
 class ShowController extends Controller
 {
@@ -36,8 +37,23 @@ class ShowController extends Controller
         // Mark as viewed if not already and decrement the unread counter
         if (!$application->viewed_at) {
             DB::transaction(function () use ($application) {
+                // Track old status to check if it changed
+                $oldStatus = $application->status;
+
                 // Mark application as viewed
                 $application->viewed_at = now();
+
+                // Automatically update status to "reviewing"
+                if ($application->status === 'pending') {
+                    $application->status = 'reviewing';
+
+                    // Send notification if status changed
+                    if ($oldStatus !== $application->status) {
+                        $application->load(['job', 'applicant']); // Make sure relations are loaded
+                        $application->applicant->notify(new ApplicationStatusChanged($application));
+                    }
+                }
+
                 $application->save();
 
                 // Decrement unread application count on the related job post

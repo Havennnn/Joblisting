@@ -6,15 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\Companies\Company;
 use App\Models\Companies\CompanyInvitation;
 use App\Models\Jobs\JobPost;
-use App\Models\Users\Employer;
 use App\Models\Users\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Notification;
-use App\Notifications\CompanyInvitationNotification;
-use App\Notifications\InvitationAccepted;
+use App\Notifications\Company\InvitationSent;
+use App\Notifications\Company\InvitationAccepted;
+use App\Http\Controllers\Employer\Company\DeleteService;
 
 /**
  * Central controller for company management
@@ -42,11 +42,17 @@ class CompanyController extends Controller
     protected $isOwner = false;
 
     /**
+     * DeleteService instance
+     */
+    protected $deleteService;
+
+    /**
      * Constructor to set up common properties
      */
     public function __construct()
     {
         $this->setupUserAndCompany();
+        $this->deleteService = new DeleteService();
     }
 
     /**
@@ -127,7 +133,7 @@ class CompanyController extends Controller
             'description' => 'required|string|max:1000',
             'website' => 'nullable|url|max:255',
             'location' => 'required|string|max:255',
-            'logo' => 'nullable|image|max:2048',
+            'logo' => 'nullable|image|max:5120',
         ]);
 
         $company = new Company();
@@ -150,33 +156,6 @@ class CompanyController extends Controller
 
         return redirect()->route('employer.company.index')
             ->with('success', 'Company created successfully! You are now the owner of this company.');
-    }
-
-    /**
-     * Kick a member from the company.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function kickMember($id)
-    {
-        if (!$this->company || $this->employer->id === (int)$id) {
-            return redirect()->route('employer.company.index')
-                ->with('error', 'You cannot remove yourself from the company.');
-        }
-
-        $employer = Employer::findOrFail($id);
-
-        if ($employer->company_id !== $this->company->id) {
-            return redirect()->route('employer.company.index')
-                ->with('error', 'This employer is not a member of your company.');
-        }
-
-        $employer->company_id = null;
-        $employer->save();
-
-        return redirect()->route('employer.company.index')
-            ->with('success', 'Member has been removed from the company.');
     }
 
     /**
@@ -236,38 +215,6 @@ class CompanyController extends Controller
             'company' => $this->company,
             'isOwner' => $this->isOwner
         ]);
-    }
-
-    /**
-     * Delete a job post
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function deleteJobPost($id)
-    {
-        if (!$this->company) {
-            return redirect()->route('employer.company.index')
-                ->with('error', 'You must belong to a company to perform this action.');
-        }
-
-        $companyEmployerIds = $this->company->employers()->pluck('id')->toArray();
-        $jobPost = JobPost::findOrFail($id);
-
-        if (!in_array($jobPost->employer_id, $companyEmployerIds)) {
-            return redirect()->route('employer.company.index')
-                ->with('error', 'This job post does not belong to your company.');
-        }
-
-        if (!$this->isOwner && $jobPost->employer_id !== $this->employer->id) {
-            return redirect()->route('employer.company.index')
-                ->with('error', 'You do not have permission to delete this job post.');
-        }
-
-        $jobPost->delete();
-
-        return redirect()->route('employer.company.index')
-            ->with('success', 'Job post has been deleted successfully.');
     }
 
     /**
@@ -349,16 +296,16 @@ class CompanyController extends Controller
 
         try {
             if ($existingUser) {
-                $existingUser->notify(new CompanyInvitationNotification($invitation));
+                $existingUser->notify(new InvitationSent($invitation));
             } else {
                 Notification::route('mail', [
                     $validated['email'] => $existingUser ? $existingUser->name : 'Invited Employer',
-                ])->notify(new CompanyInvitationNotification($invitation));
+                ])->notify(new InvitationSent($invitation));
             }
 
             if ($existingUser) {
                 $existingUser->notifications()->create([
-                    'type' => 'App\Notifications\CompanyInvitationNotification',
+                    'type' => 'App\Notifications\Company\InvitationSent',
                     'data' => [
                         'type' => 'company_invitation',
                         'invitation_id' => $invitation->id,
@@ -445,29 +392,6 @@ class CompanyController extends Controller
     }
 
     /**
-     * Cancel an invitation
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function cancelInvite($id)
-    {
-        if (!$this->company) {
-            return redirect()->route('employer.company.index');
-        }
-
-        $invitation = CompanyInvitation::where('id', $id)
-            ->where('company_id', $this->company->id)
-            ->where('status', 'pending')
-            ->firstOrFail();
-
-        $invitation->status = 'cancelled';
-        $invitation->save();
-
-        return back()->with('success', 'Invitation cancelled successfully.');
-    }
-
-    /**
      * Display the company edit form
      *
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
@@ -501,7 +425,7 @@ class CompanyController extends Controller
             'description' => 'required|string|max:1000',
             'website' => 'nullable|url|max:255',
             'location' => 'required|string|max:255',
-            'logo' => 'nullable|image|max:2048',
+            'logo' => 'nullable|image|max:5120',
         ]);
 
         $this->company->description = $validated['description'];
@@ -521,5 +445,65 @@ class CompanyController extends Controller
 
         return redirect()->route('employer.company.index')
             ->with('success', 'Company details updated successfully.');
+    }
+
+    /**
+     * Forward delete job post requests to specialized controller
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function deleteJobPost($id)
+    {
+        $result = $this->deleteService->deleteJobPost(
+            $id,
+            $this->employer,
+            $this->company,
+            $this->isOwner
+        );
+
+        if ($result['success']) {
+            return redirect()->route('employer.company.index')
+                ->with('success', $result['message']);
+        } else {
+            return redirect()->route('employer.company.index')
+                ->with('error', $result['message']);
+        }
+    }
+
+    /**
+     * Forward cancel invitation requests to specialized controller
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function cancelInvite($id)
+    {
+        $result = $this->deleteService->cancelInvite($id, $this->company);
+
+        if ($result['success']) {
+            return back()->with('success', $result['message']);
+        } else {
+            return back()->with('error', $result['message']);
+        }
+    }
+
+    /**
+     * Forward kick member requests to specialized controller
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function kickMember($id)
+    {
+        $result = $this->deleteService->kickMember($id, $this->employer, $this->company);
+
+        if ($result['success']) {
+            return redirect()->route('employer.company.index')
+                ->with('success', $result['message']);
+        } else {
+            return redirect()->route('employer.company.index')
+                ->with('error', $result['message']);
+        }
     }
 }

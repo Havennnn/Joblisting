@@ -29,9 +29,10 @@ export default {
                 'nextjob-purple': '#800080',
                 'nextjob-yellow': '#FFC107',
                 'nextjob-blue-light': '#F0F7FF',
+                'nextjob-blue-dark': '#125699'
             },
             maxWidth: {
-                '8xl': '90rem', // 1440px
+                '8xl': '90rem',
             },
         },
     },

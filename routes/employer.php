@@ -8,8 +8,7 @@ use App\Http\Controllers\Employer\SetupController;
 use App\Http\Controllers\Employer\Notification\CentralNotificationController;
 use App\Http\Controllers\Employer\ApplicationController;
 use App\Http\Controllers\Employer\Company\CompanyController;
-use App\Http\Controllers\Employer\Company\CreateController;
-use App\Http\Controllers\Employer\Company\InviteController;
+use App\Http\Controllers\Employer\InterviewController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -53,6 +52,7 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
         // Company settings
         Route::get('/edit', [CompanyController::class, 'edit'])->name('edit');
         Route::put('/update', [CompanyController::class, 'update'])->name('update');
+        Route::delete('/delete', \App\Http\Controllers\Employer\Company\DeleteCompanyController::class)->name('delete');
 
         // Company member management
         Route::delete('/members/{id}', \App\Http\Controllers\Employer\Company\Member\KickMemberController::class)->name('kick-member');
@@ -102,5 +102,10 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
         Route::post('/{id}/read', 'markAsRead')->name('read');
         Route::post('/read-all', 'markAllAsRead')->name('read-all');
         Route::delete('/{id}', 'delete')->name('delete');
+    });
+
+    // Interview Scheduling Routes
+    Route::controller(InterviewController::class)->prefix('interviews')->name('interviews.')->group(function () {
+        Route::get('/', 'index')->name('index');
     });
 });
