@@ -4,9 +4,9 @@
 
 @section('content')
 <div class="flex">
-        <!-- Sidebar -->
+
         <x-applicant.sidebar />
-        <!-- Main Content -->
+
         <div class="flex-1 bg-gray-50">
             <div class="py-8 px-12">
                 <div class="flex items-center justify-between mb-6">
@@ -19,22 +19,7 @@
                     </a>
                 </div>
 
-                <!-- Profile Completion Alert -->
                 <x-profile-completion-alert :percentage="$profileCompletionPercentage" userType="applicant" />
-
-                <!-- Success Message -->
-                @if (session('success'))
-                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
-                    <p>{{ session('success') }}</p>
-                </div>
-                @endif
-
-                <!-- Error Message -->
-                @if (session('error'))
-                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
-                    <p>{{ session('error') }}</p>
-                </div>
-                @endif
 
                 @if(count($applications) > 0)
                     <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">

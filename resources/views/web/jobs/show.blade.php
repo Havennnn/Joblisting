@@ -6,11 +6,79 @@
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
 @vite('resources/js/pages/jobDetails.js')
 <script>
+    // Define these functions directly in case the external script doesn't load
+    function openApplicationModal() {
+        document.getElementById('applicationModal').classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+    }
+
+    function closeApplicationModal() {
+        document.getElementById('applicationModal').classList.add('hidden');
+        document.body.classList.remove('overflow-hidden');
+    }
+
+    // Global variable for CSRF token to be used by toggleBookmark
+    window.csrfToken = '{{ csrf_token() }}';
+
+    function toggleBookmark(jobId) {
+        if (typeof window.jobDetails !== 'undefined' && typeof window.jobDetails.toggleBookmark === 'function') {
+            window.jobDetails.toggleBookmark(jobId, window.csrfToken);
+        } else {
+            // Fallback implementation if external script doesn't load
+            const bookmark = document.getElementById('bookmark-' + jobId);
+            const bookmarkText = document.getElementById('bookmark-text-' + jobId);
+
+            if (!bookmark) return;
+
+            const isSaved = bookmark.classList.contains('text-yellow-500');
+
+            // Send request to server
+            fetch(isSaved ? `/applicant/saved-jobs/${jobId}/unsave` : `/applicant/saved-jobs/${jobId}/save`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': window.csrfToken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Update UI based on server response
+                if (data.saved) {
+                    bookmark.classList.remove('text-gray-500');
+                    bookmark.classList.add('text-yellow-500', 'fill-yellow-500');
+                    if (bookmarkText) bookmarkText.textContent = 'Saved';
+                } else {
+                    bookmark.classList.remove('text-yellow-500', 'fill-yellow-500');
+                    bookmark.classList.add('text-gray-500');
+                    if (bookmarkText) bookmarkText.textContent = 'Save Job';
+                }
+            });
+
+            // Update UI immediately for better UX
+            if (isSaved) {
+                bookmark.classList.remove('text-yellow-500', 'fill-yellow-500');
+                bookmark.classList.add('text-gray-500');
+                if (bookmarkText) bookmarkText.textContent = 'Save Job';
+            } else {
+                bookmark.classList.remove('text-gray-500');
+                bookmark.classList.add('text-yellow-500', 'fill-yellow-500');
+                if (bookmarkText) bookmarkText.textContent = 'Saved';
+            }
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const jobId = '{{ $job->id }}';
         const csrfToken = '{{ csrf_token() }}';
+
         if (typeof jobDetails !== 'undefined') {
             jobDetails.init(jobId, csrfToken);
+        }
+
+        // Set up modal overlay event listener
+        const modalOverlay = document.getElementById('modalOverlay');
+        if (modalOverlay) {
+            modalOverlay.addEventListener('click', closeApplicationModal);
         }
     });
 </script>
@@ -39,7 +107,7 @@
                                 <svg id="bookmark-{{ $job->id }}" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
                                 </svg>
-                                Save Job
+                                <span id="bookmark-text-{{ $job->id }}">Save Job</span>
                             </button>
                         @endif
                     @endauth
@@ -228,15 +296,18 @@
                                             </div>
                                         </div>
                                         <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                                            <form action="{{ route('applicant.apply.job', $job->id) }}" method="POST">
+                                            <form action="{{ route('applicant.apply.job', $job->id) }}" method="POST" id="apply-form">
                                                 @csrf
-                                                <button type="submit" class="inline-flex justify-center border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors">
-                                                    Submit Application
-                                                </button>
+                                                <input type="hidden" name="job_id" value="{{ $job->id }}">
+                                                <div class="flex sm:flex-row-reverse">
+                                                    <button type="submit" class="inline-flex justify-center border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm transition-colors">
+                                                        Submit Application
+                                                    </button>
+                                                    <button type="button" onclick="closeApplicationModal()" class="mt-3 w-full inline-flex justify-center border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-colors">
+                                                        Cancel
+                                                    </button>
+                                                </div>
                                             </form>
-                                            <button type="button" onclick="closeApplicationModal()" class="mt-3 w-full inline-flex justify-center border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm transition-colors">
-                                                Cancel
-                                            </button>
                                         </div>
                                     </div>
                                 </div>
