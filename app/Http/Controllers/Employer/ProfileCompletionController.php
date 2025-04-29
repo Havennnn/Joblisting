@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Employer;
 
 use App\Http\Controllers\Controller;
-use App\Models\Users\User;
 use Illuminate\Support\Facades\Auth;
 use App\Services\Dashboard\ProfileCompletionService;
-use Illuminate\Contracts\Auth\Authenticatable;
 
 class ProfileCompletionController extends Controller
 {

@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Applicant\MyApplications\IndexController;
 use App\Http\Controllers\Applicant\MyApplications\ApplyController;
 use App\Models\Jobs\JobPost;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 

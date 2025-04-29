@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Employer\Application;
 use App\Http\Controllers\Controller;
 use App\Models\Jobs\JobApplication;
 use App\Services\Dashboard\ProfileCompletionService;
-use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Notifications\ApplicationStatusChanged;

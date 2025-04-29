@@ -21,8 +21,7 @@ class UpdateStatusController extends Controller
     public function __invoke(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:pending,reviewing,accepted,rejected',
-            'notes' => 'nullable|string|max:1000'
+            'status' => 'required|in:pending,reviewing,accepted,rejected,to_be_interviewed',
         ]);
 
         $employer = Auth::user()->employer;
@@ -33,10 +32,6 @@ class UpdateStatusController extends Controller
         // Track old status to check if it changed
         $oldStatus = $application->status;
         $application->status = $request->status;
-
-        if ($request->has('notes')) {
-            $application->notes = $request->notes;
-        }
 
         $application->save();
 

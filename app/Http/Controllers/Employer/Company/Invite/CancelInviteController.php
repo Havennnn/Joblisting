@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Employer\Company\Invite;
 
 use App\Http\Controllers\Employer\Company\CompanyController;
 use App\Http\Controllers\Employer\Company\DeleteService;
-use App\Models\Companies\CompanyInvitation;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 

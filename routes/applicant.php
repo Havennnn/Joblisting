@@ -7,6 +7,7 @@ use App\Http\Controllers\Applicant\SetupController;
 use App\Http\Controllers\Applicant\MyApplicationsController;
 use App\Http\Controllers\Applicant\NotificationController;
 use App\Http\Controllers\Applicant\SavedJobController;
+use App\Http\Controllers\Applicant\InterviewResponseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,12 @@ Route::prefix('applicant')->name('applicant.')->middleware(['auth', 'applicant']
     Route::controller(MyApplicationsController::class)->group(function () {
         Route::post('/jobs/{job}/apply', 'store')->name('apply.job');
         Route::get('/my-applications', 'index')->name('applications');
+    });
+
+    // Interview response routes
+    Route::controller(InterviewResponseController::class)->prefix('interviews')->name('interviews.')->group(function () {
+        Route::post('/{interviewId}/accept', 'accept')->name('accept');
+        Route::post('/{interviewId}/decline', 'decline')->name('decline');
     });
 
     // Notification routes

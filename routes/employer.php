@@ -94,6 +94,8 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
         Route::get('/{id}', 'show')->name('show');
         Route::patch('/{id}/status', 'updateStatus')->name('update-status');
         Route::get('/{id}/resume', 'downloadResume')->name('download-resume');
+        Route::get('/{id}/schedule', 'showScheduleForm')->name('schedule.form');
+        Route::post('/{id}/schedule', 'scheduleInterview')->name('schedule');
     });
 
     //Notification Routes

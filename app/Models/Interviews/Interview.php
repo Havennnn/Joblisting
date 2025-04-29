@@ -4,6 +4,7 @@ namespace App\Models\Interviews;
 
 use App\Models\Users\User;
 use App\Models\Jobs\JobPost;
+use App\Models\Jobs\JobApplication;
 use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,6 +12,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Interview extends BaseModel
 {
     use HasFactory;
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'interviews';
 
     /**
      * The attributes that are mass assignable.
@@ -21,14 +29,10 @@ class Interview extends BaseModel
         'employer_id',
         'applicant_id',
         'job_id',
+        'job_application_id',
         'interview_date',
-        'start_time',
-        'end_time',
-        'status',
         'location',
         'meeting_link',
-        'notes',
-        'is_online'
     ];
 
     /**
@@ -38,9 +42,6 @@ class Interview extends BaseModel
      */
     protected $casts = [
         'interview_date' => 'date',
-        'start_time' => 'datetime',
-        'end_time' => 'datetime',
-        'is_online' => 'boolean',
     ];
 
     /**
@@ -65,5 +66,13 @@ class Interview extends BaseModel
     public function job(): BelongsTo
     {
         return $this->belongsTo(JobPost::class, 'job_id');
+    }
+
+    /**
+     * Get the job application associated with the interview.
+     */
+    public function jobApplication(): BelongsTo
+    {
+        return $this->belongsTo(JobApplication::class, 'job_application_id');
     }
 }

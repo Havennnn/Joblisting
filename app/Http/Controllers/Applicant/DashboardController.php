@@ -7,7 +7,6 @@ use App\Http\Controllers\Applicant\Dashboard\ProfileCompletionController;
 use App\Models\Jobs\JobApplication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
 class DashboardController extends Controller

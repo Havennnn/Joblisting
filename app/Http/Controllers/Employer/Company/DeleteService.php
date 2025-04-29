@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers\Employer\Company;
 
-use App\Http\Controllers\Controller;
 use App\Models\Companies\Company;
 use App\Models\Companies\CompanyInvitation;
 use App\Models\Jobs\JobPost;
 use App\Models\Users\Employer;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 

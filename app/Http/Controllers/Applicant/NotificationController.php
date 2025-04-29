@@ -7,9 +7,6 @@ use App\Http\Controllers\Applicant\Notification\DeleteController;
 use App\Http\Controllers\Applicant\Notification\IndexController;
 use App\Http\Controllers\Applicant\Notification\MarkAllAsReadController;
 use App\Http\Controllers\Applicant\Notification\MarkAsReadController;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 
 class NotificationController extends Controller
 {

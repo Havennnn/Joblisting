@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\Employer;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Services\Dashboard\ProfileCompletionService;
 use App\Http\Controllers\Employer\Dashboard\ActiveJobPostsController;
 use App\Http\Controllers\Employer\Dashboard\ApplicationStatsController;

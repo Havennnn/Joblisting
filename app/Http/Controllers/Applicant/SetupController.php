@@ -9,8 +9,6 @@ use App\Http\Controllers\Applicant\Setup\SkipController;
 use App\Http\Controllers\Applicant\Setup\StepOneController;
 use App\Http\Controllers\Applicant\Setup\StepThreeController;
 use App\Http\Controllers\Applicant\Setup\StepTwoController;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class SetupController extends Controller

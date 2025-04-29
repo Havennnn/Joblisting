@@ -5,11 +5,14 @@ namespace App\Models\Jobs;
 use App\Models\Users\Employer;
 use App\Models\Users\User;
 use App\Models\BaseModel;
+use App\Models\Interviews\Interview;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class JobApplication extends BaseModel
 {
     use HasFactory;
+
+    protected $table = 'job_applications';
 
     protected $fillable = [
         'job_id',
@@ -19,7 +22,8 @@ class JobApplication extends BaseModel
         'resume_path',
         'applied_at',
         'viewed_at',
-        'notes'
+        'notes',
+        'interview_status'
     ];
 
     protected $casts = [
@@ -49,5 +53,13 @@ class JobApplication extends BaseModel
     public function employer()
     {
         return $this->belongsTo(Employer::class, 'employer_id');
+    }
+
+    /**
+     * Get the interview associated with this application.
+     */
+    public function interview()
+    {
+        return $this->hasOne(Interview::class, 'job_application_id');
     }
 }

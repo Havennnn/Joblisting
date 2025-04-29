@@ -5,14 +5,12 @@ namespace App\Http\Controllers\Employer;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Employer\Application\DownloadResumeController;
 use App\Http\Controllers\Employer\Application\IndexController;
+use App\Http\Controllers\Employer\Application\ScheduleInterviewController;
 use App\Http\Controllers\Employer\Application\ShowController;
 use App\Http\Controllers\Employer\Application\ShowJobApplicationsController;
 use App\Http\Controllers\Employer\Application\UpdateStatusController;
 use App\Services\Dashboard\ProfileCompletionService;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ApplicationController extends Controller
 {
@@ -22,6 +20,7 @@ class ApplicationController extends Controller
     protected $showController;
     protected $updateStatusController;
     protected $downloadResumeController;
+    protected $scheduleInterviewController;
 
     public function __construct(
         ProfileCompletionService $profileCompletionService,
@@ -29,7 +28,8 @@ class ApplicationController extends Controller
         ShowJobApplicationsController $showJobApplicationsController,
         ShowController $showController,
         UpdateStatusController $updateStatusController,
-        DownloadResumeController $downloadResumeController
+        DownloadResumeController $downloadResumeController,
+        ScheduleInterviewController $scheduleInterviewController
     ) {
         $this->profileCompletionService = $profileCompletionService;
         $this->indexController = $indexController;
@@ -37,6 +37,7 @@ class ApplicationController extends Controller
         $this->showController = $showController;
         $this->updateStatusController = $updateStatusController;
         $this->downloadResumeController = $downloadResumeController;
+        $this->scheduleInterviewController = $scheduleInterviewController;
     }
 
     /**
@@ -81,6 +82,29 @@ class ApplicationController extends Controller
     public function updateStatus(Request $request, $id)
     {
         return $this->updateStatusController->__invoke($request, $id);
+    }
+
+    /**
+     * Show form to schedule an interview
+     *
+     * @param int $id
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function showScheduleForm($id)
+    {
+        return $this->scheduleInterviewController->showForm($id);
+    }
+
+    /**
+     * Schedule an interview
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function scheduleInterview(Request $request, $id)
+    {
+        return $this->scheduleInterviewController->schedule($request, $id);
     }
 
     /**

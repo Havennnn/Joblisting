@@ -109,8 +109,9 @@
                                                         {{ $application->status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                                                           ($application->status === 'reviewing' ? 'bg-blue-100 text-blue-800' :
                                                           ($application->status === 'accepted' ? 'bg-green-100 text-green-800' :
-                                                          'bg-red-100 text-red-800')) }}">
-                                                        {{ ucfirst($application->status) }}
+                                                          ($application->status === 'to_be_interviewed' ? 'bg-purple-100 text-purple-800' :
+                                                          'bg-red-100 text-red-800'))) }}">
+                                                        {{ $application->status === 'to_be_interviewed' ? 'To Be Interviewed' : ucfirst($application->status) }}
                                                     </span>
                                                 </td>
                                                 <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">

@@ -4,12 +4,8 @@ namespace App\Http\Controllers\Employer\Company\Member;
 
 use App\Http\Controllers\Employer\Company\CompanyController;
 use App\Http\Controllers\Employer\Company\DeleteService;
-use App\Models\Users\Employer;
-use App\Models\Jobs\JobPost;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class KickMemberController extends CompanyController
 {

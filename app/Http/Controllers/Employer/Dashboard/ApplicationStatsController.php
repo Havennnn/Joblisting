@@ -41,12 +41,17 @@ class ApplicationStatsController extends Controller
                                 ->where('status', 'accepted')
                                 ->count();
 
+        $toBeInterviewedApplications = JobApplication::where('employer_id', $employer->id)
+                                ->where('status', 'to_be_interviewed')
+                                ->count();
+
         return [
             'totalApplications' => $totalApplications,
             'newApplications' => $newApplications,
             'pendingApplications' => $pendingApplications,
             'reviewingApplications' => $reviewingApplications,
-            'acceptedApplications' => $acceptedApplications
+            'acceptedApplications' => $acceptedApplications,
+            'toBeInterviewedApplications' => $toBeInterviewedApplications
         ];
     }
 }

@@ -9,11 +9,7 @@ use App\Http\Controllers\Applicant\Profile\ShowController;
 use App\Http\Controllers\Applicant\Profile\ShowProfilePictureController;
 use App\Http\Controllers\Applicant\Profile\UpdateController;
 use App\Models\Users\User;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ProfileController extends Controller
 {

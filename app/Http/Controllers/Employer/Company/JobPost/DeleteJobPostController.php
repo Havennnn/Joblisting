@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Employer\Company\JobPost;
 
 use App\Http\Controllers\Employer\Company\CompanyController;
 use App\Http\Controllers\Employer\Company\DeleteService;
-use App\Models\Jobs\JobPost;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 

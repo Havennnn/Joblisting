@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Applicant\Setup;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
 
 class StepTwoController extends Controller
 {

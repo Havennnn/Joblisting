@@ -26,7 +26,7 @@ class IndexController extends Controller
     {
         $user = Auth::user();
         $applications = JobApplication::where('applicant_id', $user->id)
-            ->with(['job.employer'])
+            ->with(['job.employer', 'interview'])
             ->latest()
             ->paginate(10);
 

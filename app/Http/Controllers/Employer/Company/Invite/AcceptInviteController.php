@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Employer\Company\Invite;
 use App\Http\Controllers\Employer\Company\CompanyController;
 use App\Models\Companies\Company;
 use App\Models\Companies\CompanyInvitation;
-use App\Models\Users\User;
 use App\Services\CompanyInvitationService;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
