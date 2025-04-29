@@ -50,9 +50,9 @@ class ScheduleInterviewController extends Controller
         $application = JobApplication::where('employer_id', $employer->id)
             ->findOrFail($id);
 
-        // Update application status to "to_be_interviewed"
+        // Update application status to "to be interviewed"
         $oldStatus = $application->status;
-        $application->status = 'to_be_interviewed';
+        $application->status = 'to be interviewed';
 
         // Set interview_status to pending
         $application->interview_status = 'pending';

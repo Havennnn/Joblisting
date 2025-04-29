@@ -21,7 +21,7 @@ class UpdateStatusController extends Controller
     public function __invoke(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:pending,reviewing,accepted,rejected,to_be_interviewed',
+            'status' => 'required|in:pending,reviewing,accepted,rejected,to be interviewed',
         ]);
 
         $employer = Auth::user()->employer;

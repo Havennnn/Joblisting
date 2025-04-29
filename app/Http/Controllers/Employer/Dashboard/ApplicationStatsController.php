@@ -42,7 +42,7 @@ class ApplicationStatsController extends Controller
                                 ->count();
 
         $toBeInterviewedApplications = JobApplication::where('employer_id', $employer->id)
-                                ->where('status', 'to_be_interviewed')
+                                ->where('status', 'to be interviewed')
                                 ->count();
 
         return [

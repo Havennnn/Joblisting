@@ -6,7 +6,7 @@ This feature allows applicants to accept or decline interview invitations direct
 
 ### Features Added
 
-1. **Interview Response Options**: Applicants can now accept or decline interview invitations when the application status is "to_be_interviewed".
+1. **Interview Response Options**: Applicants can now accept or decline interview invitations when the application status is "to be interviewed".
 2. **Interview Status Display**: Applications show different UI based on the interview status (pending, accepted, declined).
 3. **Decline Reason**: Applicants can provide an optional reason when declining an interview.
 4. **Employer Notifications**: Employers receive notifications when applicants respond to interview invitations.
@@ -39,7 +39,7 @@ This feature allows applicants to accept or decline interview invitations direct
 
 ## How It Works
 
-1. When an employer schedules an interview, the application status changes to "to_be_interviewed"
+1. When an employer schedules an interview, the application status changes to "to be interviewed"
 2. The applicant sees the interview details and options to accept or decline in their applications list
 3. Upon acceptance, the interview status updates to "accepted"
 4. Upon declining, the applicant can provide a reason, and the status updates to "declined"

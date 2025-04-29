@@ -49,7 +49,7 @@ class ApplicationStatusChanged extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
-        $statusText = ucfirst($this->application->status);
+        $statusText = $this->application->status === 'to be interviewed' ? 'To be interviewed' : ucfirst($this->application->status);
         $jobTitle = $this->application->job->title;
         $companyName = $this->application->job->employer->company_name ?? 'the employer';
 
@@ -70,13 +70,15 @@ class ApplicationStatusChanged extends Notification implements ShouldQueue
      */
     public function toArray($notifiable)
     {
+        $statusText = $this->application->status === 'to be interviewed' ? 'To be interviewed' : ucfirst($this->application->status);
+
         return [
             'application_id' => $this->application->id,
             'job_id' => $this->application->job_id,
             'job_title' => $this->application->job->title,
             'employer_id' => $this->application->employer_id,
             'employer_name' => $this->application->employer->company_name ?? 'Employer',
-            'status' => $this->application->status,
+            'status' => $statusText,
             'updated_at' => now()->toDateTimeString(),
         ];
     }
