@@ -31,6 +31,7 @@ class Interview extends BaseModel
         'job_id',
         'job_application_id',
         'interview_date',
+        'interview_time',
         'location',
         'meeting_link',
     ];
@@ -42,6 +43,7 @@ class Interview extends BaseModel
      */
     protected $casts = [
         'interview_date' => 'date',
+        'interview_time' => 'datetime:H:i',
     ];
 
     /**

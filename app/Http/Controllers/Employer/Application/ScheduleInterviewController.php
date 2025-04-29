@@ -40,6 +40,7 @@ class ScheduleInterviewController extends Controller
     {
         $request->validate([
             'interview_date' => 'required|date|after_or_equal:today',
+            'interview_time' => 'required|date_format:H:i',
             'location' => 'nullable|string|max:255',
             'meeting_link' => 'nullable|url|max:255',
         ]);
@@ -64,6 +65,7 @@ class ScheduleInterviewController extends Controller
             'job_id' => $application->job_id,
             'job_application_id' => $application->id,
             'interview_date' => $request->interview_date,
+            'interview_time' => $request->interview_time,
             'location' => $request->location,
             'meeting_link' => $request->meeting_link,
         ]);

@@ -12,12 +12,6 @@
         <div class="py-8 px-12">
             <h1 class="text-3xl font-bold text-gray-900 mb-4">Applications</h1>
 
-            @if(session('success'))
-                <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
-                    <p>{{ session('success') }}</p>
-                </div>
-            @endif
-
             <!-- Profile Completion Alert -->
             <x-profile-completion-alert :percentage="$completionPercentage" userType="employer" />
 

@@ -81,78 +81,90 @@
                                                         </div>
                                                         <div class="ml-3 flex-1">
                                                             <h3 class="text-md font-medium text-blue-800">You've been invited for an interview!</h3>
-                                                            <div class="mt-3 text-sm text-blue-700 bg-white p-3 rounded-md border border-blue-200">
-                                                                <ul class="list-disc pl-5 space-y-2">
-                                                                    <li><span class="font-medium">Date:</span> {{ $interview->interview_date->format('l, F j, Y') }}</li>
-                                                                    @if($interview->location)
-                                                                        <li>
-                                                                            <span class="font-medium">Location:</span>
-                                                                            <span class="inline-flex items-center">
-                                                                                <svg class="h-4 w-4 text-gray-500 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                                                </svg>
-                                                                                {{ $interview->location }}
-                                                                            </span>
-                                                                        </li>
-                                                                    @endif
-                                                                    @if($interview->meeting_link)
-                                                                        <li>
-                                                                            <span class="font-medium">Meeting Link:</span>
-                                                                            <a href="{{ $interview->meeting_link }}" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-800 underline">
-                                                                                <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                                                                </svg>
-                                                                                Join Meeting
-                                                                            </a>
-                                                                        </li>
-                                                                    @endif
-                                                                </ul>
-                                                            </div>
+                                                            @if($interview)
+                                                                <div class="mt-3 text-sm text-blue-700 bg-white p-3 rounded-md border border-blue-200">
+                                                                    <ul class="list-disc pl-5 space-y-2">
+                                                                        @if($interview->interview_date && $interview->interview_time)
+                                                                            <li>
+                                                                                <span class="font-medium">Date:</span>
+                                                                                {{ $interview->interview_date->format('l, F j, Y') }}
+                                                                                at {{ $interview->interview_time->format('g:i A') }}
+                                                                            </li>
+                                                                        @endif
+                                                                        @if($interview->location)
+                                                                            <li>
+                                                                                <span class="font-medium">Location:</span>
+                                                                                <span class="inline-flex items-center">
+                                                                                    <svg class="h-4 w-4 text-gray-500 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                                    </svg>
+                                                                                    {{ $interview->location }}
+                                                                                </span>
+                                                                            </li>
+                                                                        @endif
+                                                                        @if($interview->meeting_link)
+                                                                            <li>
+                                                                                <span class="font-medium">Meeting Link:</span>
+                                                                                <a href="{{ $interview->meeting_link }}" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-800 underline">
+                                                                                    <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                                                    </svg>
+                                                                                    Join Meeting
+                                                                                </a>
+                                                                            </li>
+                                                                        @endif
+                                                                    </ul>
+                                                                </div>
 
-                                                            <div class="mt-4 mb-2 text-sm text-gray-600">
-                                                                Please confirm whether you would like to attend this interview:
-                                                            </div>
+                                                                <div class="mt-4 mb-2 text-sm text-gray-600">
+                                                                    Please confirm whether you would like to attend this interview:
+                                                                </div>
 
-                                                            <div class="mt-4 flex flex-col sm:flex-row sm:space-x-4 space-y-3 sm:space-y-0">
-                                                                <form action="{{ route('applicant.interviews.accept', $interview->id) }}" method="POST">
-                                                                    @csrf
-                                                                    <button type="submit" class="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
-                                                                        <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                                                        </svg>
-                                                                        Accept Interview
-                                                                    </button>
-                                                                </form>
-
-                                                                <button type="button" onclick="toggleDeclineForm('decline-form-{{ $interview->id }}')" class="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neksjob-blue transition-colors duration-200">
-                                                                    <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                                                    </svg>
-                                                                    Decline Interview
-                                                                </button>
-                                                            </div>
-
-                                                            <div id="decline-form-{{ $interview->id }}" class="hidden mt-4 bg-gray-100 p-4 rounded-md border border-gray-300">
-                                                                <form action="{{ route('applicant.interviews.decline', $interview->id) }}" method="POST">
-                                                                    @csrf
-                                                                    <div>
-                                                                        <label for="reason" class="block text-sm font-medium text-gray-700">Reason for declining (optional)</label>
-                                                                        <textarea name="reason" id="reason" rows="3" placeholder="Please explain why you're unable to attend this interview..." class="mt-1 block w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-neksjob-blue focus:border-neksjob-blue"></textarea>
-                                                                    </div>
-                                                                    <div class="mt-4 flex justify-end">
-                                                                        <button type="button" onclick="toggleDeclineForm('decline-form-{{ $interview->id }}')" class="mr-3 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neksjob-blue">
-                                                                            Cancel
-                                                                        </button>
-                                                                        <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
-                                                                            <svg class="-ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                                <div class="mt-4 flex flex-col sm:flex-row sm:space-x-4 space-y-3 sm:space-y-0">
+                                                                    <form action="{{ route('applicant.interviews.accept', $interview->id) }}" method="POST">
+                                                                        @csrf
+                                                                        <button type="submit" class="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200">
+                                                                            <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                                                             </svg>
-                                                                            Confirm Decline
+                                                                            Accept Interview
                                                                         </button>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
+                                                                    </form>
+
+                                                                    <button type="button" onclick="toggleDeclineForm('decline-form-{{ $interview->id }}')" class="w-full sm:w-auto inline-flex justify-center items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neksjob-blue transition-colors duration-200">
+                                                                        <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                                        </svg>
+                                                                        Decline Interview
+                                                                    </button>
+                                                                </div>
+
+                                                                <div id="decline-form-{{ $interview->id }}" class="hidden mt-4 bg-gray-100 p-4 rounded-md border border-gray-300">
+                                                                    <form action="{{ route('applicant.interviews.decline', $interview->id) }}" method="POST">
+                                                                        @csrf
+                                                                        <div>
+                                                                            <label for="reason" class="block text-sm font-medium text-gray-700">Reason for declining (optional)</label>
+                                                                            <textarea name="reason" id="reason" rows="3" placeholder="Please explain why you're unable to attend this interview..." class="mt-1 block w-full text-sm border-gray-300 rounded-md shadow-sm focus:ring-neksjob-blue focus:border-neksjob-blue"></textarea>
+                                                                        </div>
+                                                                        <div class="mt-4 flex justify-end">
+                                                                            <button type="button" onclick="toggleDeclineForm('decline-form-{{ $interview->id }}')" class="mr-3 inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neksjob-blue">
+                                                                                Cancel
+                                                                            </button>
+                                                                            <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                                                                <svg class="-ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                                                </svg>
+                                                                                Confirm Decline
+                                                                            </button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                            @else
+                                                                <div class="mt-3 text-sm text-blue-700 bg-white p-3 rounded-md border border-blue-200">
+                                                                    <p>Interview details are being prepared. Please check back later.</p>
+                                                                </div>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </div>
@@ -168,37 +180,49 @@
                                                         </div>
                                                         <div class="ml-3">
                                                             <h3 class="text-md font-medium text-green-800">You've accepted this interview</h3>
-                                                            <div class="mt-3 text-sm text-green-700 bg-white p-3 rounded-md border border-green-200">
-                                                                <ul class="list-disc pl-5 space-y-2">
-                                                                    <li><span class="font-medium">Date:</span> {{ $interview->interview_date->format('l, F j, Y') }}</li>
-                                                                    @if($interview->location)
-                                                                        <li>
-                                                                            <span class="font-medium">Location:</span>
-                                                                            <span class="inline-flex items-center">
-                                                                                <svg class="h-4 w-4 text-gray-500 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                                                </svg>
-                                                                                {{ $interview->location }}
-                                                                            </span>
-                                                                        </li>
-                                                                    @endif
-                                                                    @if($interview->meeting_link)
-                                                                        <li>
-                                                                            <span class="font-medium">Meeting Link:</span>
-                                                                            <a href="{{ $interview->meeting_link }}" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-800 underline">
-                                                                                <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                                                                                </svg>
-                                                                                Join Meeting
-                                                                            </a>
-                                                                        </li>
-                                                                    @endif
-                                                                </ul>
-                                                            </div>
-                                                            <div class="mt-3 text-sm text-green-700">
-                                                                <p>Make sure to be prepared and on time for your interview. Good luck!</p>
-                                                            </div>
+                                                            @if($interview)
+                                                                <div class="mt-3 text-sm text-green-700 bg-white p-3 rounded-md border border-green-200">
+                                                                    <ul class="list-disc pl-5 space-y-2">
+                                                                        @if($interview->interview_date && $interview->interview_time)
+                                                                            <li>
+                                                                                <span class="font-medium">Date:</span>
+                                                                                {{ $interview->interview_date->format('l, F j, Y') }}
+                                                                                at {{ $interview->interview_time->format('g:i A') }}
+                                                                            </li>
+                                                                        @endif
+                                                                        @if($interview->location)
+                                                                            <li>
+                                                                                <span class="font-medium">Location:</span>
+                                                                                <span class="inline-flex items-center">
+                                                                                    <svg class="h-4 w-4 text-gray-500 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                                    </svg>
+                                                                                    {{ $interview->location }}
+                                                                                </span>
+                                                                            </li>
+                                                                        @endif
+                                                                        @if($interview->meeting_link)
+                                                                            <li>
+                                                                                <span class="font-medium">Meeting Link:</span>
+                                                                                <a href="{{ $interview->meeting_link }}" target="_blank" class="inline-flex items-center text-blue-600 hover:text-blue-800 underline">
+                                                                                    <svg class="h-4 w-4 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                                                    </svg>
+                                                                                    Join Meeting
+                                                                                </a>
+                                                                            </li>
+                                                                        @endif
+                                                                    </ul>
+                                                                </div>
+                                                                <div class="mt-3 text-sm text-green-700">
+                                                                    <p>Make sure to be prepared and on time for your interview. Good luck!</p>
+                                                                </div>
+                                                            @else
+                                                                <div class="mt-3 text-sm text-green-700 bg-white p-3 rounded-md border border-green-200">
+                                                                    <p>Interview details are being prepared. Please check back later.</p>
+                                                                </div>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </div>
@@ -214,26 +238,38 @@
                                                         </div>
                                                         <div class="ml-3">
                                                             <h3 class="text-md font-medium text-red-800">You've declined this interview</h3>
-                                                            <div class="mt-3 text-sm text-red-700 bg-white p-3 rounded-md border border-red-200">
-                                                                <ul class="list-disc pl-5 space-y-2">
-                                                                    <li><span class="font-medium">Date:</span> {{ $interview->interview_date->format('l, F j, Y') }}</li>
-                                                                    @if($interview->location)
-                                                                        <li>
-                                                                            <span class="font-medium">Location:</span>
-                                                                            <span class="inline-flex items-center">
-                                                                                <svg class="h-4 w-4 text-gray-500 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                                                                                </svg>
-                                                                                {{ $interview->location }}
-                                                                            </span>
-                                                                        </li>
-                                                                    @endif
-                                                                </ul>
-                                                            </div>
-                                                            <div class="mt-3 text-sm text-red-700">
-                                                                <p>The employer has been notified. You may want to apply for other jobs.</p>
-                                                            </div>
+                                                            @if($interview)
+                                                                <div class="mt-3 text-sm text-red-700 bg-white p-3 rounded-md border border-red-200">
+                                                                    <ul class="list-disc pl-5 space-y-2">
+                                                                        @if($interview->interview_date && $interview->interview_time)
+                                                                            <li>
+                                                                                <span class="font-medium">Date:</span>
+                                                                                {{ $interview->interview_date->format('l, F j, Y') }}
+                                                                                at {{ $interview->interview_time->format('g:i A') }}
+                                                                            </li>
+                                                                        @endif
+                                                                        @if($interview->location)
+                                                                            <li>
+                                                                                <span class="font-medium">Location:</span>
+                                                                                <span class="inline-flex items-center">
+                                                                                    <svg class="h-4 w-4 text-gray-500 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                                    </svg>
+                                                                                    {{ $interview->location }}
+                                                                                </span>
+                                                                            </li>
+                                                                        @endif
+                                                                    </ul>
+                                                                </div>
+                                                                <div class="mt-3 text-sm text-red-700">
+                                                                    <p>The employer has been notified. You may want to apply for other jobs.</p>
+                                                                </div>
+                                                            @else
+                                                                <div class="mt-3 text-sm text-red-700 bg-white p-3 rounded-md border border-red-200">
+                                                                    <p>Interview details are being prepared. Please check back later.</p>
+                                                                </div>
+                                                            @endif
                                                             <div class="mt-4">
                                                                 <a href="{{ route('jobs.index') }}" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-neksjob-blue hover:bg-neksjob-blue-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neksjob-blue">
                                                                     <svg class="-ml-0.5 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">

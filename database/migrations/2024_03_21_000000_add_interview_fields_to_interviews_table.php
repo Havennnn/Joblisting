@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::table('interviews', function (Blueprint $table) {
             $table->foreignId('job_application_id')->nullable()->after('job_id')
                   ->constrained('job_applications')->onDelete('cascade');
+            $table->time('interview_time')->nullable()->after('interview_date');
         });
     }
 
@@ -25,6 +26,7 @@ return new class extends Migration
         Schema::table('interviews', function (Blueprint $table) {
             $table->dropForeign(['job_application_id']);
             $table->dropColumn('job_application_id');
+            $table->dropColumn('interview_time');
         });
     }
 };
