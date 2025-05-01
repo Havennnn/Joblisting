@@ -8,6 +8,7 @@ use App\Http\Controllers\Applicant\MyApplicationsController;
 use App\Http\Controllers\Applicant\NotificationController;
 use App\Http\Controllers\Applicant\SavedJobController;
 use App\Http\Controllers\Applicant\InterviewResponseController;
+use App\Http\Controllers\Applicant\InterviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,5 +69,11 @@ Route::prefix('applicant')->name('applicant.')->middleware(['auth', 'applicant']
         Route::post('/{jobId}/save', 'save')->name('.save');
         Route::post('/{jobId}/unsave', 'unsave')->name('.unsave');
         Route::get('/{jobId}/check', 'isSaved')->name('.check');
+    });
+
+    // Interview routes
+    Route::controller(InterviewController::class)->prefix('interviews')->name('interviews.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/api/interviews', 'getInterviews')->name('get');
     });
 });

@@ -1,11 +1,11 @@
-@extends('layouts.employer')
+@extends('layouts.applicant')
 
 @section('title', 'Interview Calendar')
 
 @section('content')
 <div class="flex min-h-screen">
     <!-- Sidebar -->
-    <x-employer.sidebar />
+    <x-applicant.sidebar />
 
     <!-- Main Calendar Content -->
     <div class="flex-1 flex flex-col bg-white">
@@ -26,17 +26,9 @@
                     </svg>
                 </button>
             </div>
-            <div class="flex items-center space-x-4">
-                <button id="today-btn" class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    Today
-                </button>
-                <button id="schedule-interview-btn" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
-                    </svg>
-                    Schedule Interview
-                </button>
-            </div>
+            <button id="today-btn" class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                Today
+            </button>
         </div>
 
         <!-- Calendar Table -->
@@ -105,47 +97,19 @@
     </div>
 </div>
 
-<!-- Schedule Interview Modal -->
-<div id="schedule-interview-modal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 overflow-y-auto h-full w-full">
+<!-- Interview Details Modal -->
+<div id="interview-details-modal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 overflow-y-auto h-full w-full">
     <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
         <div class="mt-3">
-            <h3 class="text-lg font-medium text-gray-900">Schedule New Interview</h3>
-            <form id="schedule-interview-form" class="mt-4 space-y-4">
-                <div>
-                    <label for="applicant" class="block text-sm font-medium text-gray-700">Applicant</label>
-                    <select id="applicant" name="applicant" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
-                        <option value="">Select an applicant</option>
-                        <!-- Options will be populated via JavaScript -->
-                    </select>
-                </div>
-                <div>
-                    <label for="job" class="block text-sm font-medium text-gray-700">Job Position</label>
-                    <select id="job" name="job" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
-                        <option value="">Select a job</option>
-                        <!-- Options will be populated via JavaScript -->
-                    </select>
-                </div>
-                <div>
-                    <label for="interview_date" class="block text-sm font-medium text-gray-700">Date</label>
-                    <input type="date" id="interview_date" name="interview_date" required min="{{ date('Y-m-d') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                </div>
-                <div>
-                    <label for="interview_time" class="block text-sm font-medium text-gray-700">Time</label>
-                    <input type="time" id="interview_time" name="interview_time" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                </div>
-                <div>
-                    <label for="meeting_link" class="block text-sm font-medium text-gray-700">Meeting Link (Optional)</label>
-                    <input type="url" id="meeting_link" name="meeting_link" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                </div>
-                <div class="flex justify-end space-x-3">
-                    <button type="button" id="cancel-schedule" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        Cancel
-                    </button>
-                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        Schedule
-                    </button>
-                </div>
-            </form>
+            <h3 class="text-lg font-medium text-gray-900">Interview Details</h3>
+            <div id="interview-details" class="mt-4 space-y-4">
+                <!-- Interview details will be populated here -->
+            </div>
+            <div class="mt-6 flex justify-end space-x-3">
+                <button type="button" id="close-details" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                    Close
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -159,10 +123,9 @@
         let currentYear = currentDate.getFullYear();
         const monthDisplay = document.getElementById('month-display');
         const calendarBody = document.getElementById('calendar-body');
-        const scheduleInterviewBtn = document.getElementById('schedule-interview-btn');
-        const scheduleInterviewModal = document.getElementById('schedule-interview-modal');
-        const cancelScheduleBtn = document.getElementById('cancel-schedule');
-        const scheduleInterviewForm = document.getElementById('schedule-interview-form');
+        const interviewDetailsModal = document.getElementById('interview-details-modal');
+        const interviewDetails = document.getElementById('interview-details');
+        const closeDetailsBtn = document.getElementById('close-details');
 
         // Function to generate the calendar
         function generateCalendar(month, year) {
@@ -248,7 +211,7 @@
         // Function to load interviews
         async function loadInterviews(month, year) {
             try {
-                const response = await fetch(`/api/employer/interviews?month=${month + 1}&year=${year}`);
+                const response = await fetch(`/api/applicant/interviews?month=${month + 1}&year=${year}`);
                 const interviews = await response.json();
 
                 // Clear existing interview events
@@ -261,13 +224,13 @@
 
                     if (cell) {
                         const event = document.createElement('div');
-                        event.className = 'interview-event mt-1 p-1 text-xs rounded bg-purple-100 text-purple-800';
+                        event.className = 'interview-event mt-1 p-1 text-xs rounded bg-purple-100 text-purple-800 cursor-pointer hover:bg-purple-200';
                         event.innerHTML = `
-                            <div class="font-medium">${interview.applicant.name}</div>
-                            <div>${interview.job.title}</div>
+                            <div class="font-medium">${interview.job.title}</div>
                             <div>${interview.interview_time}</div>
                             ${interview.meeting_link ? `<a href="${interview.meeting_link}" target="_blank" class="text-purple-600 hover:text-purple-800">Join Meeting</a>` : ''}
                         `;
+                        event.addEventListener('click', () => showInterviewDetails(interview));
                         cell.appendChild(event);
                     }
                 });
@@ -276,42 +239,31 @@
             }
         }
 
-        // Function to load applicants and jobs for the schedule form
-        async function loadScheduleFormData() {
-            try {
-                const [applicantsResponse, jobsResponse] = await Promise.all([
-                    fetch('/api/employer/applicants'),
-                    fetch('/api/employer/jobs')
-                ]);
-
-                const applicants = await applicantsResponse.json();
-                const jobs = await jobsResponse.json();
-
-                const applicantSelect = document.getElementById('applicant');
-                const jobSelect = document.getElementById('job');
-
-                // Clear existing options
-                applicantSelect.innerHTML = '<option value="">Select an applicant</option>';
-                jobSelect.innerHTML = '<option value="">Select a job</option>';
-
-                // Add applicant options
-                applicants.forEach(applicant => {
-                    const option = document.createElement('option');
-                    option.value = applicant.id;
-                    option.textContent = applicant.name;
-                    applicantSelect.appendChild(option);
-                });
-
-                // Add job options
-                jobs.forEach(job => {
-                    const option = document.createElement('option');
-                    option.value = job.id;
-                    option.textContent = job.title;
-                    jobSelect.appendChild(option);
-                });
-            } catch (error) {
-                console.error('Error loading form data:', error);
-            }
+        // Function to show interview details
+        function showInterviewDetails(interview) {
+            interviewDetails.innerHTML = `
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Job Position</h4>
+                        <p class="mt-1 text-sm text-gray-900">${interview.job.title}</p>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Date & Time</h4>
+                        <p class="mt-1 text-sm text-gray-900">${new Date(interview.interview_date).toLocaleDateString()} at ${interview.interview_time}</p>
+                    </div>
+                    ${interview.meeting_link ? `
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-500">Meeting Link</h4>
+                            <a href="${interview.meeting_link}" target="_blank" class="mt-1 text-sm text-blue-600 hover:text-blue-800">${interview.meeting_link}</a>
+                        </div>
+                    ` : ''}
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Status</h4>
+                        <p class="mt-1 text-sm text-gray-900">${interview.status || 'Scheduled'}</p>
+                    </div>
+                </div>
+            `;
+            interviewDetailsModal.classList.remove('hidden');
         }
 
         // Initialize calendar
@@ -345,44 +297,9 @@
             generateCalendar(currentMonth, currentYear);
         });
 
-        // Schedule Interview button
-        scheduleInterviewBtn.addEventListener('click', function() {
-            loadScheduleFormData();
-            scheduleInterviewModal.classList.remove('hidden');
-        });
-
-        // Cancel Schedule button
-        cancelScheduleBtn.addEventListener('click', function() {
-            scheduleInterviewModal.classList.add('hidden');
-        });
-
-        // Schedule Interview form submission
-        scheduleInterviewForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData.entries());
-
-            try {
-                const response = await fetch('/api/employer/interviews', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                if (response.ok) {
-                    scheduleInterviewModal.classList.add('hidden');
-                    generateCalendar(currentMonth, currentYear);
-                } else {
-                    throw new Error('Failed to schedule interview');
-                }
-            } catch (error) {
-                console.error('Error scheduling interview:', error);
-                alert('Failed to schedule interview. Please try again.');
-            }
+        // Close details modal
+        closeDetailsBtn.addEventListener('click', function() {
+            interviewDetailsModal.classList.add('hidden');
         });
     });
 </script>
