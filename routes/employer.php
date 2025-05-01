@@ -9,6 +9,7 @@ use App\Http\Controllers\Employer\Notification\CentralNotificationController;
 use App\Http\Controllers\Employer\ApplicationController;
 use App\Http\Controllers\Employer\Company\CompanyController;
 use App\Http\Controllers\Employer\InterviewController;
+use App\Http\Controllers\Employer\Interview\CalendarController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -96,6 +97,7 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
         Route::get('/{id}/resume', 'downloadResume')->name('download-resume');
         Route::get('/{id}/schedule', 'showScheduleForm')->name('schedule.form');
         Route::post('/{id}/schedule', 'scheduleInterview')->name('schedule');
+        Route::post('/{id}/accept-after-interview', 'acceptAfterInterview')->name('accept-after-interview');
     });
 
     //Notification Routes
@@ -109,5 +111,10 @@ Route::prefix('employer')->name('employer.')->middleware(['auth', 'employer'])->
     // Interview Scheduling Routes
     Route::controller(InterviewController::class)->prefix('interviews')->name('interviews.')->group(function () {
         Route::get('/', 'index')->name('index');
+    });
+
+    // Interview Calendar Routes
+    Route::controller(CalendarController::class)->prefix('interview/calendar')->name('interview.calendar.')->group(function () {
+        Route::get('/interviews', 'getInterviews')->name('interviews');
     });
 });

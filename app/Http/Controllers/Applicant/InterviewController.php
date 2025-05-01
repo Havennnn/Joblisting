@@ -32,23 +32,35 @@ class InterviewController extends Controller
             'year' => 'required|integer|min:2000|max:2100',
         ]);
 
-        $interviews = Interview::where('applicant_id', Auth::id())
+        $applicantId = Auth::id();
+
+        $interviews = Interview::where('applicant_id', $applicantId)
             ->whereMonth('interview_date', $request->month)
             ->whereYear('interview_date', $request->year)
-            ->with('job')
-            ->get()
-            ->map(function ($interview) {
-                return [
-                    'id' => $interview->id,
-                    'interview_date' => $interview->interview_date->format('Y-m-d'),
-                    'interview_time' => $interview->interview_time->format('g:i A'),
-                    'meeting_link' => $interview->meeting_link,
-                    'job' => [
-                        'title' => $interview->job->title,
-                    ],
-                ];
-            });
+            ->whereIn('status', ['pending', 'accepted'])
+            ->with(['job', 'employer'])
+            ->orderBy('interview_date', 'asc')
+            ->orderBy('interview_time', 'asc')
+            ->get();
 
-        return response()->json($interviews);
+        $formattedInterviews = $interviews->map(function ($interview) {
+            return [
+                'id' => $interview->id,
+                'interview_date' => $interview->interview_date->format('Y-m-d'),
+                'interview_time' => $interview->interview_time->format('g:i A'),
+                'meeting_link' => $interview->meeting_link,
+                'status' => $interview->status,
+                'job' => [
+                    'title' => $interview->job->title,
+                    'company' => $interview->employer->company_name,
+                ],
+                'employer' => [
+                    'name' => $interview->employer->name,
+                    'email' => $interview->employer->email,
+                ],
+            ];
+        });
+
+        return response()->json($formattedInterviews);
     }
 }

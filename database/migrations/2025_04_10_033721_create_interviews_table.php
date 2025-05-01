@@ -39,6 +39,9 @@ return new class extends Migration
             if (!Schema::hasColumn('interviews', 'interview_time')) {
                 $table->time('interview_time')->nullable()->after('interview_date');
             }
+            if (!Schema::hasColumn('interviews', 'status')) {
+                $table->enum('status', ['pending', 'accepted', 'declined', 'completed', 'cancelled'])->default('pending')->after('interview_time');
+            }
         });
     }
 
@@ -54,6 +57,9 @@ return new class extends Migration
             }
             if (Schema::hasColumn('interviews', 'interview_time')) {
                 $table->dropColumn('interview_time');
+            }
+            if (Schema::hasColumn('interviews', 'status')) {
+                $table->dropColumn('status');
             }
         });
 

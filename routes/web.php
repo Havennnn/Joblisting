@@ -55,9 +55,3 @@ Route::get('/content-unavailable', function(Request $request) {
 require __DIR__ . '/auth.php';
 require __DIR__ . '/applicant.php';
 require __DIR__ . '/employer.php';
-
-// Applicant Interview Routes
-Route::middleware(['auth', 'role:applicant'])->prefix('applicant')->name('applicant.')->group(function () {
-    Route::get('/interviews', [App\Http\Controllers\Applicant\InterviewController::class, 'index'])->name('interviews.index');
-    Route::get('/api/interviews', [App\Http\Controllers\Applicant\InterviewController::class, 'getInterviews'])->name('interviews.get');
-});

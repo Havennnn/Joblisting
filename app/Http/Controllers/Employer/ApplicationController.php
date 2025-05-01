@@ -11,6 +11,8 @@ use App\Http\Controllers\Employer\Application\ShowJobApplicationsController;
 use App\Http\Controllers\Employer\Application\UpdateStatusController;
 use App\Services\Dashboard\ProfileCompletionService;
 use Illuminate\Http\Request;
+use App\Models\Jobs\JobApplication;
+use App\Notifications\ApplicationAcceptedAfterInterview;
 
 class ApplicationController extends Controller
 {
@@ -116,5 +118,26 @@ class ApplicationController extends Controller
     public function downloadResume($id)
     {
         return $this->downloadResumeController->__invoke($id);
+    }
+
+    /**
+     * Accept an applicant after interview
+     *
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function acceptAfterInterview($id)
+    {
+        $request = Request::create('', 'PATCH', ['status' => 'accepted']);
+        $request->setMethod('PATCH');
+
+        $response = $this->updateStatusController->__invoke($request, $id);
+
+        // Send acceptance notification
+        $application = JobApplication::findOrFail($id);
+        $application->load(['job', 'applicant']);
+        $application->applicant->notify(new ApplicationAcceptedAfterInterview($application));
+
+        return $response;
     }
 }

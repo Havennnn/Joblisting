@@ -26,11 +26,9 @@
                     </svg>
                 </button>
             </div>
-            <div class="flex items-center space-x-4">
-                <button id="today-btn" class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    Today
-                </button>
-            </div>
+            <button id="today-btn" class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                Today
+            </button>
         </div>
 
         <!-- Calendar Table -->
@@ -48,53 +46,24 @@
                     </tr>
                 </thead>
                 <tbody id="calendar-body" class="bg-white">
-                    @php
-                        $currentMonth = date('m');
-                        $currentYear = date('Y');
-                        $currentDay = date('d');
-
-                        $firstDay = mktime(0, 0, 0, $currentMonth, 1, $currentYear);
-                        $daysInMonth = date('t', $firstDay);
-                        $startDay = date('w', $firstDay);
-
-                        $prevMonth = date('m', strtotime('-1 month', $firstDay));
-                        $prevYear = date('Y', strtotime('-1 month', $firstDay));
-                        $daysInPrevMonth = date('t', mktime(0, 0, 0, $prevMonth, 1, $prevYear));
-
-                        $day = 1;
-                        $nextMonthDay = 1;
-                    @endphp
-
-                    @for ($i = 0; $i < 6; $i++)
-                        <tr>
-                            @for ($j = 0; $j < 7; $j++)
-                                @if (($i == 0 && $j < $startDay) || ($day > $daysInMonth))
-                                    @if ($i == 0 && $j < $startDay)
-                                        @php $prevMonthDate = $daysInPrevMonth - ($startDay - $j - 1); @endphp
-                                        <td class="p-2 h-32 border border-gray-200 bg-gray-50">
-                                            <div class="text-sm text-gray-400">{{ $prevMonthDate }}</div>
-                                        </td>
-                                    @else
-                                        <td class="p-2 h-32 border border-gray-200 bg-gray-50">
-                                            <div class="text-sm text-gray-400">{{ $nextMonthDay++ }}</div>
-                                        </td>
-                                    @endif
-                                @else
-                                    <td class="p-2 h-32 border border-gray-200 {{ $day == $currentDay ? 'bg-blue-50' : '' }}"
-                                        data-date="{{ $currentYear }}-{{ str_pad($currentMonth, 2, '0', STR_PAD_LEFT) }}-{{ str_pad($day, 2, '0', STR_PAD_LEFT) }}">
-                                        <div class="text-sm font-medium text-gray-900">{{ $day }}</div>
-                                        <!-- Interview events will be populated here via JavaScript -->
-                                    </td>
-                                    @php $day++; @endphp
-                                @endif
-                            @endfor
-                        </tr>
-                        @if ($day > $daysInMonth && $i < 5 && $nextMonthDay > 7)
-                            @break
-                        @endif
-                    @endfor
+                    <!-- Calendar cells will be populated here via JavaScript -->
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<!-- Interview Details Modal -->
+<div id="interview-details-modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Interview Details</h3>
+            <div id="interview-details" class="mt-2 px-7 py-3"></div>
+            <div class="items-center px-4 py-3">
+                <button id="close-details" class="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                    Close
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -108,6 +77,9 @@
         let currentYear = currentDate.getFullYear();
         const monthDisplay = document.getElementById('month-display');
         const calendarBody = document.getElementById('calendar-body');
+        const interviewDetailsModal = document.getElementById('interview-details-modal');
+        const interviewDetails = document.getElementById('interview-details');
+        const closeDetailsBtn = document.getElementById('close-details');
 
         // Function to generate the calendar
         function generateCalendar(month, year) {
@@ -136,28 +108,20 @@
 
             // Create calendar rows
             for (let i = 0; i < 6; i++) {
-                // Break if we've gone beyond the month and there's no need for another row
-                if (i > 0 && date > daysInMonth && nextMonthDate > 7) break;
-
                 const row = document.createElement('tr');
 
-                // Create cells for each day of the week
                 for (let j = 0; j < 7; j++) {
                     const cell = document.createElement('td');
                     cell.className = 'p-2 h-32 border border-gray-200';
                     const dayContent = document.createElement('div');
-                    dayContent.className = 'text-sm font-medium text-gray-900';
 
-                    // Previous month, current month, or next month
                     if (i === 0 && j < startingDay) {
                         // Previous month
-                        const prevDate = daysInPrevMonth - (startingDay - j - 1);
-                        cell.className += ' bg-gray-50';
+                        const prevMonthDate = daysInPrevMonth - (startingDay - j - 1);
                         dayContent.className = 'text-sm text-gray-400';
-                        dayContent.textContent = prevDate;
+                        dayContent.textContent = prevMonthDate;
                     } else if (date > daysInMonth) {
                         // Next month
-                        cell.className += ' bg-gray-50';
                         dayContent.className = 'text-sm text-gray-400';
                         dayContent.textContent = nextMonthDate++;
                     } else {
@@ -175,6 +139,7 @@
                         const dateStr = `${year}-${formattedMonth}-${formattedDate}`;
                         cell.setAttribute('data-date', dateStr);
 
+                        dayContent.className = 'text-sm font-medium text-gray-900';
                         dayContent.textContent = date;
                         date++;
                     }
@@ -193,7 +158,7 @@
         // Function to load interviews
         async function loadInterviews(month, year) {
             try {
-                const response = await fetch(`/api/employer/interviews?month=${month + 1}&year=${year}`);
+                const response = await fetch(`/employer/interview/calendar/interviews?month=${month + 1}&year=${year}`);
                 const interviews = await response.json();
 
                 // Clear existing interview events
@@ -206,19 +171,61 @@
 
                     if (cell) {
                         const event = document.createElement('div');
-                        event.className = 'interview-event mt-1 p-1 text-xs rounded bg-purple-100 text-purple-800';
+                        event.className = 'interview-event mt-1 p-2 text-xs rounded cursor-pointer hover:bg-opacity-90';
+
+                        // Set background color based on status
+                        if (interview.status === 'accepted') {
+                            event.className += ' bg-green-100 text-green-800 hover:bg-green-200';
+                        } else if (interview.status === 'pending') {
+                            event.className += ' bg-yellow-100 text-yellow-800 hover:bg-yellow-200';
+                        } else {
+                            event.className += ' bg-gray-100 text-gray-800 hover:bg-gray-200';
+                        }
+
                         event.innerHTML = `
                             <div class="font-medium">${interview.applicant.name}</div>
-                            <div>${interview.job.title}</div>
-                            <div>${interview.interview_time}</div>
-                            ${interview.meeting_link ? `<a href="${interview.meeting_link}" target="_blank" class="text-purple-600 hover:text-purple-800">Join Meeting</a>` : ''}
+                            <div class="text-xs">${interview.job.title}</div>
+                            <div class="text-xs">${interview.interview_time}</div>
+                            ${interview.meeting_link ? `<a href="${interview.meeting_link}" target="_blank" class="block mt-1 text-xs text-blue-600 hover:text-blue-800">Join Meeting</a>` : ''}
                         `;
+                        event.addEventListener('click', () => showInterviewDetails(interview));
                         cell.appendChild(event);
                     }
                 });
             } catch (error) {
                 console.error('Error loading interviews:', error);
             }
+        }
+
+        // Function to show interview details
+        function showInterviewDetails(interview) {
+            interviewDetails.innerHTML = `
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Applicant</h4>
+                        <p class="mt-1 text-sm text-gray-900">${interview.applicant.name}</p>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Job Position</h4>
+                        <p class="mt-1 text-sm text-gray-900">${interview.job.title}</p>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Date & Time</h4>
+                        <p class="mt-1 text-sm text-gray-900">${new Date(interview.interview_date).toLocaleDateString()} at ${interview.interview_time}</p>
+                    </div>
+                    ${interview.meeting_link ? `
+                        <div>
+                            <h4 class="text-sm font-medium text-gray-500">Meeting Link</h4>
+                            <a href="${interview.meeting_link}" target="_blank" class="mt-1 text-sm text-blue-600 hover:text-blue-800">${interview.meeting_link}</a>
+                        </div>
+                    ` : ''}
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Status</h4>
+                        <p class="mt-1 text-sm text-gray-900">${interview.status || 'Scheduled'}</p>
+                    </div>
+                </div>
+            `;
+            interviewDetailsModal.classList.remove('hidden');
         }
 
         // Initialize calendar
@@ -250,6 +257,11 @@
             currentMonth = today.getMonth();
             currentYear = today.getFullYear();
             generateCalendar(currentMonth, currentYear);
+        });
+
+        // Close details modal
+        closeDetailsBtn.addEventListener('click', function() {
+            interviewDetailsModal.classList.add('hidden');
         });
     });
 </script>

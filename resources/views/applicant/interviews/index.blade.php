@@ -46,51 +46,7 @@
                     </tr>
                 </thead>
                 <tbody id="calendar-body" class="bg-white">
-                    @php
-                        $currentMonth = date('m');
-                        $currentYear = date('Y');
-                        $currentDay = date('d');
-
-                        $firstDay = mktime(0, 0, 0, $currentMonth, 1, $currentYear);
-                        $daysInMonth = date('t', $firstDay);
-                        $startDay = date('w', $firstDay);
-
-                        $prevMonth = date('m', strtotime('-1 month', $firstDay));
-                        $prevYear = date('Y', strtotime('-1 month', $firstDay));
-                        $daysInPrevMonth = date('t', mktime(0, 0, 0, $prevMonth, 1, $prevYear));
-
-                        $day = 1;
-                        $nextMonthDay = 1;
-                    @endphp
-
-                    @for ($i = 0; $i < 6; $i++)
-                        <tr>
-                            @for ($j = 0; $j < 7; $j++)
-                                @if (($i == 0 && $j < $startDay) || ($day > $daysInMonth))
-                                    @if ($i == 0 && $j < $startDay)
-                                        @php $prevMonthDate = $daysInPrevMonth - ($startDay - $j - 1); @endphp
-                                        <td class="p-2 h-32 border border-gray-200 bg-gray-50">
-                                            <div class="text-sm text-gray-400">{{ $prevMonthDate }}</div>
-                                        </td>
-                                    @else
-                                        <td class="p-2 h-32 border border-gray-200 bg-gray-50">
-                                            <div class="text-sm text-gray-400">{{ $nextMonthDay++ }}</div>
-                                        </td>
-                                    @endif
-                                @else
-                                    <td class="p-2 h-32 border border-gray-200 {{ $day == $currentDay ? 'bg-blue-50' : '' }}"
-                                        data-date="{{ $currentYear }}-{{ str_pad($currentMonth, 2, '0', STR_PAD_LEFT) }}-{{ str_pad($day, 2, '0', STR_PAD_LEFT) }}">
-                                        <div class="text-sm font-medium text-gray-900">{{ $day }}</div>
-                                        <!-- Interview events will be populated here via JavaScript -->
-                                    </td>
-                                    @php $day++; @endphp
-                                @endif
-                            @endfor
-                        </tr>
-                        @if ($day > $daysInMonth && $i < 5 && $nextMonthDay > 7)
-                            @break
-                        @endif
-                    @endfor
+                    <!-- Calendar cells will be populated here via JavaScript -->
                 </tbody>
             </table>
         </div>
@@ -211,7 +167,7 @@
         // Function to load interviews
         async function loadInterviews(month, year) {
             try {
-                const response = await fetch(`/api/applicant/interviews?month=${month + 1}&year=${year}`);
+                const response = await fetch(`/applicant/interviews/api/interviews?month=${month + 1}&year=${year}`);
                 const interviews = await response.json();
 
                 // Clear existing interview events
@@ -224,11 +180,22 @@
 
                     if (cell) {
                         const event = document.createElement('div');
-                        event.className = 'interview-event mt-1 p-1 text-xs rounded bg-purple-100 text-purple-800 cursor-pointer hover:bg-purple-200';
+                        event.className = 'interview-event mt-1 p-2 text-xs rounded cursor-pointer hover:bg-opacity-90';
+
+                        // Set background color based on status
+                        if (interview.status === 'accepted') {
+                            event.className += ' bg-green-100 text-green-800 hover:bg-green-200';
+                        } else if (interview.status === 'pending') {
+                            event.className += ' bg-yellow-100 text-yellow-800 hover:bg-yellow-200';
+                        } else {
+                            event.className += ' bg-gray-100 text-gray-800 hover:bg-gray-200';
+                        }
+
                         event.innerHTML = `
                             <div class="font-medium">${interview.job.title}</div>
-                            <div>${interview.interview_time}</div>
-                            ${interview.meeting_link ? `<a href="${interview.meeting_link}" target="_blank" class="text-purple-600 hover:text-purple-800">Join Meeting</a>` : ''}
+                            <div class="text-xs">${interview.interview_time}</div>
+                            ${interview.meeting_link ? `<a href="${interview.meeting_link}" target="_blank" class="block mt-1 text-xs text-blue-600 hover:text-blue-800">Join Meeting</a>` : ''}
+                            <div class="text-xs mt-1">${interview.status}</div>
                         `;
                         event.addEventListener('click', () => showInterviewDetails(interview));
                         cell.appendChild(event);
@@ -248,6 +215,10 @@
                         <p class="mt-1 text-sm text-gray-900">${interview.job.title}</p>
                     </div>
                     <div>
+                        <h4 class="text-sm font-medium text-gray-500">Company</h4>
+                        <p class="mt-1 text-sm text-gray-900">${interview.job.company}</p>
+                    </div>
+                    <div>
                         <h4 class="text-sm font-medium text-gray-500">Date & Time</h4>
                         <p class="mt-1 text-sm text-gray-900">${new Date(interview.interview_date).toLocaleDateString()} at ${interview.interview_time}</p>
                     </div>
@@ -260,6 +231,11 @@
                     <div>
                         <h4 class="text-sm font-medium text-gray-500">Status</h4>
                         <p class="mt-1 text-sm text-gray-900">${interview.status || 'Scheduled'}</p>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-medium text-gray-500">Interviewer</h4>
+                        <p class="mt-1 text-sm text-gray-900">${interview.employer.name}</p>
+                        <p class="mt-1 text-sm text-gray-600">${interview.employer.email}</p>
                     </div>
                 </div>
             `;

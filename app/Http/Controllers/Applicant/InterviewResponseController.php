@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Interviews\Interview;
 use App\Models\Jobs\JobApplication;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Notifications\InterviewResponseSubmitted;
 
 class InterviewResponseController extends Controller
@@ -27,6 +28,10 @@ class InterviewResponseController extends Controller
             ->where('applicant_id', $applicant->id)
             ->firstOrFail();
 
+        // Update the interview status
+        $interview->status = 'accepted';
+        $interview->save();
+
         // Update related job application status
         $jobApplication = JobApplication::where('job_id', $interview->job_id)
             ->where('applicant_id', $applicant->id)
@@ -42,8 +47,8 @@ class InterviewResponseController extends Controller
             $interview->employer->notify(new InterviewResponseSubmitted($interview, 'accepted'));
         }
 
-        return redirect()->route('applicant.applications')
-            ->with('success', 'Interview accepted successfully!');
+        return redirect()->route('applicant.interviews.index')
+            ->with('success', 'Interview accepted successfully! The interview has been added to your calendar.');
     }
 
     /**
