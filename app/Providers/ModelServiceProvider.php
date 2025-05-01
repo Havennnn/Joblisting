@@ -22,16 +22,16 @@ class ModelServiceProvider extends ServiceProvider
     {
         // Register custom relationship morphMap keys
         Relation::morphMap([
-            'user' => \App\Models\Users\User::class,
+            'user' => \App\Models\User::class,
             'employer' => \App\Models\Users\Employer::class,
-            'applicant_profile' => \App\Models\Users\ApplicantProfile::class,
-            'job_post' => \App\Models\Jobs\JobPost::class,
+            'jobseeker' => \App\Models\Users\Jobseeker::class,
+            'jobpost' => \App\Models\Jobs\JobPost::class,
+            'company' => \App\Models\Company::class,
+            'company_invitation' => \App\Models\Company\CompanyInvitation::class,
             'job_application' => \App\Models\Jobs\JobApplication::class,
-            'conversation' => \App\Models\Messaging\Conversation::class,
-            'message' => \App\Models\Messaging\Message::class,
-            'event' => \App\Models\Content\Event::class,
-            'blog' => \App\Models\Content\Blog::class,
-            'featured_item' => \App\Models\Content\FeaturedItem::class,
+            'interview' => \App\Models\Jobs\Interview::class,
+            'notification' => \App\Models\Notification::class,
+            'saved_job' => \App\Models\Jobs\SavedJob::class,
         ]);
     }
 }

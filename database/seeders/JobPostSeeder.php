@@ -69,6 +69,7 @@ class JobPostSeeder extends Seeder
 
             JobPost::create([
                 'employer_id' => $employer_id,
+                'company_id' => 1,
                 'title' => $jobTitle,
                 'job_description' => "We are looking for a talented $jobTitle to join our team. This position requires excellent skills in $industry and the ability to work in a fast-paced environment. The ideal candidate will have strong communication skills and be detail-oriented.",
                 'location' => $locations[$i % count($locations)],

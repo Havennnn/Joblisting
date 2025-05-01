@@ -6,9 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\LandingPage\JobController;
 use App\Http\Controllers\LandingPage\LandingController;
 use App\Models\Jobs\JobPost;
-use App\Models\Content\Event;
-use App\Models\Content\Blog;
-use App\Models\Content\FeaturedItem;
+use App\Models\Company;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 

@@ -4,9 +4,7 @@ namespace App\Http\Controllers\LandingPage;
 
 use App\Http\Controllers\Controller;
 use App\Models\Jobs\JobPost;
-use App\Models\Content\Event;
-use App\Models\Content\Blog;
-use App\Models\Content\FeaturedItem;
+use App\Models\Company;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
@@ -19,25 +17,15 @@ class LandingController extends Controller
      */
     public function index(): View
     {
-        $featured = FeaturedItem::where('is_active', true)
-            ->orderBy('order', 'asc')
+        $featured = []; // Empty array since we removed FeaturedItem
+        $events = []; // Empty array since we removed Event
+        $blogs = []; // Empty array since we removed Blog
+
+        $recentJobs = JobPost::with(['company', 'employer'])
+            ->latest()
+            ->take(6)
             ->get();
 
-        $events = Event::where('date', '>=', now())
-            ->orderBy('date', 'asc')
-            ->take(4)
-            ->get();
-
-        $jobs = JobPost::with('employer')
-            ->orderBy('created_at', 'DESC')
-            ->take(4)
-            ->get();
-
-        $blogs = Blog::where('is_published', true)
-            ->orderBy('created_at', 'DESC')
-            ->take(3)
-            ->get();
-
-        return view('web.landing.landing', compact('featured', 'events', 'jobs', 'blogs'));
+        return view('web.landing.landing', compact('featured', 'events', 'recentJobs', 'blogs'));
     }
 }
