@@ -195,7 +195,6 @@
                             <div class="font-medium">${interview.job.title}</div>
                             <div class="text-xs">${interview.interview_time}</div>
                             ${interview.meeting_link ? `<a href="${interview.meeting_link}" target="_blank" class="block mt-1 text-xs text-blue-600 hover:text-blue-800">Join Meeting</a>` : ''}
-                            <div class="text-xs mt-1">${interview.status}</div>
                         `;
                         event.addEventListener('click', () => showInterviewDetails(interview));
                         cell.appendChild(event);
@@ -228,10 +227,6 @@
                             <a href="${interview.meeting_link}" target="_blank" class="mt-1 text-sm text-blue-600 hover:text-blue-800">${interview.meeting_link}</a>
                         </div>
                     ` : ''}
-                    <div>
-                        <h4 class="text-sm font-medium text-gray-500">Status</h4>
-                        <p class="mt-1 text-sm text-gray-900">${interview.status || 'Scheduled'}</p>
-                    </div>
                     <div>
                         <h4 class="text-sm font-medium text-gray-500">Interviewer</h4>
                         <p class="mt-1 text-sm text-gray-900">${interview.employer.name}</p>
